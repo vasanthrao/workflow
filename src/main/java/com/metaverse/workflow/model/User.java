@@ -1,9 +1,6 @@
-package com.metaverse.workflow.login.repository;
+package com.metaverse.workflow.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +14,7 @@ import java.util.Date;
 @Builder
 @Getter
 @Table(name="user")
-public class UserEntity {
+public class User {
 
     @Id
     @Column(name="user_id")
@@ -32,10 +29,6 @@ public class UserEntity {
     private Integer attempts;
     @Column(name="status")
     private String status;
-    @Column(name="created_on")
-    private Date createdOn;
-    @Column(name="updated_on")
-    private Date updatedOn;
     @Column(name="first_name")
     private String firstName;
     @Column(name="last_name")
@@ -46,5 +39,9 @@ public class UserEntity {
     private Long mobileNo;
     @Column(name="address")
     private String address;
+    @Column(name="created_on")
+    private Date createdOn;
+    @Column(name="updated_on")
+    private Date updatedOn;
 
 }

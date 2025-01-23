@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping(value = "/login")
+//@RequestMapping(value = "/login")
 public class LoginController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class LoginController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = LoginUserResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
     })
-    @GetMapping(value = "/user", produces = {"application/json"})
+    @GetMapping(value = "/login/user", produces = {"application/json"})
     public ResponseEntity<LoginUserResponse> getUserById(@RequestHeader("userId") Long userId) {
         log.info("login controller, userId : {}", userId);
         LoginUserResponse response = loginService.getUserById(userId);
@@ -38,11 +38,25 @@ public class LoginController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = LoginUserResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
     })
-    @PostMapping(value = "/user/create", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/login/user/create", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<LoginUserResponse> createUser(@RequestBody LoginUserRequest request) {
         log.info("login controller, userId : {}", request.getMobileNo());
         LoginUserResponse response = loginService.createUser(request);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Get user by id", responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = LoginUserResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
+    })
+    @GetMapping(value = "/login", produces = {"application/json"})
+    public ResponseEntity<LoginUserResponse> login(@RequestHeader("userId") Long userId, @RequestHeader("password") String password) {
+        log.info("login controller, userId : {}", userId);
+        LoginUserResponse response = loginService.getUserById(userId);
+        if(response.getUserId() != null && response.getPassword().equals(password))
+            return ResponseEntity.ok(response);
+        else
+            return ResponseEntity.notFound().build();
     }
 
 

@@ -1,9 +1,6 @@
-package com.metaverse.workflow.program.repository;
+package com.metaverse.workflow.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,15 +13,18 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name="program")
-public class ProgramSessionEntity {
+@Table(name="program_session")
+public class ProgramSession {
     @Id
+    @GeneratedValue
     @Column(name="program_session_id")
     private Long programSessionId;
+    @Column(name="session_date")
+    private Date sessionDate;
     @Column(name="start_time")
-    private Date startTime;
+    private String startTime;
     @Column(name="end_time")
-    private Date endTime;
+    private String endTime;
     @Column(name="sessionType_name")
     private String sessionTypeName;
     @Column(name="session_type_methodology")
@@ -51,4 +51,12 @@ public class ProgramSessionEntity {
     private String image4;
     @Column(name="image5")
     private String image5;
+    @Column(name="created_on")
+    private Date createdOn;
+    @Column(name="updated_on")
+    private Date updatedOn;
+    @ManyToOne
+    @JoinColumn(name = "program_id")
+    private Program program;
+
 }

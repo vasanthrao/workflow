@@ -1,13 +1,12 @@
 package com.metaverse.workflow.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -15,11 +14,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 @Table(name="activity")
-public class ActivityEntity {
+public class Activity {
     @Id
     @Column(name="activity_id")
     private Long activityId;
     @Column(name="activity_name")
     private String activityName;
+    @Column(name="created_on")
+    private Date createdOn;
+    @Column(name="updated_on")
+    private Date updatedOn;
 
 }
