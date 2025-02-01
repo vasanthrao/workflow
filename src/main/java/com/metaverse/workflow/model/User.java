@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -18,7 +20,7 @@ public class User {
 
     @Id
     @Column(name="user_id")
-    private Long userId;
+    private String userId;
     @Column(name="email")
     private String email;
     @Column(name="password")
@@ -39,9 +41,14 @@ public class User {
     private Long mobileNo;
     @Column(name="address")
     private String address;
-    @Column(name="created_on")
+    @Column(name="created_on",insertable = true,updatable = false)
+    @CreationTimestamp
     private Date createdOn;
-    @Column(name="updated_on")
+    @Column(name="updated_on",insertable = false,updatable = true)
+    @UpdateTimestamp
     private Date updatedOn;
+    @ManyToOne
+    @JoinColumn(name = "agency_id")
+    private Agency agency;
 
 }

@@ -1,4 +1,8 @@
 package com.metaverse.workflow.resouce.repository;
 
-public interface ResourceRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.metaverse.workflow.model.Resource;
+
+public interface ResourceRepository extends JpaRepository<Resource, Long>{
 }

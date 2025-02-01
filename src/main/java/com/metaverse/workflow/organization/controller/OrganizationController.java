@@ -1,4 +1,37 @@
 package com.metaverse.workflow.organization.controller;
 
+import com.metaverse.workflow.agency.service.AgencyResponseMapper;
+import com.metaverse.workflow.model.Agency;
+import com.metaverse.workflow.resouce.service.ResourceResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.organization.service.OrganizationRequest;
+import com.metaverse.workflow.organization.service.OrganizationResponse;
+import com.metaverse.workflow.organization.service.OrganizationService;
+
+import java.util.List;
+
+@RestController
 public class OrganizationController {
+	
+	@Autowired
+	private OrganizationService organizationService;
+	
+	@PostMapping("/organization/save")
+	public ResponseEntity<WorkflowResponse> saveOrganization(@RequestBody OrganizationRequest request)
+	{
+		OrganizationResponse organizationResponse = organizationService.saveOrganization(request);
+		return ResponseEntity.ok(WorkflowResponse.builder().message("Created").status(200).data(organizationResponse).build());
+	}
+
+	@GetMapping("/organization/list")
+	public ResponseEntity<WorkflowResponse> getResourcesByAgencyId()
+	{
+		WorkflowResponse response = organizationService.getOrganizations();
+		return ResponseEntity.ok(response);
+	}
+
 }

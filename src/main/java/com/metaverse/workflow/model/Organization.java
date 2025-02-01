@@ -1,37 +1,52 @@
 package com.metaverse.workflow.model;
 
+import java.util.Date;
+import java.util.List;
+
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
+@ToString
 @Table(name="organization")
 public class Organization {
     @Id
     @Column(name="organization_id")
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long organizationId;
-    @Column(name="organization_type")
-    private String organizationType;
-    @Column(name="organization_category")
-    private String organizationCategory;
     @Column(name="organization_name")
     private String organizationName;
-    @Column(name="business_sector")
-    private String businessSector;
-    @Column(name="is_udyam_registration_enable")
-    private Character isUdyamRegistrationEnable;
-    @Column(name="registration_no")
-    private String registrationNo;
-    @Column(name="year_of_registration")
-    private Date yearOfRegistration;
+    @Column(name="organization_category")
+    private String organizationCategory;
+    @Column(name="organization_type")
+    private String organizationType;
+    @Column(name="udyam_registration_no")
+    private String udyamregistrationNo;
+    @Column(name="date_of_registration")
+    private Date dateOfRegistration;
+    @Column(name="startup_certificate_no")
+    private String startupCertificateNo;
+    @Column(name="nature_of_startup")
+    private String natureOfStartup;
+	@Column(name="areas_of_working")
+	private String areasOfWorking;
+    @Column(name = "incorporation_date")
+    private Date incorporationDate;
+    @Column(name="date_of_issue")
+    private String dateOfIssue;
+    @Column(name="valid_upto")
+    private String validUpto;
     @Column(name="state_id")
     private String stateId;
     @Column(name="dist_id")
@@ -40,10 +55,10 @@ public class Organization {
     private String mandal;
     @Column(name="town")
     private String town;
-    @Column(name="street_or_locality")
-    private String streetOrLocality;
-    @Column(name="address")
-    private String address;
+    @Column(name="street_no")
+    private String streetNo;
+    @Column(name="house_no")
+    private String houseNo;
     @Column(name="latitude")
     private Double latitude;
     @Column(name="longitude")
@@ -62,32 +77,20 @@ public class Organization {
     private String ownerEmail;
     @Column(name="owner_address")
     private String ownerAddress;
-    @Column(name="name_of_the_mandal_samakya")
-    private String nameOfTheMandalSamakya;
+    @Column(name="name_of_the_SHG")
+    private String nameOfTheSHG;
     @Column(name="name_of_the_VO")
     private String nameOfTheVO;
     @Column(name="grama_panchayat")
     private String gramaPanchayat;
-    @Column(name="bank_ac_no")
-    private String bankAcNo;
-    @Column(name="bank_name")
-    private String bankName;
-    @Column(name="ifsc_code")
-    private String ifscCode;
-    @Column(name="branch_name")
-    private String branchName;
-    @Column(name="startup_certificate_no")
-    private String startupCertificateNo;
-    @Column(name="nature_of_startup")
-    private String natureOfStartup;
-    @Column(name="areas_of_working")
-    private String areasOfWorking;
-    @Column(name="date_of_issue")
-    private String dateOfIssue;
-    @Column(name="valid_upto")
-    private String validUpto;
-    @Column(name="created_on")
+    @OneToMany(targetEntity = Participant.class,cascade = CascadeType.ALL,mappedBy = "organization")
+    @Column(name = "participants")
+    private List<Participant> participants;
+    @Column(name="created_on",insertable = true,updatable = false)
+    @CreationTimestamp
     private Date createdOn;
-    @Column(name="updated_on")
+    @Column(name="updated_on",insertable = false,updatable = true)
+    @UpdateTimestamp
     private Date updatedOn;
+    
 }

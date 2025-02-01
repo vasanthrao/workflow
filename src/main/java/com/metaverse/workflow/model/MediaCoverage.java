@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name="media_coverage")
 public class MediaCoverage {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="coverage_id")
     private Long coverageId;
     @Column(name="coverage_type")

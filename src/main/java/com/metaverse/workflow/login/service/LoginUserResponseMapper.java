@@ -14,18 +14,12 @@ public class LoginUserResponseMapper {
         return LoginUserResponse.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
-                .address(user.getAddress())
                 .mobileNo(user.getMobileNo())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .gender(user.getGender())
-                .status(user.getStatus())
-                .address(user.getAddress())
-                .attempts(user.getAttempts())
-                .userRole(UserRole.valueOf(user.getUserRole()))
-                .createdOn(user.getCreatedOn())
-                .updatedOn(user.getUpdatedOn())
                 .password(user.getPassword())
+                .userRole(UserRole.valueOf(user.getUserRole()))
+                .agencyId(user.getAgency() != null ? user.getAgency().getAgencyId() : null)
                 .build();
     }
 

@@ -22,6 +22,7 @@ public class ProgramResponse {
     private String programTitle;
     private Long agencyId;
     private String startDate;
+    private String endDate;
     private String startTime;
     private String endTime;
     private String spocName;
@@ -30,7 +31,7 @@ public class ProgramResponse {
     private String kpi;
     private Date createdOn;
     private Date updatedOn;
-    private List<ProgramSession> programSessionList;
+    private List<ProgramSessionResponse> programSessionList;
     private List<MediaCoverage> mediaCoverageList;
 
     @Builder
@@ -48,15 +49,15 @@ public class ProgramResponse {
         private String sessionTypeMethodology;
         private String sessionDetails;
         private Long resourceId;
-        private String meterialType;
         private String uploaFile;
         private String coverageType;
-        private String videoUrl;
+        private List<String> videoUrls;
         private String image1;
         private String image2;
         private String image3;
         private String image4;
         private String image5;
+        private String sessionStreamingUrl;
         private Date createdOn;
         private Date updatedOn;
     }

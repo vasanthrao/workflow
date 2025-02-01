@@ -1,5 +1,6 @@
 package com.metaverse.workflow.login.controller;
 
+import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.login.service.LoginService;
 import com.metaverse.workflow.login.service.LoginUserRequest;
 import com.metaverse.workflow.login.service.LoginUserResponse;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @Slf4j
-//@RequestMapping(value = "/login")
 public class LoginController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class LoginController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
     })
     @GetMapping(value = "/login/user", produces = {"application/json"})
-    public ResponseEntity<LoginUserResponse> getUserById(@RequestHeader("userId") Long userId) {
+    public ResponseEntity<LoginUserResponse> getUserById(@RequestHeader("userId") String userId) {
         log.info("login controller, userId : {}", userId);
         LoginUserResponse response = loginService.getUserById(userId);
         return ResponseEntity.ok(response);
@@ -39,9 +39,9 @@ public class LoginController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
     })
     @PostMapping(value = "/login/user/create", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<LoginUserResponse> createUser(@RequestBody LoginUserRequest request) {
+    public ResponseEntity<WorkflowResponse> createUser(@RequestBody LoginUserRequest request) {
         log.info("login controller, userId : {}", request.getMobileNo());
-        LoginUserResponse response = loginService.createUser(request);
+        WorkflowResponse response = loginService.createUser(request);
         return ResponseEntity.ok(response);
     }
 
@@ -50,13 +50,16 @@ public class LoginController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
     })
     @GetMapping(value = "/login", produces = {"application/json"})
-    public ResponseEntity<LoginUserResponse> login(@RequestHeader("userId") Long userId, @RequestHeader("password") String password) {
+    public ResponseEntity<WorkflowResponse> login(@RequestHeader("userId") String userId, @RequestHeader("password") String password) {
         log.info("login controller, userId : {}", userId);
         LoginUserResponse response = loginService.getUserById(userId);
-        if(response.getUserId() != null && response.getPassword().equals(password))
-            return ResponseEntity.ok(response);
-        else
-            return ResponseEntity.notFound().build();
+        if (response.getUserId() != null && response.getPassword().equals(password)) {
+            response.setPassword(null);
+            return ResponseEntity.ok(WorkflowResponse.builder().status(200).message("Success").data(response).build());
+
+        } else {
+            return ResponseEntity.ok(WorkflowResponse.builder().status(400).message("User not found").build());
+        }
     }
 
 

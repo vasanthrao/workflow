@@ -14,7 +14,8 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoginUserResponse {
 
-    private Long userId;
+    private String userId;
+    private Long agencyId;
     private String email;
     private String password;
     private UserRole userRole;

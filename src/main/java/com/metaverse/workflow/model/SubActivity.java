@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,9 +23,11 @@ public class SubActivity {
     private Long subActivityId;
     @Column(name="sub_activity_name")
     private String subActivityName;
-    @Column(name="created_on")
+    @Column(name="created_on",insertable = true,updatable = false)
+    @CreationTimestamp
     private Date createdOn;
-    @Column(name="updated_on")
+    @Column(name="updated_on",insertable = false,updatable = true)
+    @UpdateTimestamp
     private Date updatedOn;
 
 }

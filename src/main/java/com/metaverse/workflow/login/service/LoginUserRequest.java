@@ -17,5 +17,6 @@ public class LoginUserRequest {
     private String gender;
     private Long mobileNo;
     private String address;
+    private Long agencyId;
 
 }

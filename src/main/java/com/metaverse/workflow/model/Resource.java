@@ -1,51 +1,59 @@
 package com.metaverse.workflow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @Table(name="resource")
 public class Resource {
     @Id
     @Column(name="resource_id")
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long resourceId;
     @Column(name="name")
     private String name;
     @Column(name="gender")
     private Character gender;
-    @Column(name="category")
-    private String category;
-    @Column(name="aadhar_no")
-    private Long aadharNo;
+    
     @Column(name="mobile_no")
     private Long mobileNo;
-    @Column(name="capacity")
-    private Integer capacity;
+    @Column(name="organization_name")
+    private String organizationName;
     @Column(name="email")
     private String email;
-    @Column(name="state_id")
-    private String stateId;
-    @Column(name="dist_id")
-    private String distId;
-    @Column(name="mandal")
-    private String mandal;
-    @Column(name="town")
-    private String town;
-    @Column(name="street_or_locality")
-    private String streetOrLocality;
-    @Column(name="address")
-    private String address;
-    @Column(name="created_on")
+    @Column(name="designation")
+    private String designation;
+    @Column(name="qualification")
+    private String qualification;
+    @Column(name="specialization")
+    private String specialization;
+  
+    @Column(name="brief_description")
+    private String briefDescription;
+    
+    @ManyToMany
+    @JoinTable(name = "agency_resource",
+    joinColumns = @JoinColumn(name="resource_id",referencedColumnName = "resource_id"),
+    inverseJoinColumns = @JoinColumn(name="agency_id",referencedColumnName = "agency_id"))
+    @JsonIgnore
+    private List<Agency> agency;
+    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProgramSession> ProgramSessionList;
+    @Column(name="created_on",insertable = true,updatable = false)
+    @CreationTimestamp
     private Date createdOn;
-    @Column(name="updated_on")
+    @Column(name="updated_on",insertable = false,updatable = true)
+    @UpdateTimestamp
     private Date updatedOn;
 }
