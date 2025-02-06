@@ -62,5 +62,15 @@ public class LoginController {
         }
     }
 
+    @Operation(summary = "Get all users", responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = WorkflowResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
+    })
+    @GetMapping(value = "/users", produces = {"application/json"})
+    public ResponseEntity<WorkflowResponse> users() {
+        WorkflowResponse response = loginService.getUsers();
+        return ResponseEntity.ok(response);
+    }
+
 
 }

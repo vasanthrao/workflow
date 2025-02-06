@@ -28,5 +28,6 @@ public class LoginUserResponse {
     private String gender;
     private Long mobileNo;
     private String address;
+    private String agencyName;
 
 }

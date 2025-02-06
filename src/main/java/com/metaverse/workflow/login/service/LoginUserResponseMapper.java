@@ -27,4 +27,16 @@ public class LoginUserResponseMapper {
         return user.stream().map(LoginUserResponseMapper::map).collect(Collectors.toList());
     }
 
+    public static LoginUserResponse mapUser(User user) {
+        return LoginUserResponse.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .mobileNo(user.getMobileNo())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .userRole(UserRole.valueOf(user.getUserRole()))
+                .agencyName(user.getAgency() != null ? user.getAgency().getAgencyName() : null)
+                .build();
+    }
+
 }

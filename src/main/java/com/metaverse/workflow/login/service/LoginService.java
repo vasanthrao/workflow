@@ -12,4 +12,6 @@ public interface LoginService {
 
     List<LoginUserResponse> getUserByMobileNo(Long mobileNo);
 
+    WorkflowResponse getUsers();
+
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -50,6 +51,13 @@ public class LoginServiceAdapter implements LoginService{
     @Override
     public List<LoginUserResponse> getUserByMobileNo(Long mobileNo) {
         return null;
+    }
+
+    @Override
+    public WorkflowResponse getUsers() {
+        List<User> userList = loginRepository.findAll();
+        List<LoginUserResponse> response = userList.stream().map(user -> LoginUserResponseMapper.mapUser(user)).collect(Collectors.toList());
+        return WorkflowResponse.builder().status(200).message("Success").data(response).build();
     }
 
 }

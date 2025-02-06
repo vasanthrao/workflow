@@ -6,6 +6,8 @@ import com.metaverse.workflow.agency.service.AgencyService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.location.service.LocationResponse;
 import com.metaverse.workflow.model.Agency;
+import com.metaverse.workflow.participant.service.ParticipantResponse;
+import com.metaverse.workflow.program.service.ProgramResponse;
 import com.metaverse.workflow.resouce.service.ResourceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +52,22 @@ public class AgencyController {
 	{
 		WorkflowResponse response = service.getAgencies();
 		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/agency/programs/{id}")
+	public ResponseEntity<WorkflowResponse> getProgramsByAgencyId(@PathVariable("id") Long id)
+	{
+		Agency agency = service.getAgencyById(id);
+		List<ProgramResponse> response = AgencyResponseMapper.mapPrograms(agency.getProgramList());
+		return ResponseEntity.ok(WorkflowResponse.builder().message("Success").status(200).data(response).build());
+	}
+
+	@GetMapping("/agency/participants/{id}")
+	public ResponseEntity<WorkflowResponse> getParticipantsByAgencyId(@PathVariable("id") Long id)
+	{
+		Agency agency = service.getAgencyById(id);
+		List<ParticipantResponse> response = AgencyResponseMapper.mapParticipants(agency.getProgramList());
+		return ResponseEntity.ok(WorkflowResponse.builder().message("Success").status(200).data(response).build());
 	}
 
 }
