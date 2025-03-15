@@ -104,7 +104,7 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse getPrograms() {
         List<Program> programList = programRepository.findAll();
-        List<ProgramResponse> response = programList.stream().map(program -> ProgramResponseMapper.map(program)).collect(Collectors.toList());
+        List<ProgramResponse> response = programList != null ? programList.stream().map(program -> ProgramResponseMapper.map(program)).collect(Collectors.toList()) : null;
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
     }
 

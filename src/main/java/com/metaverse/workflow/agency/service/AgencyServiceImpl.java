@@ -37,7 +37,7 @@ public class AgencyServiceImpl implements AgencyService{
 	@Override
 	public WorkflowResponse getAgencies() {
 		List<Agency> agencyList = agencyRepository.findAll();
-		List<AgencyResponse> response = agencyList.stream().map(agency -> AgencyResponseMapper.map(agency)).collect(Collectors.toList());
+		List<AgencyResponse> response = agencyList != null ? agencyList.stream().map(agency -> AgencyResponseMapper.map(agency)).collect(Collectors.toList()) : null;
 		return WorkflowResponse.builder().message("Success").status(200).data(response).build();
 	}
 

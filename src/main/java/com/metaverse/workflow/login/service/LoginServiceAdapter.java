@@ -55,8 +55,10 @@ public class LoginServiceAdapter implements LoginService{
 
     @Override
     public WorkflowResponse getUsers() {
+        log.info("users requested entered in service");
         List<User> userList = loginRepository.findAll();
-        List<LoginUserResponse> response = userList.stream().map(user -> LoginUserResponseMapper.mapUser(user)).collect(Collectors.toList());
+        log.info("users list : "+userList.size());
+        List<LoginUserResponse> response = userList != null ? userList.stream().map(user -> LoginUserResponseMapper.mapUser(user)).collect(Collectors.toList()) : null;
         return WorkflowResponse.builder().status(200).message("Success").data(response).build();
     }
 

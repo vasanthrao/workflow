@@ -43,7 +43,7 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public WorkflowResponse getResources() {
 		List<Resource> resourceList = repository.findAll();
-		List<ResourceResponse> response = resourceList.stream().map(resource -> ResourceResponseMapper.map(resource)).collect(Collectors.toList());
+		List<ResourceResponse> response = resourceList != null ? resourceList.stream().map(resource -> ResourceResponseMapper.map(resource)).collect(Collectors.toList()) : null;
 		return WorkflowResponse.builder().message("Success").status(200).data(response).build();
 	}
 

@@ -70,4 +70,12 @@ public class AgencyController {
 		return ResponseEntity.ok(WorkflowResponse.builder().message("Success").status(200).data(response).build());
 	}
 
+	@GetMapping("/agency/locationdetails/{id}")
+	public ResponseEntity<WorkflowResponse> getLocationDetailsByAgencyId(@PathVariable("id") Long id)
+	{
+		Agency agency = service.getAgencyById(id);
+		List<LocationResponse> response = AgencyResponseMapper.mapLocationDetails(agency.getLocations());
+		return ResponseEntity.ok(WorkflowResponse.builder().message("Success").status(200).data(response).build());
+	}
+
 }

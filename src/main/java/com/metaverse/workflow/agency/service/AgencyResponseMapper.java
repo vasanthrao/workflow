@@ -1,6 +1,7 @@
 package com.metaverse.workflow.agency.service;
 
 import com.metaverse.workflow.location.service.LocationResponse;
+import com.metaverse.workflow.location.service.LocationResponseMapper;
 import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.participant.service.ParticipantResponseMapper;
@@ -57,6 +58,11 @@ public class AgencyResponseMapper {
         return participantList != null ? participantList.stream().map(participant ->
                 ParticipantResponseMapper.map(participant))
                 .collect(Collectors.toList()) : null;
+    }
+
+    public static List<LocationResponse> mapLocationDetails(List<Location> locationList) {
+        return locationList != null ? locationList.stream().map(location ->
+                LocationResponseMapper.map(location)).collect(Collectors.toList()) : null;
     }
 
 }

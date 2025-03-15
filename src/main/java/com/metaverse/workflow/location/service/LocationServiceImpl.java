@@ -52,7 +52,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public WorkflowResponse getLocations() {
         List<Location> locationList = repository.findAll();
-        List<LocationResponse> response = locationList.stream().map(location -> LocationResponseMapper.map(location)).collect(Collectors.toList());
+        List<LocationResponse> response = locationList != null ? locationList.stream().map(location -> LocationResponseMapper.map(location)).collect(Collectors.toList()) : null;
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
 
     }

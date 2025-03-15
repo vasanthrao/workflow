@@ -52,7 +52,7 @@ public class ParticipantServiceAdapter implements ParticipantService{
 	@Override
 	public WorkflowResponse getParticipants() {
 		List<Participant> participantList = participantRepository.findAll();
-		List<ParticipantResponse> response = participantList.stream().map(participant -> ParticipantResponseMapper.map(participant)).collect(Collectors.toList());
+		List<ParticipantResponse> response = participantList != null ? participantList.stream().map(participant -> ParticipantResponseMapper.map(participant)).collect(Collectors.toList()) : null;
 		return WorkflowResponse.builder().message("Success").status(200).data(response).build();
 	}
 
