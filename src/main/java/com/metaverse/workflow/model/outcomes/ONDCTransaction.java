@@ -12,40 +12,38 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_ondc_registration")
-public class ONDCRegistration {
+@Table(name = "outcome_ondc_transaction")
+public class ONDCTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ondc_registration_id")
-    private Long ondcRegistrationId;
-    @Column(name = "ondc_registration_No")
-    private String ondcRegistrationNo;
-    @Column(name = "ondc_registration_Date")
-    private Date ondcRegistrationDate;
+    @Column(name = "ondc_transaction_id")
+    private Long ondcTransactionId;
+    @ManyToOne
+    @JoinColumn(name = "ondc_registration_id")
+    private ONDCRegistration ondcRegistration;
+    @Column(name = "product_name")
+    private String productName;
+    @Column(name = "transaction_date")
+    private Date transactionDate;
+    @Column(name = "product_quantity")
+    private Integer productQuantity;
+    @Column(name = "product_units")
+    private String productUnits;
+    @Column(name = "transaction_type")
+    private String transactionType;
+    @Column(name = "transaction_value")
+    private Double transactionValue;
     @Column(name = "created_on", insertable = true, updatable = false)
     @CreationTimestamp
     private Date createdOn;
     @Column(name = "updated_on", insertable = false, updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
-    @ManyToOne
-    @JoinColumn(name = "agency_id")
-    private Agency agency;
-    @ManyToOne
-    @JoinColumn(name = "participant_id")
-    private Participant participant;
-    @ManyToOne
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
-
-    @OneToMany(mappedBy = "ondcRegistration", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ONDCTransaction> ondcTransactionList;
 
 }

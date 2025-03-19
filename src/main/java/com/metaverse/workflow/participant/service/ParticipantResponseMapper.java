@@ -5,6 +5,7 @@ import com.metaverse.workflow.model.Participant;
 
 import java.util.stream.Collectors;
 
+import static com.metaverse.workflow.common.util.DateUtil.dateToString;
 public class ParticipantResponseMapper {
 	
 	public static ParticipantResponse map(Participant participant)
@@ -31,4 +32,14 @@ public class ParticipantResponseMapper {
 				.organizationName(participant.getOrganization().getOrganizationName())
 				.build();
 	}
+
+	public static ParticipantResponseForESDPTraining map1(Participant participant)
+	{
+		return ParticipantResponseForESDPTraining.builder()
+				.participantName(participant.getParticipantName())
+				.organizationName(participant.getOrganization().getOrganizationName())
+				.programDates(participant.getPrograms().stream().map(program -> dateToString(program.getStartDate(), "dd-mm-yyyy"))
+						.collect(Collectors.toList())).build();
+	}
+
 }

@@ -67,5 +67,6 @@ public class Participant {
 	@Column(name = "updated_on",insertable = false,updatable = true)
 	@UpdateTimestamp
 	private Date updatedOn;
-
+	@Column(name = "member_id",unique = true)
+	private String memberId;
 }

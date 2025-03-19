@@ -92,5 +92,11 @@ public class Organization {
     @Column(name="updated_on",insertable = false,updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
-    
+    @ManyToMany
+    @JoinTable(
+            name = "organization_sector",
+            joinColumns = @JoinColumn(name = "organization_id"),
+            inverseJoinColumns = @JoinColumn(name = "sector_id")
+    )
+    private List<Sector> sectors;
 }

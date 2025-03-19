@@ -5,10 +5,7 @@ import com.metaverse.workflow.participant.service.ParticipantRequest;
 import com.metaverse.workflow.participant.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ParticipantController {
@@ -27,6 +24,25 @@ public class ParticipantController {
 	public ResponseEntity<WorkflowResponse> getParticipants()
 	{
 		WorkflowResponse response = participantService.getParticipants();
+		return ResponseEntity.ok(response);
+	}
+	@GetMapping("getParticipantsByMobileNo/{mobileNo}")
+	public ResponseEntity<WorkflowResponse> getParticipantsByMobileNo(@PathVariable Long mobileNo)
+	{
+		WorkflowResponse response=	participantService.getParticipantsByMobileNo(mobileNo);
+		return ResponseEntity.ok(response);
+	}
+	@GetMapping("/getOrganizationByParticipant/{participantId}")
+	public ResponseEntity<WorkflowResponse> getOrganizationByParticipant(@PathVariable Long participantId)
+	{
+		WorkflowResponse response = participantService.getOrganizationByParticipant(participantId);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/getParticipantByTypeOfProgram/{typeOfProgram}")
+	public ResponseEntity<WorkflowResponse> getParticipantByTypeOfProgram(@PathVariable String typeOfProgram)
+	{
+		WorkflowResponse response = participantService.getParticipantByTypeOfProgram(typeOfProgram);
 		return ResponseEntity.ok(response);
 	}
 

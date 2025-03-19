@@ -5,7 +5,9 @@ import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.model.outcomes.ONDCRegistration;
+import com.metaverse.workflow.model.outcomes.ONDCTransaction;
 import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
+import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
 
 public class OutcomeRequestMapper {
 
@@ -18,4 +20,17 @@ public class OutcomeRequestMapper {
                 .participant(participant)
                 .build();
     }
+
+    public static ONDCTransaction mapOndcTransaction(ONDCTransactionRequest request, ONDCRegistration ondcRegistration) {
+        return ONDCTransaction.builder()
+                .ondcRegistration(ondcRegistration)
+                .transactionDate(DateUtil.stringToDate(request.getTransactionDate(), "dd-mm-yyyy"))
+                .transactionType(request.getTransactionType())
+                .transactionValue(request.getTransactionValue())
+                .productName(request.getProductName())
+                .productUnits(request.getProductUnits())
+                .productQuantity(request.getProductQuantity())
+                .build();
+    }
+
 }

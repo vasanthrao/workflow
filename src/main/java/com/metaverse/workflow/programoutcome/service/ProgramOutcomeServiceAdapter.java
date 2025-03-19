@@ -10,7 +10,9 @@ import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
+import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
 import com.metaverse.workflow.programoutcome.repository.ONDCRegistrationRepository;
+import com.metaverse.workflow.programoutcome.repository.ONDCTransactionRepository;
 import com.metaverse.workflow.programoutcome.repository.ProgramOutcomeTableRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.parser.JSONParser;
@@ -32,6 +34,9 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
     @Autowired
     ONDCRegistrationRepository ondcRegistrationRepository;
+
+    @Autowired
+    ONDCTransactionRepository ondcTransactionRepository;
 
     @Autowired
     AgencyRepository agencyRepository;
@@ -82,6 +87,14 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 ondcRegistrationRepository.save(OutcomeRequestMapper.mapOndcRegistration(request, agency.get(), participant.get(), organization.get()));
                 status = outcomeName + " Saved Successfully.";
                 break;
+            case "ONDCTransaction":
+                ONDCTransactionRequest ondcTransactionRequest = parser.parse(data, ONDCTransactionRequest.class);
+                Optional<ONDCRegistration> ondcRegistration = ondcRegistrationRepository.findById(ondcTransactionRequest.getOndcRegistrationId());
+                if (!ondcRegistration.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Ondc Registration").build();
+                ondcTransactionRepository.save(OutcomeRequestMapper.mapOndcTransaction(ondcTransactionRequest, ondcRegistration.get()));
+                status = outcomeName + " Saved Successfully.";
+                break;
         }
         return WorkflowResponse.builder().status(200).message("Success").data(status).build();
     }
@@ -94,8 +107,12 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             return "textbox";
         } else if (outcomeClass.getName().equals("java.lang.Long") || outcomeClass.getName().equals("java.lang.Integer")) {
             return "number";
+        } else if (outcomeClass.getName().equals("java.lang.Double") || outcomeClass.getName().equals("java.lang.Float")) {
+            return "decimalnumber";
+        } else if (outcomeClass.getName().equals("java.lang.Character")) {
+            return "character";
         }
-        return null;
+        return "";
     }
 
     private String getFieldDisplayName(String fieldName) {

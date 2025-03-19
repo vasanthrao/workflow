@@ -2,6 +2,7 @@ package com.metaverse.workflow.programoutcome.service;
 
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OutcomeDetails {
 
     private List<OutcomeDataSet> columns;
@@ -20,6 +22,7 @@ public class OutcomeDetails {
     @AllArgsConstructor
     @Getter
     @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OutcomeDataSet {
         private String fieldName;
         private String fieldDisplayName;
