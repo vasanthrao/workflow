@@ -1,15 +1,13 @@
-package com.metaverse.workflow.ESDPTrainingProgramApplication.service;
+package com.metaverse.workflow.ESDPTraining.service;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
-@Setter
 @Getter
-
-public class ESDPTrainingProgramRequest {
-
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ESDPTrainingRequest {
     private Long participantId;
     private Long organizationId;
     private Long agencyId;

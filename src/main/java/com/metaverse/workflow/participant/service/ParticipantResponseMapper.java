@@ -33,10 +33,12 @@ public class ParticipantResponseMapper {
 				.build();
 	}
 
-	public static ParticipantResponseForESDPTraining map1(Participant participant)
+	public static ParticipantResponseForESDPTraining mapForESDPTraing(Participant participant)
 	{
 		return ParticipantResponseForESDPTraining.builder()
+				.participantId(participant.getParticipantId())
 				.participantName(participant.getParticipantName())
+				.organizationId(participant.getOrganization().getOrganizationId())
 				.organizationName(participant.getOrganization().getOrganizationName())
 				.programDates(participant.getPrograms().stream().map(program -> dateToString(program.getStartDate(), "dd-mm-yyyy"))
 						.collect(Collectors.toList())).build();

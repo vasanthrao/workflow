@@ -28,6 +28,8 @@ public class DistrictUtil {
     public static Map<Integer, District> districtEntityList;
     public static Map<Integer, Mandal> mandalEntityList;
 
+
+
     static {
         WorkflowResponse response = districtService.getAllDistricts();
         List<DistrictResponce> districts = (List<DistrictResponce>) response.getData();
@@ -42,6 +44,8 @@ public class DistrictUtil {
 
         List<Mandal> mandals1 = districtService.getAllMandalsEntity();
         mandalEntityList = mandals1.stream().collect(Collectors.toMap(mandal -> mandal.getMandalId(), mandal -> mandal));
+
+
     }
 
 

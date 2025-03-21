@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Builder
 @Getter
@@ -19,7 +19,7 @@ public class CounsellorAllotment {
 
 
     @ManyToOne
-    @JoinColumn(name="counsellor_registration_id", referencedColumnName="counsellorRegistrationId")
+    @JoinColumn(name="counsellor_registration_id", referencedColumnName="counsellor_registration_id")
     private CounsellorRegistration counsellorRegistration;
 
 
@@ -33,11 +33,11 @@ public class CounsellorAllotment {
     private Mandal allotedMandal;
 
     @Column(name="start_date")
-    private LocalDate startDate;
+    private Date startDate;
 
     @Column(name="end_date")
-    private LocalDate endDate;
+    private Date endDate;
 
     @Column(name="dateOfSelection")
-    LocalDate dateOfSelection;
+    Date dateOfSelection;
 }

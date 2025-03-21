@@ -11,9 +11,11 @@ import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
 import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
+import com.metaverse.workflow.programoutcome.dto.StartupsOnFormalizationRegistrationRequest;
 import com.metaverse.workflow.programoutcome.repository.ONDCRegistrationRepository;
 import com.metaverse.workflow.programoutcome.repository.ONDCTransactionRepository;
 import com.metaverse.workflow.programoutcome.repository.ProgramOutcomeTableRepository;
+import com.metaverse.workflow.programoutcome.repository.StartupsOnFormalizationRegistrationRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -37,6 +39,9 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
     @Autowired
     ONDCTransactionRepository ondcTransactionRepository;
+
+    @Autowired
+    StartupsOnFormalizationRegistrationRepository startupsOnFormalizationRegistrationRepository;
 
     @Autowired
     AgencyRepository agencyRepository;
@@ -73,7 +78,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
         String status = "";
         JSONParser parser = new JSONParser();
         switch (outcomeName) {
-            case "ONDCRegistration":
+            case "ONDCRegistration": {
                 ONDCRegistrationRequest request = parser.parse(data, ONDCRegistrationRequest.class);
                 Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
                 if (!agency.isPresent())
@@ -87,7 +92,8 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 ondcRegistrationRepository.save(OutcomeRequestMapper.mapOndcRegistration(request, agency.get(), participant.get(), organization.get()));
                 status = outcomeName + " Saved Successfully.";
                 break;
-            case "ONDCTransaction":
+            }
+            case "ONDCTransaction": {
                 ONDCTransactionRequest ondcTransactionRequest = parser.parse(data, ONDCTransactionRequest.class);
                 Optional<ONDCRegistration> ondcRegistration = ondcRegistrationRepository.findById(ondcTransactionRequest.getOndcRegistrationId());
                 if (!ondcRegistration.isPresent())
@@ -95,6 +101,22 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 ondcTransactionRepository.save(OutcomeRequestMapper.mapOndcTransaction(ondcTransactionRequest, ondcRegistration.get()));
                 status = outcomeName + " Saved Successfully.";
                 break;
+            }
+            case "StartupsOnFormalizationRegistration"  : {
+                StartupsOnFormalizationRegistrationRequest startupsOnFormalizationRegistrationRequest = parser.parse(data, StartupsOnFormalizationRegistrationRequest.class);
+                Optional<Agency> agency = agencyRepository.findById(startupsOnFormalizationRegistrationRequest.getAgencyId());
+                if (!agency.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
+                Optional<Participant> participant = participantRepository.findById(startupsOnFormalizationRegistrationRequest.getParticipantId());
+                if (!participant.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
+                Optional<Organization> organization = organizationRepository.findById(startupsOnFormalizationRegistrationRequest.getOrganizationId());
+                if (!organization.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
+                startupsOnFormalizationRegistrationRepository.save(OutcomeRequestMapper.mapStartupsOnFormalizationRegistration(startupsOnFormalizationRegistrationRequest, agency.get(), participant.get(), organization.get()));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
         }
         return WorkflowResponse.builder().status(200).message("Success").data(status).build();
     }

@@ -1,16 +1,16 @@
 package com.metaverse.workflow.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @NoArgsConstructor
@@ -32,7 +32,13 @@ public class Activity {
     @UpdateTimestamp
     private Date updatedOn;
 
-    @ManyToMany(cascade = CascadeType.ALL,targetEntity = SubActivity.class,mappedBy = "activities")
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "activity_sub_activity",
+            joinColumns = @JoinColumn(name = "activity_id"),
+            inverseJoinColumns = @JoinColumn(name = "sub_activity_id")
+    )  @JsonManagedReference
     private List<SubActivity> subActivities;
+
 
 }

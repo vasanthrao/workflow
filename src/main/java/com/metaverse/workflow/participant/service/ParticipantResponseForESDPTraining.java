@@ -10,5 +10,7 @@ public class ParticipantResponseForESDPTraining {
 
     private String participantName;
     private String organizationName;
+    private Long participantId;
+    private Long organizationId;
     private List<String> programDates;
 }

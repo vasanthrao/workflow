@@ -1,18 +1,14 @@
-package com.metaverse.workflow.ESDPTrainingProgramApplication.service;
+package com.metaverse.workflow.ESDPTraining.service;
 
 import com.metaverse.workflow.common.util.DateUtil;
-import com.metaverse.workflow.model.Agency;
-import com.metaverse.workflow.model.ESDPTrainingApplication;
-import com.metaverse.workflow.model.Organization;
-import com.metaverse.workflow.model.Participant;
+import com.metaverse.workflow.model.*;
 
-public class ESDPTrainingProgramRequestMapper {
-
-
-    public static ESDPTrainingApplication map(ESDPTrainingProgramRequest request, Organization organization,
-                                              Participant participant, Agency agency)
+public class ESDPTrainingRequestMapper
+{
+    public static ESDPTraining map(ESDPTrainingRequest request, Organization organization,
+                                   Participant participant, Agency agency)
     {
-        return ESDPTrainingApplication.builder()
+        return ESDPTraining.builder()
                 .dateOfAwarenessProgram(DateUtil.stringToDate(request.getDateOfAwarenessProgram(),"dd-mm-yyyy"))
                 .selectedForTraining(request.getSelectedForTraining())
                 .interestedInAttending15Days(request.getInterestedInAttending15Days())

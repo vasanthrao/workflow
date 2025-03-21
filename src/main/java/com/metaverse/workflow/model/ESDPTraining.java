@@ -7,48 +7,48 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "ESDPTrainingApplication")
-public class ESDPTrainingApplication {
+@Table(name = "esdp_training")
+public class ESDPTraining {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ESDPTrainingApplicationId")
+    @Column(name = "esdp_training_id")
     private Long ESDPTrainingApplicationId;
 
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "participantId", referencedColumnName = "participant_id")
+    @JoinColumn(name = "participant_id", referencedColumnName = "participant_id")
     private Participant participantId;
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "organizationId", referencedColumnName = "organization_id")
+    @JoinColumn(name = "organization_id", referencedColumnName = "organization_id")
     private Organization organizationId;
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "agencyId", referencedColumnName = "agency_id")
+    @JoinColumn(name = "agency_id", referencedColumnName = "agency_id")
     private Agency agency;
 
 
-    @Column(name = "dateOfAwarenessProgram")
+    @Column(name = "dateofawareness_program")
     private Date dateOfAwarenessProgram;
 
-    @Column(name = "interestedInAttending15Days")
+    @Column(name = "interested_inAttending_15days")
     private String interestedInAttending15Days;
 
     @Column(name = "dateOfApplicationReceived")
     private Date dateOfApplicationReceived;
 
-    @Column(name = "selectedForTraining")
+    @Column(name = "selectedfor_training")
     private String selectedForTraining;
 
 
@@ -59,5 +59,4 @@ public class ESDPTrainingApplication {
     @Column(name="updated_on", insertable = false, updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
-
 }

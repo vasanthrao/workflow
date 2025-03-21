@@ -14,4 +14,6 @@ public interface DistrictService {
     WorkflowResponse getAllMandals();
     List<District> getAllDistrictsEntity();
     List<Mandal> getAllMandalsEntity();
+
+    Mandal getMandalById(Integer id);
 }

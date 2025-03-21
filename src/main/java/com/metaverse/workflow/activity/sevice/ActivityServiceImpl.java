@@ -24,12 +24,13 @@ public class ActivityServiceImpl implements ActivityService{
 
     @Override
     public WorkflowResponse saveActivity(ActivityRequest activityRequest) {
-        Activity activity=Activity.builder().activityId(activityRequest.getActivityId())
-                .activityName(activityRequest.getActivityName())
-                .createdOn(activityRequest.getCreatedOn())
-                .updatedOn(activityRequest.getUpdatedOn())
-                .subActivities(activityRequest.getSubActivities())
-                .build();
+        List<SubActivity> savedSubActivities = activityRequest.getSubActivities()
+                .stream()
+                .map(subActivityRepository::save)
+                .toList();
+
+        Activity activity=ActivityRequestMapper.map(activityRequest);
+
         activityRepository.save(activity);
         return WorkflowResponse.builder()
                 .message("Activity saved successfully")
@@ -40,7 +41,10 @@ public class ActivityServiceImpl implements ActivityService{
     @Override
     public WorkflowResponse getSubActivityById(Long id) {
         Optional<SubActivity> subActivity = subActivityRepository.findById(id);
-
+        if(!subActivity.isPresent())return WorkflowResponse.builder()
+                .message("SubActivity Not found")
+                .status(400)
+                .build();
         SubActivityResponse  response = SubActivityResponseMapper.map(subActivity.get());
         return WorkflowResponse.builder()
                 .message("Success")
@@ -53,7 +57,10 @@ public class ActivityServiceImpl implements ActivityService{
     @Override
     public WorkflowResponse getActivityById(Long id) {
         Optional<Activity> activity = activityRepository.findById(id);
-
+        if(!activity.isPresent())return WorkflowResponse.builder()
+                .message("Activity Not found")
+                .status(400)
+                .build();
         ActivityResponse response = ActivityResponseMapper.map(activity.get());
         return WorkflowResponse.builder()
                 .message("Success")

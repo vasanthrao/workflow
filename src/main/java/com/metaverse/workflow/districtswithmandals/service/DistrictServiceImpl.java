@@ -101,4 +101,11 @@ public class DistrictServiceImpl implements DistrictService {
    public  List<Mandal> getAllMandalsEntity(){
         return mandalRepositrory.findAll();
     }
+
+
+
+    @Override
+    public Mandal getMandalById(Integer id) {
+        return mandalRepositrory.findById(id).get();
+    }
 }

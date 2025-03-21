@@ -1,20 +1,17 @@
 package com.metaverse.workflow.participant.service;
 
-import com.metaverse.workflow.agency.service.AgencyResponse;
-import com.metaverse.workflow.agency.service.AgencyResponseMapper;
 import com.metaverse.workflow.common.response.WorkflowResponse;
-import com.metaverse.workflow.model.Agency;
+import com.metaverse.workflow.model.Organization;
+import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.model.Program;
 import com.metaverse.workflow.organization.service.OrganizationResponse;
 import com.metaverse.workflow.organization.service.OrganizationResponseMapper;
-import com.metaverse.workflow.program.repository.ProgramRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.metaverse.workflow.model.Organization;
-import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.organization.service.OrganizationService;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
+import com.metaverse.workflow.program.repository.ProgramRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ParticipantServiceAdapter implements ParticipantService {
 
     @Autowired
@@ -64,7 +62,8 @@ public class ParticipantServiceAdapter implements ParticipantService {
     public WorkflowResponse getParticipantsByMobileNo(Long mobileNo) {
 
         Participant participant = participantRepository.findByMobileNo(mobileNo);
-        ParticipantResponseForESDPTraining response = ParticipantResponseMapper.map1(participant);
+        if(participant == null)return WorkflowResponse.builder().message("Participant Not found").status(400).build();
+        ParticipantResponseForESDPTraining response= ParticipantResponseMapper.mapForESDPTraing(participant);
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
     }
 
@@ -92,8 +91,10 @@ public class ParticipantServiceAdapter implements ParticipantService {
     }
 
     public WorkflowResponse getParticipantByTypeOfProgram(String typeOfProgram) {
+        log.info("getparticipant on mobaile number");
         List<Participant> participantList = participantRepository.findByProgramType(typeOfProgram);
-        if (participantList.isEmpty()) return WorkflowResponse.builder()
+        if (participantList.isEmpty())
+            return WorkflowResponse.builder()
                 .message("Not found such type of program.")
                 .status(400).build();
         List<ParticipantResponse> response = participantList.stream().map(participant -> ParticipantResponseMapper.map(participant)).collect(Collectors.toList());

@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Setter
@@ -16,14 +16,14 @@ import java.util.Date;
 public class CounsellorRegistration {
 
     @Id
-    @Column(name="counsellorRegistrationId")
+    @Column(name="counsellor_registration_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long counsellorRegistrationId;
 
-    @Column(name="dateOfRegistration")
+    @Column(name="dateOf_registration")
     private Date dateOfRegistration;
 
-    @Column(name="nameOfCounsellor")
+    @Column(name="nameOf_counsellor")
     private String nameOfCounsellor;
 
     @Column(name="dateOfBirth")
@@ -32,10 +32,10 @@ public class CounsellorRegistration {
     @Column(name="gender")
     private String gender;
 
-    @Column(name="socialCategory")
+    @Column(name="socialcategory")
     private String socialCategory;
 
-    @Column(name="educationalQualification")
+    @Column(name="educational_qualification")
     private String educationalQualification;
 
 
@@ -91,5 +91,8 @@ public class CounsellorRegistration {
     private String emailId;
 
     @Column(name="dateOfSelection")
-    LocalDate dateOfSelection;
+    Date dateOfSelection;
+
+    @OneToMany(mappedBy = "counsellorRegistration", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CounsellorAllotment> counsellorAllotments ;
 }
