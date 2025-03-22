@@ -3,4 +3,4 @@
 insert into agency (agency_id, agency_name) values (1,'ALEAP'),(2,'WeHub'),(3,'TIHCL');
 
 -- Insert program outcome tables
-insert into program_outcome_tables (outcome_table_id, outcome_table_display_name, outcome_table_name) values (1, 'ONDC Registration', 'ONDCRegistration'),(1, 'ONDC Transaction', 'ONDCTransaction');
+insert into program_outcome_tables (outcome_table_id, outcome_table_display_name, outcome_table_name) values (1, 'ONDC Registration', 'ONDCRegistration'),(2, 'ONDC Transaction', 'ONDCTransaction');
