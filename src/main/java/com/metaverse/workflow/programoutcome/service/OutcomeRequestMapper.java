@@ -6,7 +6,7 @@ import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.model.outcomes.ONDCRegistration;
 import com.metaverse.workflow.model.outcomes.ONDCTransaction;
-import com.metaverse.workflow.model.outcomes.StartupsOnFormalizationRegistration;
+import com.metaverse.workflow.model.outcomes.UdyamRegistration;
 import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
 import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
 import com.metaverse.workflow.programoutcome.dto.StartupsOnFormalizationRegistrationRequest;
@@ -35,9 +35,9 @@ public class OutcomeRequestMapper {
                 .build();
     }
 
-    public static StartupsOnFormalizationRegistration mapStartupsOnFormalizationRegistration(StartupsOnFormalizationRegistrationRequest request, Agency agency, Participant participant, Organization organization)
+    public static UdyamRegistration mapStartupsOnFormalizationRegistration(StartupsOnFormalizationRegistrationRequest request, Agency agency, Participant participant, Organization organization)
     {
-        return StartupsOnFormalizationRegistration.builder()
+        return UdyamRegistration.builder()
                 .udyamRegistationDate(DateUtil.stringToDate(request.getUdyamRegistrationDate(),"dd,MM,yyyy"))
                 .udyamRegistrationNo(request.getUdyamRegistrationNo())
                 .agency(agency)

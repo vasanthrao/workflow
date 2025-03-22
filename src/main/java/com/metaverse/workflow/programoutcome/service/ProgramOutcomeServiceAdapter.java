@@ -15,7 +15,7 @@ import com.metaverse.workflow.programoutcome.dto.StartupsOnFormalizationRegistra
 import com.metaverse.workflow.programoutcome.repository.ONDCRegistrationRepository;
 import com.metaverse.workflow.programoutcome.repository.ONDCTransactionRepository;
 import com.metaverse.workflow.programoutcome.repository.ProgramOutcomeTableRepository;
-import com.metaverse.workflow.programoutcome.repository.StartupsOnFormalizationRegistrationRepository;
+import com.metaverse.workflow.programoutcome.repository.UdyamResistrationRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -41,7 +41,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     ONDCTransactionRepository ondcTransactionRepository;
 
     @Autowired
-    StartupsOnFormalizationRegistrationRepository startupsOnFormalizationRegistrationRepository;
+    UdyamResistrationRepository startupsOnFormalizationRegistrationRepository;
 
     @Autowired
     AgencyRepository agencyRepository;
@@ -102,7 +102,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
-            case "StartupsOnFormalizationRegistration"  : {
+            case "UdyamRegistration"  : {
                 StartupsOnFormalizationRegistrationRequest startupsOnFormalizationRegistrationRequest = parser.parse(data, StartupsOnFormalizationRegistrationRequest.class);
                 Optional<Agency> agency = agencyRepository.findById(startupsOnFormalizationRegistrationRequest.getAgencyId());
                 if (!agency.isPresent())

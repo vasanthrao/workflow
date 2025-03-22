@@ -18,8 +18,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "startups_on_formalization_registration")
-public class StartupsOnFormalizationRegistration {
+@Table(name = "udyam_registration")
+public class UdyamRegistration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
