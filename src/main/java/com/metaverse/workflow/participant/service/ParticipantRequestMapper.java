@@ -31,4 +31,26 @@ public class ParticipantRequestMapper {
 				.programs(programs)
 				.build();
 	}
+
+	public static Participant mapAsprient(ParticipantRequest request)
+	{
+		return Participant.builder()
+				.participantName(request.getParticipantName())
+				.gender(request.getGender())
+				.category(request.getCategory())
+				.disability(request.getDisability())
+				.aadharNo(request.getAadharNo())
+				.mobileNo(request.getMobileNo())
+				.email(request.getEmail())
+				.designation(request.getDesignation())
+				.isParticipatedBefore(request.getIsParticipatedBefore())
+				.previousParticipationDetails(request.getPreviousParticipationDetails())
+				.preTrainingAssessmentConducted(request.getPreTrainingAssessmentConducted())
+				.postTrainingAssessmentConducted(request.getPostTrainingAssessmentConducted())
+				.isCertificateIssued(request.getIsCertificateIssued())
+				.certificateIssueDate(DateUtil.stringToDate(request.getCertificateIssueDate(), "dd-mm-yyyy"))
+				.needAssessmentMethodology(request.getNeedAssessmentMethodology())
+				.build();
+	}
+
 }

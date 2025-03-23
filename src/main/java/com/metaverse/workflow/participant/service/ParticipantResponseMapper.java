@@ -65,4 +65,26 @@ public class ParticipantResponseMapper {
 				.build();
 	}
 
+	public static ParticipantResponse mapAsprient(Participant participant)
+	{
+		return ParticipantResponse.builder()
+				.participantId(participant.getParticipantId())
+				.participantName(participant.getParticipantName())
+				.gender(participant.getGender())
+				.category(participant.getCategory())
+				.disability(participant.getDisability())
+				.aadharNo(participant.getAadharNo())
+				.mobileNo(participant.getMobileNo())
+				.email(participant.getEmail())
+				.designation(participant.getDesignation())
+				.isParticipatedBefore(participant.getIsParticipatedBefore())
+				.previousParticipationDetails(participant.getPreviousParticipationDetails())
+				.preTrainingAssessmentConducted(participant.getPreTrainingAssessmentConducted())
+				.postTrainingAssessmentConducted(participant.getPostTrainingAssessmentConducted())
+				.isCertificateIssued(participant.getIsCertificateIssued())
+				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(), "dd-mm-yyyy"))
+				.needAssessmentMethodology(participant.getNeedAssessmentMethodology())
+				.build();
+	}
+
 }

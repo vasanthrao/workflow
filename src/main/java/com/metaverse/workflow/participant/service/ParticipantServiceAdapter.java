@@ -32,22 +32,37 @@ public class ParticipantServiceAdapter implements ParticipantService {
 
     @Override
     public WorkflowResponse saveParticipant(ParticipantRequest request) {
-        List<Program> programList = new ArrayList<>();
-        Set<Long> programIds = request.getProgramIds();
-        for (Long id : programIds) {
-            Optional<Program> program = programRepository.findById(id);
-            if (program.isPresent()) {
-                programList.add(program.get());
+        List<Program> programList = null;
+        Optional<Organization> organization = Optional.empty();
+        Participant participant;
+        if (request.getProgramIds() != null && request.getProgramIds().size() > 0) {
+            programList = new ArrayList<>();
+            Set<Long> programIds = request.getProgramIds();
+            for (Long id : programIds) {
+                Optional<Program> program = programRepository.findById(id);
+                if (program.isPresent()) {
+                    programList.add(program.get());
+                }
             }
+            if (programList.size() == 0)
+                return WorkflowResponse.builder().status(400).message("Programs not found").build();
         }
-        if (programList.size() == 0)
-            return WorkflowResponse.builder().status(400).message("Programs not found").build();
-        Optional<Organization> organization = organizationService.getOrganizationById(request.getOrganizationId());
-        if (!organization.isPresent())
-            return WorkflowResponse.builder().status(400).message("Organization not found").build();
-        Participant participant = ParticipantRequestMapper.map(request, organization.get(), programList);
-        Participant savedParticipant = participantRepository.save(participant);
-        ParticipantResponse participantResponse = ParticipantResponseMapper.map(savedParticipant);
+        if (request.getOrganizationId() != null) {
+            organization = organizationService.getOrganizationById(request.getOrganizationId());
+            if (!organization.isPresent())
+                return WorkflowResponse.builder().status(400).message("Organization not found").build();
+        }
+        Participant savedParticipant;
+        ParticipantResponse participantResponse;
+        if (programList == null) {
+            participant = ParticipantRequestMapper.mapAsprient(request);
+            savedParticipant = participantRepository.save(participant);
+            participantResponse = ParticipantResponseMapper.mapAsprient(savedParticipant);
+        } else {
+            participant = ParticipantRequestMapper.map(request, organization.get(), programList);
+            savedParticipant = participantRepository.save(participant);
+            participantResponse = ParticipantResponseMapper.map(savedParticipant);
+        }
         return WorkflowResponse.builder().status(200).message("Success").data(participantResponse).build();
     }
 
