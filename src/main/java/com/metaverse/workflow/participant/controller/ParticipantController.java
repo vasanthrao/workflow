@@ -1,5 +1,6 @@
 package com.metaverse.workflow.participant.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.participant.service.ParticipantRequest;
 import com.metaverse.workflow.participant.service.ParticipantService;
