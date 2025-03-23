@@ -33,15 +33,36 @@ public class ParticipantResponseMapper {
 				.build();
 	}
 
-	public static ParticipantResponseForESDPTraining mapForESDPTraing(Participant participant)
+	public static ParticipantResponseForESDPTraining mapForESDPTraining(Participant participant)
 	{
 		return ParticipantResponseForESDPTraining.builder()
-				.participantId(participant.getParticipantId())
-				.participantName(participant.getParticipantName())
 				.organizationId(participant.getOrganization().getOrganizationId())
 				.organizationName(participant.getOrganization().getOrganizationName())
+				.organizationCategory(participant.getOrganization().getOrganizationCategory())
+				.organizationType(participant.getOrganization().getOrganizationType())
+				.nameOfTheSHG(participant.getOrganization().getNameOfTheSHG())
+				.startupCertificateNo(participant.getOrganization().getStartupCertificateNo())
+				.natureOfStartup(participant.getOrganization().getNatureOfStartup())
+				.areasOfWorking(participant.getOrganization().getAreasOfWorking())
 				.programDates(participant.getPrograms().stream().map(program -> dateToString(program.getStartDate(), "dd-mm-yyyy"))
-						.collect(Collectors.toList())).build();
+						.collect(Collectors.toList()))
+				.participantId(participant.getParticipantId())
+				.participantName(participant.getParticipantName())
+				.gender(participant.getGender())
+				.category(participant.getCategory())
+				.disability(participant.getDisability())
+				.aadharNo(participant.getAadharNo())
+				.mobileNo(participant.getMobileNo())
+				.email(participant.getEmail())
+				.designation(participant.getDesignation())
+				.isParticipatedBefore(participant.getIsParticipatedBefore())
+				.previousParticipationDetails(participant.getPreviousParticipationDetails())
+				.preTrainingAssessmentConducted(participant.getPreTrainingAssessmentConducted())
+				.postTrainingAssessmentConducted(participant.getPostTrainingAssessmentConducted())
+				.isCertificateIssued((participant.getIsCertificateIssued()))
+				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(),"dd-mm-yyyy"))
+				.needAssessmentMethodology(participant.getNeedAssessmentMethodology())
+				.build();
 	}
 
 }
