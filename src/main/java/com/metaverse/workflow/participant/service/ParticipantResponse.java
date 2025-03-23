@@ -3,13 +3,16 @@ package com.metaverse.workflow.participant.service;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.metaverse.workflow.model.Organization;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ParticipantResponse {
 	private Long participantId;
 	private String participantName;
