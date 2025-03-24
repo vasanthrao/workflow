@@ -26,7 +26,7 @@ public class CounsellorController {
     }
 
     @GetMapping("/getCounsellorByAllocatedMandal/{id}")
-     public ResponseEntity<WorkflowResponse> getCounsellorByMandal(@PathVariable Integer id) {
+    public ResponseEntity<WorkflowResponse> getCounsellorByMandal(@PathVariable Integer id) {
         WorkflowResponse counsellorResponse = counsellorService.getCounsellerByMandal(id);
         return ResponseEntity.ok(counsellorResponse);
     }

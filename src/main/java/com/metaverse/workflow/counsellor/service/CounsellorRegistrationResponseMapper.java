@@ -32,6 +32,6 @@ public class CounsellorRegistrationResponseMapper {
                 .contactNo(counsellorRegistration.getContactNo())
                 .altContactNo(counsellorRegistration.getAltContactNo())
                 .emailId(counsellorRegistration.getEmailId())
-                 .build();
+                .build();
     }
 }

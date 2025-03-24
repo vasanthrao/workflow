@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "udyam_registration")
+@Table(name = "outcome_udyam_registration")
 public class UdyamRegistration {
 
     @Id

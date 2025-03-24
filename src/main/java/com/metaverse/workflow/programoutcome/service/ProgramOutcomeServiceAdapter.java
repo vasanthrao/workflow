@@ -9,13 +9,11 @@ import com.metaverse.workflow.model.outcomes.ONDCRegistration;
 import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
+import com.metaverse.workflow.programoutcome.dto.CGTMSETransactionRequest;
 import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
 import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
-import com.metaverse.workflow.programoutcome.dto.StartupsOnFormalizationRegistrationRequest;
-import com.metaverse.workflow.programoutcome.repository.ONDCRegistrationRepository;
-import com.metaverse.workflow.programoutcome.repository.ONDCTransactionRepository;
-import com.metaverse.workflow.programoutcome.repository.ProgramOutcomeTableRepository;
-import com.metaverse.workflow.programoutcome.repository.UdyamResistrationRepository;
+import com.metaverse.workflow.programoutcome.dto.UdyamRegistrationRequest;
+import com.metaverse.workflow.programoutcome.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
@@ -41,7 +39,10 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     ONDCTransactionRepository ondcTransactionRepository;
 
     @Autowired
-    UdyamResistrationRepository startupsOnFormalizationRegistrationRepository;
+    UdyamResistrationRepository udyamResistrationRepository;
+
+    @Autowired
+    CGTMSETransactionRepository cgtmseTransactionRepository;
 
     @Autowired
     AgencyRepository agencyRepository;
@@ -110,18 +111,33 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
-            case "UdyamRegistration"  : {
-                StartupsOnFormalizationRegistrationRequest startupsOnFormalizationRegistrationRequest = parser.parse(data, StartupsOnFormalizationRegistrationRequest.class);
-                Optional<Agency> agency = agencyRepository.findById(startupsOnFormalizationRegistrationRequest.getAgencyId());
+            case "UdyamRegistration": {
+                UdyamRegistrationRequest udyamResistrationRequest = parser.parse(data, UdyamRegistrationRequest.class);
+                Optional<Agency> agency = agencyRepository.findById(udyamResistrationRequest.getAgencyId());
                 if (!agency.isPresent())
                     return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
-                Optional<Participant> participant = participantRepository.findById(startupsOnFormalizationRegistrationRequest.getParticipantId());
+                Optional<Participant> participant = participantRepository.findById(udyamResistrationRequest.getParticipantId());
                 if (!participant.isPresent())
                     return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
-                Optional<Organization> organization = organizationRepository.findById(startupsOnFormalizationRegistrationRequest.getOrganizationId());
+                Optional<Organization> organization = organizationRepository.findById(udyamResistrationRequest.getOrganizationId());
                 if (!organization.isPresent())
                     return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
-                startupsOnFormalizationRegistrationRepository.save(OutcomeRequestMapper.mapStartupsOnFormalizationRegistration(startupsOnFormalizationRegistrationRequest, agency.get(), participant.get(), organization.get()));
+                udyamResistrationRepository.save(OutcomeRequestMapper.mapUdyamRegistration(udyamResistrationRequest, agency.get(), participant.get(), organization.get()));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "CGTMSETransaction": {
+                CGTMSETransactionRequest transactionRequest= parser.parse(data,CGTMSETransactionRequest.class);
+                Optional<Agency> agency = agencyRepository.findById(transactionRequest.getAgencyId());
+                if (!agency.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
+                Optional<Participant> participant = participantRepository.findById(transactionRequest.getParticipantId());
+                if (!participant.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
+                Optional<Organization> organization = organizationRepository.findById(transactionRequest.getOrganizationId());
+                if (!organization.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
+                cgtmseTransactionRepository.save(OutcomeRequestMapper.mapCGTMSETransaction(transactionRequest,agency.get(),participant.get(),organization.get()));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }

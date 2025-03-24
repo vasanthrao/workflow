@@ -1,5 +1,6 @@
 package com.metaverse.workflow.participant.service;
 
+import com.metaverse.workflow.model.Sector;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,7 +19,8 @@ public class ParticipantResponseForESDPTraining {
     private String areasOfWorking;
 
     private List<String> programDates;
-
+    private List<Sector> sectors;
+    private String memberId;
     private Long participantId;
     private String participantName;
     private Character gender;

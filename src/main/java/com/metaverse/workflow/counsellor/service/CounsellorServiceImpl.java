@@ -41,8 +41,6 @@ public class CounsellorServiceImpl implements CounsellorService {
         if (!mandal.isPresent()) {
             return WorkflowResponse.builder().message("Mandal not found").status(400).build();
         }
-       //counsellorRegistration.setDistrict(allottedDistrict.get());
-        //counsellorRegistration.setMandal(allottedMandal.get());
 
         counsellorRegistration.setRegistrationMandal(mandal.get());
 
@@ -52,8 +50,6 @@ public class CounsellorServiceImpl implements CounsellorService {
         if (!allocatedMandal.isPresent()) {
             return WorkflowResponse.builder().message("AllortedMandal not found").status(400).build();
         }
-        //counsellorAllotment.setAllotedDistrict(district.get());
-        //counsellorAllotment.setAllotedMandal(mandal.get());
 
         counsellorAllotment.setAllotedMandal(allocatedMandal.get());
         counsellorRegistration.setCounsellorAllotments(Arrays.asList(counsellorAllotment));
@@ -68,9 +64,9 @@ public class CounsellorServiceImpl implements CounsellorService {
 
     @Override
     public WorkflowResponse getAllCounsellors() {
-       List<CounsellorRegistration> counsellorRegistrationList= counsellorRegistrationRepository.findAll();
+        List<CounsellorRegistration> counsellorRegistrationList= counsellorRegistrationRepository.findAll();
 
-      List<CounsellorRegistrationResponse>  counsellorRegistrationResponseList=counsellorRegistrationList.stream().map(counsellorRegistration -> CounsellorRegistrationResponseMapper.map(counsellorRegistration)).collect(Collectors.toList());
+        List<CounsellorRegistrationResponse>  counsellorRegistrationResponseList=counsellorRegistrationList.stream().map(counsellorRegistration -> CounsellorRegistrationResponseMapper.map(counsellorRegistration)).collect(Collectors.toList());
         return WorkflowResponse.builder().message("success").status(200).data(counsellorRegistrationResponseList).build();
     }
 

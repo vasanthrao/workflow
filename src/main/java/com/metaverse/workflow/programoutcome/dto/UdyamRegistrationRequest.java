@@ -7,10 +7,10 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class StartupsOnFormalizationRegistrationRequest {
+public class UdyamRegistrationRequest {
 
-    private String udyamRegistrationDate;
-    private String udyamRegistrationNo;
+    public String udyamRegistrationDate;
+    public String udyamRegistrationNo;
     private Long participantId;
     private Long organizationId;
     private Long agencyId;

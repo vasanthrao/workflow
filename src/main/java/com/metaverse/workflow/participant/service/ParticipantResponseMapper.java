@@ -46,6 +46,8 @@ public class ParticipantResponseMapper {
 				.areasOfWorking(participant.getOrganization().getAreasOfWorking())
 				.programDates(participant.getPrograms().stream().map(program -> dateToString(program.getStartDate(), "dd-mm-yyyy"))
 						.collect(Collectors.toList()))
+				.sectors(participant.getOrganization().getSectors())
+				.memberId(participant.getMemberId())
 				.participantId(participant.getParticipantId())
 				.participantName(participant.getParticipantName())
 				.gender(participant.getGender())
