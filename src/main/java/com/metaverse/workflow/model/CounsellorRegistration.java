@@ -1,9 +1,8 @@
 package com.metaverse.workflow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +13,8 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "counsellor_registration")
 public class CounsellorRegistration {
 
@@ -81,6 +82,7 @@ public class CounsellorRegistration {
     Date dateOfSelection;
 
     @OneToMany(mappedBy = "counsellorRegistration", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<CounsellorAllotment> counsellorAllotments;
 
     @Column(name = "created_on", insertable = true, updatable = false)

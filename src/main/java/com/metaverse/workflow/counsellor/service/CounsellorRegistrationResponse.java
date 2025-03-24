@@ -10,26 +10,30 @@ import lombok.Setter;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CounsellorRegistrationResponse {
-    Long counsellerRegistationId;
-    String dateOfRegistation;
-    String nameOfCounseller;
+    Long counsellorRegistrationId;
+    String dateOfRegistration;
+    String nameOfCounsellor;
     String dateOfBirth;
     String gender;
     String socialCategory;
-    String educatiuonalQulification;
+    String educationalQualification;
     Integer districtId;
+    String districtName;
     Integer mandalId;
-    String vilage;
+    String mandalName;
+    String village;
     String houseNo;
     String streetName;
     Integer pincode;
     String landmark;
-    Integer expriance;
+    Integer experience;
     String designation;
-    String specialzation;
+    String specialization;
     Long contactNo;
     Long altContactNo;
     String emailId;
     Integer allocatedDistrictId;
+    String allocatedDistrictName;
     Integer allocatedMandalId;
+    String allocatedMandalName;
 }
