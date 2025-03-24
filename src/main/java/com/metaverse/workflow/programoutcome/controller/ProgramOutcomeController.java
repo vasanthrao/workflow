@@ -32,10 +32,10 @@ public class ProgramOutcomeController {
         return ResponseEntity.ok(WorkflowResponse.builder().status(200).message("Success").data(response).build());
     }
 
-    @GetMapping(value = "/program/outcome/details/{outcome}")
-    public ResponseEntity<WorkflowResponse> getProgramOutcomeDetails(@PathVariable("outcome") String outcome) {
-        OutcomeDetails details = programOutcomeService.getOutcomeDetails(outcome);
-        return ResponseEntity.ok(WorkflowResponse.builder().status(200).message("Success").data(details).build());
+    @GetMapping(value = "/program/outcome/details/{participantId}/{outcome}")
+    public ResponseEntity<WorkflowResponse> getProgramOutcomeDetails(@PathVariable("participantId") Long participantId, @PathVariable("outcome") String outcome) {
+        WorkflowResponse response = programOutcomeService.getOutcomeDetails(participantId, outcome);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(value = "/program/outcome/save/{outcome}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},

@@ -10,7 +10,7 @@ public interface ProgramOutcomeService {
 
     List<ProgramOutcomeTable> getProgramOutcomeTables();
 
-    OutcomeDetails getOutcomeDetails(String outcome);
+    WorkflowResponse getOutcomeDetails(Long participantId, String outcome);
 
     WorkflowResponse saveOutCome(String outcomeName, String data) throws ParseException;
 

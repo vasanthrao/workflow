@@ -58,7 +58,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     }
 
     @Override
-    public OutcomeDetails getOutcomeDetails(String outcome) {
+    public WorkflowResponse getOutcomeDetails(Long participantId, String outcome) {
         String className = "com.metaverse.workflow.programoutcome.dto." + outcome + "Request";
         try {
             Field[] fields = Class.forName(className).getFields();
@@ -66,10 +66,18 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             for (Field field : fields) {
                 columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName(field.getName())).fieldName(field.getName()).fieldType(getFieldType(field)).build());
             }
-            return OutcomeDetails.builder().columns(columnList).build();
+            switch (outcome) {
+                case "ONDCTransaction": {
+                    List<ONDCRegistration> ondcRegistration = ondcRegistrationRepository.findByParticipantId(participantId);
+                    if (ondcRegistration == null || ondcRegistration.size() == 0)
+                        return WorkflowResponse.builder().status(400).message("ONDC Registration not completed").build();
+                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("ONDC Registration No")).fieldName("ondcRegistrationNo").fieldType("label").fieldValue(ondcRegistration.get(0).getOndcRegistrationNo()).build());
+                }
+            }
+            return WorkflowResponse.builder().status(200).message("Success").data(OutcomeDetails.builder().outcomeForm(columnList).build()).build();
         } catch (ClassNotFoundException ex) {
             log.error("Invalid out come name");
-            return OutcomeDetails.builder().build();
+            return WorkflowResponse.builder().status(500).message("Internal server error").build();
         }
     }
 
@@ -95,10 +103,10 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             }
             case "ONDCTransaction": {
                 ONDCTransactionRequest ondcTransactionRequest = parser.parse(data, ONDCTransactionRequest.class);
-                Optional<ONDCRegistration> ondcRegistration = ondcRegistrationRepository.findById(ondcTransactionRequest.getOndcRegistrationId());
-                if (!ondcRegistration.isPresent())
+                List<ONDCRegistration> ondcRegistrationList = ondcRegistrationRepository.findByParticipantId(ondcTransactionRequest.getParticipantId());
+                if (ondcRegistrationList == null || ondcRegistrationList.size() == 0)
                     return WorkflowResponse.builder().status(400).message("Invalid Ondc Registration").build();
-                ondcTransactionRepository.save(OutcomeRequestMapper.mapOndcTransaction(ondcTransactionRequest, ondcRegistration.get()));
+                ondcTransactionRepository.save(OutcomeRequestMapper.mapOndcTransaction(ondcTransactionRequest, ondcRegistrationList.get(0)));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
@@ -126,11 +134,11 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
         if (field.getName().endsWith("Date")) {
             return "date";
         } else if (outcomeClass.getName().equals("java.lang.String")) {
-            return "textbox";
+            return "text";
         } else if (outcomeClass.getName().equals("java.lang.Long") || outcomeClass.getName().equals("java.lang.Integer")) {
             return "number";
         } else if (outcomeClass.getName().equals("java.lang.Double") || outcomeClass.getName().equals("java.lang.Float")) {
-            return "decimalnumber";
+            return "decimal";
         } else if (outcomeClass.getName().equals("java.lang.Character")) {
             return "character";
         }

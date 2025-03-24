@@ -15,7 +15,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OutcomeDetails {
 
-    private List<OutcomeDataSet> columns;
+    private List<OutcomeDataSet> outcomeForm;
 
     @Builder
     @NoArgsConstructor
@@ -27,6 +27,7 @@ public class OutcomeDetails {
         private String fieldName;
         private String fieldDisplayName;
         private String fieldType;
+        private String fieldValue;
 
     }
 

@@ -17,6 +17,6 @@ public class ONDCTransactionRequest {
     public String productUnits;
     public String transactionType;
     public Double transactionValue;
-    private Long ondcRegistrationId;
+    private Long participantId;
 
 }

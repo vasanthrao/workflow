@@ -27,9 +27,9 @@ public class ParticipantResponseMapper {
 				.isCertificateIssued(participant.getIsCertificateIssued())
 				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(), "dd-mm-yyyy"))
 				.needAssessmentMethodology(participant.getNeedAssessmentMethodology())
-				.organizationId(participant.getOrganization().getOrganizationId())
-				.programIds(participant.getPrograms().stream().map(program -> program.getProgramId()).collect(Collectors.toList()))
-				.organizationName(participant.getOrganization().getOrganizationName())
+				.organizationId(participant.getOrganization() != null ? participant.getOrganization().getOrganizationId() : null)
+				.programIds(participant.getPrograms() != null ? participant.getPrograms().stream().map(program -> program.getProgramId()).collect(Collectors.toList()) : null)
+				.organizationName(participant.getOrganization() != null ? participant.getOrganization().getOrganizationName() : null)
 				.build();
 	}
 
