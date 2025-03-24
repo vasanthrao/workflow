@@ -7,9 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -27,12 +25,17 @@ public class CounsellorController {
         return ResponseEntity.ok(response);
     }
 
-    /*@GetMapping("/getCounsellorByMandal")
-     public WorkflowResponse getCounsellorByMandal(@RequestParam String mandal)
-     {
-         CounsellorRegistrationResponse counsellorResponse=   counsellorService.getCounsellerByMandal(mandal);
-         return WorkflowResponse.builder().message("Counsellor details By mandal").status(200).data(counsellorResponse).build();
-     }*/
+    @GetMapping("/getCounsellorByAllocatedMandal/{id}")
+     public ResponseEntity<WorkflowResponse> getCounsellorByMandal(@PathVariable Integer id) {
+        WorkflowResponse counsellorResponse = counsellorService.getCounsellerByMandal(id);
+        return ResponseEntity.ok(counsellorResponse);
+    }
+    @GetMapping("/getAllCounsellors")
+    public ResponseEntity<WorkflowResponse> getAllCounsellors()
+    {
+        WorkflowResponse response=counsellorService.getAllCounsellors();
+        return ResponseEntity.ok(response);
+    }
 
 
 }

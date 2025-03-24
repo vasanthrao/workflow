@@ -7,7 +7,6 @@ import com.metaverse.workflow.districtswithmandals.repository.DistrictRepository
 import com.metaverse.workflow.districtswithmandals.repository.MandalRepositrory;
 import com.metaverse.workflow.model.CounsellorAllotment;
 import com.metaverse.workflow.model.CounsellorRegistration;
-import com.metaverse.workflow.model.District;
 import com.metaverse.workflow.model.Mandal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,35 +34,55 @@ public class CounsellorServiceImpl implements CounsellorService {
 
     @Override
     public WorkflowResponse saveCounseller(CounsellorRegistrationRequest counsellorRequest) {
-        log.info("service");
+        log.info("service counsellor");
         CounsellorRegistration counsellorRegistration = CounsellorRegistrationRequestMapper.map(counsellorRequest);
-        Optional<District> allottedDistrict = districtRepository.findById(counsellorRequest.districtId);
-        Optional<Mandal> allottedMandal = mandalRepositrory.findById(counsellorRequest.mandalId);
-        if (!allottedDistrict.isPresent() || !allottedMandal.isPresent()) {
-            return WorkflowResponse.builder().message("District or Mandal not found").status(400).build();
+
+        Optional<Mandal> mandal = mandalRepositrory.findById(counsellorRequest.mandalId);
+        if (!mandal.isPresent()) {
+            return WorkflowResponse.builder().message("Mandal not found").status(400).build();
         }
-        counsellorRegistration.setDistrict(allottedDistrict.get());
-        counsellorRegistration.setMandal(allottedMandal.get());
+
+        counsellorRegistration.setRegistrationMandal(mandal.get());
 
         CounsellorAllotment counsellorAllotment = CounsellorAllotmentMapper.map(counsellorRegistration);
-        Optional<District> district = districtRepository.findById(counsellorRequest.allortedDistrictId);
-        Optional<Mandal> mandal = mandalRepositrory.findById(counsellorRequest.allortedMandalId);
-        if (!district.isPresent() || !mandal.isPresent()) {
-            return WorkflowResponse.builder().message("AllortedDistrict or AllortedMandal not found").status(400).build();
+
+        Optional<Mandal> allocatedMandal = mandalRepositrory.findById(counsellorRequest.allortedMandalId);
+        if (!allocatedMandal.isPresent()) {
+            return WorkflowResponse.builder().message("AllortedMandal not found").status(400).build();
         }
-        counsellorAllotment.setAllotedDistrict(district.get());
-        counsellorAllotment.setAllotedMandal(mandal.get());
+
+        counsellorAllotment.setAllotedMandal(allocatedMandal.get());
         counsellorRegistration.setCounsellorAllotments(Arrays.asList(counsellorAllotment));
         CounsellorRegistration response = counsellorRegistrationRepository.save(counsellorRegistration);
+        counsellorAllotment.setCounsellorRegistration(response);
+        counsellorAllotmentRepository.save(counsellorAllotment);
         return WorkflowResponse.builder().message("success").status(200).data(response).build();
     }
 
 
+
+
     @Override
-    public CounsellorRegistrationResponse getCounsellerByMandal(String mandal) {
-        List<CounsellorAllotment> counsellorAllotments = counsellorAllotmentRepository.findByAllotedMandalName(mandal);
+    public WorkflowResponse getAllCounsellors() {
+       List<CounsellorRegistration> counsellorRegistrationList= counsellorRegistrationRepository.findAll();
+
+      List<CounsellorRegistrationResponse>  counsellorRegistrationResponseList=counsellorRegistrationList.stream().map(counsellorRegistration -> CounsellorRegistrationResponseMapper.map(counsellorRegistration)).collect(Collectors.toList());
+        return WorkflowResponse.builder().message("success").status(200).data(counsellorRegistrationResponseList).build();
+    }
+
+    @Override
+    public WorkflowResponse getCounsellerByMandal(Integer mandalId) {
+        Optional<Mandal> mandal = mandalRepositrory.findById(mandalId);
+        if (!mandal.isPresent()) {
+            return WorkflowResponse.builder().message("Mandal not found").status(400).build();
+        }
+
+        List<CounsellorAllotment> counsellorAllotments = counsellorAllotmentRepository.findByAllotedMandal(mandal.get());
+        if(counsellorAllotments.isEmpty())return
+                WorkflowResponse.builder().status(400).message("Counsellor not allocated for this mandal").build();
         CounsellorRegistration counsellorRegistration = counsellorAllotments.get(0).getCounsellorRegistration();
-        return CounsellorRegistrationResponseMapper.map(counsellorRegistration);
+        CounsellorRegistrationResponse registrationResponse= CounsellorRegistrationResponseMapper.map(counsellorRegistration);
+        return WorkflowResponse.builder().message("success").status(200).data(registrationResponse).build();
     }
 
 }
