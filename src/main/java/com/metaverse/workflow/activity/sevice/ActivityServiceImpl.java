@@ -2,24 +2,29 @@ package com.metaverse.workflow.activity.sevice;
 
 import com.metaverse.workflow.activity.repository.ActivityRepository;
 import com.metaverse.workflow.activity.repository.SubActivityRepository;
+import com.metaverse.workflow.agency.service.AgencyService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.model.Activity;
+import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.SubActivity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
-public class ActivityServiceImpl implements ActivityService{
+public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
-    private ActivityRepository activityRepository;
+    ActivityRepository activityRepository;
     @Autowired
-    private SubActivityRepository subActivityRepository;
+    SubActivityRepository subActivityRepository;
 
+    @Autowired
+    AgencyService agencyService;
 
 
     @Override
@@ -28,8 +33,12 @@ public class ActivityServiceImpl implements ActivityService{
                 .stream()
                 .map(subActivityRepository::save)
                 .toList();
-
-        Activity activity=ActivityRequestMapper.map(activityRequest);
+        Agency agency = agencyService.getAgencyById(activityRequest.getAgencyId());
+        if (agency == null) return WorkflowResponse.builder()
+                .message("agency Not found")
+                .status(400)
+                .build();
+        Activity activity = ActivityRequestMapper.map(activityRequest, agency);
 
         activityRepository.save(activity);
         return WorkflowResponse.builder()
@@ -38,14 +47,15 @@ public class ActivityServiceImpl implements ActivityService{
                 .data(ActivityResponseMapper.map(activity))
                 .build();
     }
+
     @Override
     public WorkflowResponse getSubActivityById(Long id) {
         Optional<SubActivity> subActivity = subActivityRepository.findById(id);
-        if(!subActivity.isPresent())return WorkflowResponse.builder()
+        if (!subActivity.isPresent()) return WorkflowResponse.builder()
                 .message("SubActivity Not found")
                 .status(400)
                 .build();
-        SubActivityResponse  response = SubActivityResponseMapper.map(subActivity.get());
+        SubActivityResponse response = SubActivityResponseMapper.map(subActivity.get());
         return WorkflowResponse.builder()
                 .message("Success")
                 .status(200)
@@ -57,11 +67,30 @@ public class ActivityServiceImpl implements ActivityService{
     @Override
     public WorkflowResponse getActivityById(Long id) {
         Optional<Activity> activity = activityRepository.findById(id);
-        if(!activity.isPresent())return WorkflowResponse.builder()
+        if (!activity.isPresent()) return WorkflowResponse.builder()
                 .message("Activity Not found")
                 .status(400)
                 .build();
         ActivityResponse response = ActivityResponseMapper.map(activity.get());
+        return WorkflowResponse.builder()
+                .message("Success")
+                .status(200)
+                .data(response)
+                .build();
+    }
+
+    @Override
+    public WorkflowResponse getActivityByAgencyId(Long id) {
+
+        List<Activity> activityList = activityRepository.findByAgencyAgencyId(id);
+        if (activityList.isEmpty()) return WorkflowResponse.builder()
+                .message("Activity Not found on this agency")
+                .status(400)
+                .build();
+        List<ActivityResponse> response = activityList.stream()
+                .map(activity -> ActivityResponseMapper.map(activity))
+                .collect(Collectors.toList());
+
         return WorkflowResponse.builder()
                 .message("Success")
                 .status(200)

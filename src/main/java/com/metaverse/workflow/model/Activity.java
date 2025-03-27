@@ -32,6 +32,10 @@ public class Activity {
     @UpdateTimestamp
     private Date updatedOn;
 
+    @ManyToOne
+    @JoinColumn(name = "agency_id")
+    private Agency agency;
+
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "activity_sub_activity",

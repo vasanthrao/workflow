@@ -10,8 +10,7 @@ public class SubActivityResponseMapper {
         SubActivityResponse response = SubActivityResponse.builder()
                 .subActivityId(subActivity.getSubActivityId())
                 .subActivityName(subActivity.getSubActivityName())
-                .createdOn(subActivity.getCreatedOn())
-                .updatedOn(subActivity.getUpdatedOn())
+
                 .Activities(subActivity.getActivities().stream().map(Activity::getActivityName).toList())
                 .build();
         return response;

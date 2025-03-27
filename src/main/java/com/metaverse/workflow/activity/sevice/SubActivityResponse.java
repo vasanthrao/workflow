@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -16,8 +15,7 @@ public class SubActivityResponse {
 
     private Long subActivityId;
     private String subActivityName;
-    private Date createdOn;
-    private Date updatedOn;
+
     private List<String> Activities;
 
 }

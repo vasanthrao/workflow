@@ -14,6 +14,6 @@ import java.util.List;
 public class ActivityRequest {
 
     private String activityName;
-
+    private Long agencyId;
     private List<SubActivity> subActivities;
 }

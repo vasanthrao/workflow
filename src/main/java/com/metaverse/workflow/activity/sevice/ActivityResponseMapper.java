@@ -9,8 +9,8 @@ public class ActivityResponseMapper {
         ActivityResponse response = ActivityResponse.builder()
                 .activityId(activity.getActivityId())
                 .activityName(activity.getActivityName())
-                .createdOn(activity.getCreatedOn())
-                .updatedOn(activity.getUpdatedOn())
+                .agencyId(activity.getAgency().getAgencyId())
+                .agencyName(activity.getAgency().getAgencyName())
                 .subActivities(activity.getSubActivities())
                 .build();
         return response;

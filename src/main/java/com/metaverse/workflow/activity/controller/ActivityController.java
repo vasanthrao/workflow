@@ -44,6 +44,13 @@ public class ActivityController {
         WorkflowResponse response = service.getSubActivityById(id);
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/activity/agency/{id}")
+    public ResponseEntity<WorkflowResponse> getActivityByAgencyId(@PathVariable("id") Long id)
+    {
+
+        WorkflowResponse response = service.getActivityByAgencyId(id);
+        return ResponseEntity.ok(response);
+    }
 
 
 
