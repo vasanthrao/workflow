@@ -27,8 +27,8 @@ public class ParticipantRequestMapper {
 				.isCertificateIssued(request.getIsCertificateIssued())
 				.certificateIssueDate(DateUtil.stringToDate(request.getCertificateIssueDate(), "dd-mm-yyyy"))
 				.needAssessmentMethodology(request.getNeedAssessmentMethodology())
-				.organization(organization)
-				.programs(programs)
+				.organization(organization != null ? organization : null)
+				.programs(programs!= null && programs.size() > 0 ? programs : null)
 				.build();
 	}
 

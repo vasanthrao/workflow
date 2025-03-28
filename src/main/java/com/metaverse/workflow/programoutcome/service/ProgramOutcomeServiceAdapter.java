@@ -145,6 +145,16 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
         return WorkflowResponse.builder().status(200).message("Success").data(status).build();
     }
 
+    @Override
+    public WorkflowResponse getOutcomeDetailsByName(String outcome) {
+        switch (outcome) {
+            case "ONDCRegistration": {
+                List<ONDCRegistration> list = ondcRegistrationRepository.findAll();
+            }
+        }
+        return null;
+    }
+
     private String getFieldType(Field field) {
         Class outcomeClass = field.getType();
         if (field.getName().endsWith("Date")) {

@@ -52,17 +52,9 @@ public class ParticipantServiceAdapter implements ParticipantService {
             if (!organization.isPresent())
                 return WorkflowResponse.builder().status(400).message("Organization not found").build();
         }
-        Participant savedParticipant;
-        ParticipantResponse participantResponse;
-        if (programList == null) {
-            participant = ParticipantRequestMapper.mapAsprient(request);
-            savedParticipant = participantRepository.save(participant);
-            participantResponse = ParticipantResponseMapper.mapAsprient(savedParticipant);
-        } else {
-            participant = ParticipantRequestMapper.map(request, organization.get(), programList);
-            savedParticipant = participantRepository.save(participant);
-            participantResponse = ParticipantResponseMapper.map(savedParticipant);
-        }
+        participant = ParticipantRequestMapper.map(request, organization.isPresent() ? organization.get() : null, programList);
+        Participant savedParticipant = participantRepository.save(participant);
+        ParticipantResponse participantResponse = ParticipantResponseMapper.map(savedParticipant);
         return WorkflowResponse.builder().status(200).message("Success").data(participantResponse).build();
     }
 

@@ -46,4 +46,10 @@ public class ProgramOutcomeController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping(value = "/program/getOutcomeByName/{outcomeName}")
+    public ResponseEntity<WorkflowResponse> getProgramOutcomes(@PathVariable("outcome") String outcomeName) {
+        WorkflowResponse response = programOutcomeService.getOutcomeDetailsByName(outcomeName);
+        return ResponseEntity.ok(response);
+    }
+
 }

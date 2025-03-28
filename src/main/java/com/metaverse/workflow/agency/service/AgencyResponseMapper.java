@@ -48,7 +48,7 @@ public class AgencyResponseMapper {
 
     public static List<ProgramResponse> mapPrograms(List<Program> programList) {
         return programList != null ? programList.stream().map(program ->
-                        ProgramResponseMapper.map(program)
+                        ProgramResponseMapper.mapProgram(program)
                 ).collect(Collectors.toList()) : null;
     }
 

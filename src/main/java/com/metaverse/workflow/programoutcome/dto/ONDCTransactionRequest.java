@@ -18,5 +18,7 @@ public class ONDCTransactionRequest {
     public String transactionType;
     public Double transactionValue;
     private Long participantId;
+    private Long organizationId;
+    private Long agencyId;
 
 }

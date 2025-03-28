@@ -14,4 +14,6 @@ public interface ProgramOutcomeService {
 
     WorkflowResponse saveOutCome(String outcomeName, String data) throws ParseException;
 
+    WorkflowResponse getOutcomeDetailsByName(String outcome);
+
 }
