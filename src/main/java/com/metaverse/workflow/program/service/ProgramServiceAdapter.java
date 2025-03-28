@@ -1,13 +1,9 @@
 package com.metaverse.workflow.program.service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
-import com.metaverse.workflow.agency.service.AgencyResponse;
-import com.metaverse.workflow.agency.service.AgencyResponseMapper;
-import com.metaverse.workflow.agency.service.AgencyService;
 import com.metaverse.workflow.common.fileservice.StorageService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.location.repository.LocationRepository;
-import com.metaverse.workflow.location.service.LocationService;
 import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.ProgramRepository;
@@ -17,6 +13,7 @@ import com.metaverse.workflow.resouce.repository.ResourceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -50,13 +47,12 @@ public class ProgramServiceAdapter implements ProgramService {
     ProgramSessionFileRepository programSessionFileRepository;
 
 
-
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
         Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
-        if(!agency.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
+        if (!agency.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
         Optional<Location> location = locationRepository.findById(request.getLocationId());
-        if(!location.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Location").build();
+        if (!location.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Location").build();
         Program program = programRepository.save(ProgramRequestMapper.map(request, agency.get(), location.get()));
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.map(program)).build();
     }
@@ -64,9 +60,9 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse createProgramSession(ProgramSessionRequest request, List<MultipartFile> files) {
         Optional<Resource> resource = resourceRepository.findById(request.getResourceId());
-        if(!resource.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Resource").build();
+        if (!resource.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Resource").build();
         Optional<Program> program = programRepository.findById(request.getProgramId());
-        if(!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
+        if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
         ProgramSession session = ProgramRequestMapper.mapSession(request, resource.get(), program.get());
         ProgramSession programSession = programSessionRepository.save(session);
         List<String> filePaths = storageProgramFiles(files, programSession.getProgramSessionId());
@@ -79,7 +75,7 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse getProgramById(Long id) {
         Optional<Program> program = programRepository.findById(id);
-        if(!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
+        if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
         ProgramResponse response = ProgramResponseMapper.mapProgram(program.get());
         return WorkflowResponse.builder().status(200).message("Success").data(response).build();
     }
@@ -87,7 +83,7 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse getProgramParticipants(Long id) {
         Optional<Program> program = programRepository.findById(id);
-        if(!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
+        if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
         List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(program.get().getParticipants());
         return WorkflowResponse.builder().status(200).message("Success").data(response).build();
     }
@@ -95,8 +91,8 @@ public class ProgramServiceAdapter implements ProgramService {
     private List<String> storageProgramFiles(List<MultipartFile> files, Long sessionId) {
         List<String> uploadFilePaths = new ArrayList<>();
         files.stream().forEach(file -> {
-                String filePath = storageService.store(file, sessionId);
-                uploadFilePaths.add(filePath);
+            String filePath = storageService.store(file, sessionId);
+            uploadFilePaths.add(filePath);
         });
         return uploadFilePaths;
     }
@@ -108,5 +104,21 @@ public class ProgramServiceAdapter implements ProgramService {
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
     }
 
+    @Override
+    @Transactional
+    public WorkflowResponse updateProgram(ProgramRequest request) {
+        Optional<Program> programOptional= programRepository.findById(request.getProgramId());
+        if (!programOptional.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
 
+        Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
+        if (!agency.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
+        Optional<Location> location = locationRepository.findById(request.getLocationId());
+        if (!location.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Location").build();
+
+        Program program = programRepository.save(ProgramRequestMapper.mapUpdate(request, agency.get(), location.get(),programOptional.get()));
+        return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.map(program)).build();
+    }
 }
+
+
+

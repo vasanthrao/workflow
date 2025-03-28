@@ -1,6 +1,5 @@
 package com.metaverse.workflow.participant.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.participant.service.ParticipantRequest;
 import com.metaverse.workflow.participant.service.ParticipantService;
@@ -18,6 +17,12 @@ public class ParticipantController {
 	public ResponseEntity<WorkflowResponse> saveParticipant(@RequestBody ParticipantRequest participantRequest)
 	{
 		WorkflowResponse response = participantService.saveParticipant(participantRequest);
+		return ResponseEntity.ok(response);
+	}
+	@PutMapping("/updateParticipant")
+	public ResponseEntity<WorkflowResponse> updateParticipant(@RequestBody ParticipantRequest participantRequest)
+	{
+		WorkflowResponse response = participantService.updateParticipant(participantRequest);
 		return ResponseEntity.ok(response);
 	}
 
@@ -44,6 +49,12 @@ public class ParticipantController {
 	public ResponseEntity<WorkflowResponse> getParticipantByTypeOfProgram(@PathVariable String typeOfProgram)
 	{
 		WorkflowResponse response = participantService.getParticipantByTypeOfProgram(typeOfProgram);
+		return ResponseEntity.ok(response);
+	}
+	@GetMapping("getParticipantById/{id}")
+	public  ResponseEntity<WorkflowResponse> getParticipantById(@PathVariable Long id) {
+		WorkflowResponse response=participantService.getParticipantsByParticipantId(id);
+
 		return ResponseEntity.ok(response);
 	}
 

@@ -12,6 +12,7 @@ import com.metaverse.workflow.program.repository.ProgramRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,46 @@ public class ParticipantServiceAdapter implements ParticipantService {
     }
 
     @Override
+    @Transactional
+    public WorkflowResponse updateParticipant(ParticipantRequest request) {
+        Optional<Participant> existingParticipantOpt = participantRepository.findById(request.getParticipantId());
+
+        if (!existingParticipantOpt.isPresent()) {
+            return WorkflowResponse.builder()
+                    .status(404)
+                    .message("Participant not found with ID: " + request.getParticipantId())
+                    .build();
+        }
+
+        Participant existingParticipant = ParticipantRequestMapper.mapUpdate(request,existingParticipantOpt.get());
+
+        // Update Organization
+        if (request.getOrganizationId() != null) {
+            Optional<Organization> organizationOpt = organizationService.getOrganizationById(request.getOrganizationId());
+            if (organizationOpt.isPresent()) {
+                existingParticipant.setOrganization(organizationOpt.get());
+            } else {
+                return WorkflowResponse.builder().status(400).message("Organization not found").build();
+            }
+        }
+
+        // Update Programs
+        if (request.getProgramIds() != null && !request.getProgramIds().isEmpty()) {
+            List<Program> programList = programRepository.findAllById(request.getProgramIds()); // Fetch managed entities
+            if (programList.isEmpty()) {
+                return WorkflowResponse.builder().status(400).message("Programs not found").build();
+            }
+            existingParticipant.setPrograms(programList);
+        }
+
+        // Save updated participant
+        Participant updatedParticipant = participantRepository.save(existingParticipant);
+        ParticipantResponse participantResponse = ParticipantResponseMapper.map(updatedParticipant);
+
+        return WorkflowResponse.builder().status(200).message("Participant updated successfully").data(participantResponse).build();
+    }
+
+    @Override
     public WorkflowResponse getParticipants() {
         List<Participant> participantList = participantRepository.findAll();
         List<ParticipantResponse> response = participantList != null ? participantList.stream().map(participant -> ParticipantResponseMapper.map(participant)).collect(Collectors.toList()) : null;
@@ -88,6 +129,15 @@ public class ParticipantServiceAdapter implements ParticipantService {
         Optional<Participant> participant = participantRepository.findById(id);
         return participant;
     }
+
+    @Override
+    public WorkflowResponse getParticipantsByParticipantId(Long id) {
+        Optional<Participant> participant = getParticipantsById(id);
+        if(!participant.isPresent())return WorkflowResponse.builder().status(400).message("Participant Not Found").build();
+        ParticipantResponse response=ParticipantResponseMapper.map(participant.get());
+        return WorkflowResponse.builder().status(200).message("Success").data(response).build();
+    }
+
 
 
     @Override

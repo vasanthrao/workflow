@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 public class ProgramRequest {
 
+    private Long programId;
     private Long activityId;
     private Long subActivityId;
     private String programType;

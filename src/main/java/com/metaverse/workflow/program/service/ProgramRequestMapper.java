@@ -3,7 +3,6 @@ package com.metaverse.workflow.program.service;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +83,26 @@ public class ProgramRequestMapper {
                         .build())
                 .collect(Collectors.toList());
     }
+    public static Program mapUpdate(ProgramRequest programRequest, Agency agency, Location location,Program exisitingProgram) {
+
+        Program program=exisitingProgram;
+        program.setActivityId(programRequest.getActivityId());
+        program.setSubActivityId(programRequest.getSubActivityId());
+        program.setProgramType(programRequest.getProgramType());
+        program.setProgramDetails(programRequest.getProgramDetails());
+        program.setProgramTitle(programRequest.getProgramTitle());
+        program.setStartTime(programRequest.getStartTime());
+        program.setEndTime(programRequest.getEndTime());
+        program.setSpocName(programRequest.getSpocName());
+        program.setSpocContactNo(programRequest.getSpocContactNo());
+        program.setKpi(programRequest.getKpi());
+        program.setStartDate(DateUtil.stringToDate(programRequest.getStartDate(), "dd-MM-yyyy"));
+        program.setEndDate(DateUtil.stringToDate(programRequest.getEndDate(), "dd-MM-yyyy"));
+        program.setAgency(agency);
+        program.setLocation(location);
+        return program;
+    }
+
 
 
 }
