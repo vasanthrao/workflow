@@ -90,7 +90,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>workflow1</finalName>
+		<finalName>workflow</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
