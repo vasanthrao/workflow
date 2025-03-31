@@ -11,4 +11,6 @@ public interface ProgramService {
     WorkflowResponse getProgramById(Long id);
     WorkflowResponse getProgramParticipants(Long id);
     public WorkflowResponse getPrograms();
+
+    WorkflowResponse updateProgram(ProgramRequest request);
 }

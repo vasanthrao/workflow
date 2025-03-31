@@ -1,12 +1,8 @@
 package com.metaverse.workflow.participant.service;
 
-import java.util.Date;
-import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.metaverse.workflow.model.Organization;
-
 import lombok.*;
+
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
@@ -14,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 public class ParticipantRequest {
-	
+	private Long participantId;
 	private String participantName;
 	private Character gender;
 	private String category;

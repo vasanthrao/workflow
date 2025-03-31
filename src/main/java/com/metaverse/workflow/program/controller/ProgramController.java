@@ -76,5 +76,13 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping(value = "/updateProgram", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<WorkflowResponse> updateProgram(@RequestBody ProgramRequest request) {
+        log.info("Updating Program with ID: {}", request.getProgramId());
+        WorkflowResponse response = programService.updateProgram(request);
+        return ResponseEntity.ok(response);
+    }
+
+
 
 }

@@ -31,6 +31,29 @@ public class ParticipantRequestMapper {
 				.programs(programs!= null && programs.size() > 0 ? programs : null)
 				.build();
 	}
+	public static Participant mapUpdate(ParticipantRequest request,Participant participant)
+	{
+		Participant existingParticipant = participant; // Get the existing entity
+
+		// Update fields
+		existingParticipant.setParticipantName(request.getParticipantName());
+		existingParticipant.setGender(request.getGender());
+		existingParticipant.setCategory(request.getCategory());
+		existingParticipant.setDisability(request.getDisability());
+		existingParticipant.setAadharNo(request.getAadharNo());
+		existingParticipant.setMobileNo(request.getMobileNo());
+		existingParticipant.setEmail(request.getEmail());
+		existingParticipant.setDesignation(request.getDesignation());
+		existingParticipant.setIsParticipatedBefore(request.getIsParticipatedBefore());
+		existingParticipant.setPreviousParticipationDetails(request.getPreviousParticipationDetails());
+		existingParticipant.setPreTrainingAssessmentConducted(request.getPreTrainingAssessmentConducted());
+		existingParticipant.setPostTrainingAssessmentConducted(request.getPostTrainingAssessmentConducted());
+		existingParticipant.setIsCertificateIssued(request.getIsCertificateIssued());
+		existingParticipant.setCertificateIssueDate(DateUtil.stringToDate(request.getCertificateIssueDate(), "dd-MM-yyyy"));
+		existingParticipant.setNeedAssessmentMethodology(request.getNeedAssessmentMethodology());
+		return existingParticipant;
+	}
+
 
 	public static Participant mapAsprient(ParticipantRequest request)
 	{

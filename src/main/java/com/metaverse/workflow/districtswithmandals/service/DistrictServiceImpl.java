@@ -9,6 +9,7 @@ import com.metaverse.workflow.model.Mandal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,15 +25,32 @@ public class DistrictServiceImpl implements DistrictService {
 
     @Override
     public WorkflowResponse saveDistrict(DistrictRequest districtRequest) {
-        if (districtRequest == null) {
+        if (districtRequest == null && districtRequest.getDistrictName() == null) {
             return WorkflowResponse.builder().message("Invalid request: DistrictRequest is null")
                     .status(400).build();
         }
-        District district = District.builder().districtId(districtRequest.getDistrictId())
+        District district = District.builder()
+                .districtId(districtRequest.getDistrictId())
                 .districtName(districtRequest.getDistrictName())
-                .createdOn(districtRequest.getCreatedOn()).updatedOn(districtRequest.getUpdatedOn())
-                .mandals(districtRequest.getMandals()).build();
-        districtRepository.save(district);
+                .createdOn(districtRequest.getCreatedOn())
+                .updatedOn(districtRequest.getUpdatedOn())
+                .build();
+        List<Mandal> mandals= new ArrayList<>();
+        if(districtRequest.getMandals()!=null) {
+            mandals = districtRequest.getMandals().stream()
+                    .map(mandalRequest ->
+                    {
+                        return Mandal.builder().mandalName(mandalRequest.getMandalName())
+                                .district(district)
+                                .build();
+                    }).collect(Collectors.toList());
+        }
+        else return WorkflowResponse.builder().message("Mandals are required").status(400).build();
+
+        district.setMandals(mandals);
+            districtRepository.save(district);
+
+
         return WorkflowResponse.builder().message("District saved successfully")
                 .status(200).data(district).build();
     }
