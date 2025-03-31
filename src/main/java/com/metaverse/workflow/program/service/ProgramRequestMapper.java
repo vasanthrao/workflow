@@ -83,9 +83,10 @@ public class ProgramRequestMapper {
                         .build())
                 .collect(Collectors.toList());
     }
-    public static Program mapUpdate(ProgramRequest programRequest, Agency agency, Location location,Program exisitingProgram) {
 
-        Program program=exisitingProgram;
+    public static Program mapUpdate(ProgramRequest programRequest, Agency agency, Location location, Program exisitingProgram) {
+
+        Program program = exisitingProgram;
         program.setActivityId(programRequest.getActivityId());
         program.setSubActivityId(programRequest.getSubActivityId());
         program.setProgramType(programRequest.getProgramType());
