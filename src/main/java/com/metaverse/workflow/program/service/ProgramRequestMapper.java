@@ -38,6 +38,7 @@ public class ProgramRequestMapper {
                 .sessionTypeMethodology(session.getSessionTypeMethodology())
                 .resource(resource)
                 .program(program)
+                .sessionDetails(session.getSessionDetails())
                 .sessionStreamingUrl(session.getSessionStreamingUrl())
                 .image1(session.getImage1())
                 .image2(session.getImage2())
