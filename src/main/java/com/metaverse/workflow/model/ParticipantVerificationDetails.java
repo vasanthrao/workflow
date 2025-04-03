@@ -17,17 +17,25 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name="program_attendance")
+@Table(name="participant_verification_Details")
 @Entity
-public class ProgramAttendance {
+public class ParticipantVerificationDetails {
 
     @EmbeddedId
-    private ProgramAttendanceId programAttendanceId;
+    private ParticipantVerificationId participantVerificationId;
+
+    private CallCenterVerification callCenterVerification;
+
     @Column(name="program_attendance_data")
     private String programAttendanceData;
+
+    @Column(name="program_raw_material")
+    private String programRawMaterial;
+
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp
     private Date createdOn;
+
     @Column(name="updated_on",insertable = false,updatable = true)
     @UpdateTimestamp
     private Date updatedOn;

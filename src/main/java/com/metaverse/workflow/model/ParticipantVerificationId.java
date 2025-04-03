@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class ProgramAttendanceId {
+public class ParticipantVerificationId {
 
     @Column(name = "program_id", nullable = false)
     private Long programId;
