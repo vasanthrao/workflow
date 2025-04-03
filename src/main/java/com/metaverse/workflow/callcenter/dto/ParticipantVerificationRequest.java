@@ -15,5 +15,6 @@ public class ParticipantVerificationRequest {
     private List<Integer> questionId;
     private List<String> answers;
     private Integer verificationStatusId;
+    private String name;
 
 }
