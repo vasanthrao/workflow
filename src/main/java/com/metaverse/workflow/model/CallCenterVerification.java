@@ -15,12 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="participant_verification")
-public class ParticipantVerification {
+@Table(name="call_center_verification")
+public class CallCenterVerification {
     @Id
-    @Column(name="participant_verification_id")
+    @Column(name="cc_verification_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long participantVerificationId;
+    private Long ccVerificationId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,9 +34,9 @@ public class ParticipantVerification {
     @Column(name="question_answers")
     List<QuestionAnswers> questionAnswers;
 
-
-    @Column(name="participant_verification_status_id")
-    private Integer participantVerificationStatusId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cc_verification_status_id", referencedColumnName = "cc_verification_status_id")
+    private CallCenterVerificationStatus ccVerificationStatus;
 
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp
@@ -45,4 +45,7 @@ public class ParticipantVerification {
     @Column(name="updated_on",insertable = false,updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
+
+    @OneToOne(mappedBy = "callCenterVerification")
+    private ParticipantVerificationDetails participantVerificationDetails;
 }

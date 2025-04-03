@@ -59,7 +59,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
 
     @Override
     public WorkflowResponse getAllVerificationStatus() {
-        List<ParticipantVerificationStatus> statusList = participantVerificationStatusRepository.findAll();
+        List<CallCenterVerificationStatus> statusList = participantVerificationStatusRepository.findAll();
         if(statusList.isEmpty())
             return WorkflowResponse.builder().message("Status Not found").status(400).build();
 
@@ -103,7 +103,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
     public WorkflowResponse saveParticipantVerification(ParticipantVerificationRequest request) {
         if(request.getQuestionId().size()!=request.getAnswers().size())
             return WorkflowResponse.builder().message("Must give an answer for every question.").status(422).build();
-        Optional<ParticipantVerificationStatus> verificationStatus = participantVerificationStatusRepository.findById(request.getVerificationStatusId());
+        Optional<CallCenterVerificationStatus> verificationStatus = participantVerificationStatusRepository.findById(request.getVerificationStatusId());
         if(!verificationStatus.isPresent())
             return WorkflowResponse.builder().message("Give  a valid verification status").status(422).build();
         List<Question> questionList = questionRepository.findAllById(request.getQuestionId());
@@ -112,26 +112,26 @@ public class CallCenterServiceAdepter implements CallCenterService {
                 .collect(Collectors.toList());
         Optional<User> user = loginRepository.findById(request.getVerifiedBy());
         if(!user.isPresent()) return WorkflowResponse.builder().message("User not found").status(4).build();
-        ParticipantVerification participantVerification = participantVerificationRepository.save(CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get()));
+        CallCenterVerification callCenterVerification = participantVerificationRepository.save(CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get()));
 
 
-        return WorkflowResponse.builder().message("Participant Verification data is saved successfully").status(200).data(participantVerification).build();
+        return WorkflowResponse.builder().message("Participant Verification data is saved successfully").status(200).data(callCenterVerification).build();
 
     }
 
     @Override
     public WorkflowResponse getAllParticipantVerificationData() {
 
-        List<ParticipantVerification> participantVerificationList = participantVerificationRepository.findAll();
-        if(participantVerificationList.isEmpty())
+        List<CallCenterVerification> callCenterVerificationList = participantVerificationRepository.findAll();
+        if(callCenterVerificationList.isEmpty())
             return WorkflowResponse.builder().message("Verification list empty").status(400).build();
-        List<ParticipantVerificationResponse> verificationResponses = participantVerificationList.stream().map(participantVerification -> CallCenterResponseMapper.mapParticipantVerification(participantVerification
-                , getVerificationStatusByID(participantVerification.getParticipantVerificationStatusId()))).collect(Collectors.toList());
+        List<ParticipantVerificationResponse> verificationResponses = callCenterVerificationList.stream().map(callCenterVerification -> CallCenterResponseMapper.mapParticipantVerification(callCenterVerification
+                , getVerificationStatusByID(callCenterVerification.getCcVerificationStatus().getCcVerificationStatusId()))).collect(Collectors.toList());
         return WorkflowResponse.builder().message("Success").status(200).data(verificationResponses).build();
     }
 
-   public ParticipantVerificationStatus getVerificationStatusByID(Integer participantVerificationStatusId) {
-       Optional<ParticipantVerificationStatus> status = participantVerificationStatusRepository.findById(participantVerificationStatusId);
+   public CallCenterVerificationStatus getVerificationStatusByID(Integer participantVerificationStatusId) {
+       Optional<CallCenterVerificationStatus> status = participantVerificationStatusRepository.findById(participantVerificationStatusId);
        return status.get();
     }
 

@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @Setter
 @Getter
-@Setter
 @Table(name="program")
 public class Program {
 

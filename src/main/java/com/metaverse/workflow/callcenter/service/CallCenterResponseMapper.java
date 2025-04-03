@@ -3,8 +3,8 @@ package com.metaverse.workflow.callcenter.service;
 import com.metaverse.workflow.callcenter.dto.ParticipantVerificationResponse;
 import com.metaverse.workflow.callcenter.dto.QuestionResponse;
 import com.metaverse.workflow.common.util.DateUtil;
-import com.metaverse.workflow.model.ParticipantVerification;
-import com.metaverse.workflow.model.ParticipantVerificationStatus;
+import com.metaverse.workflow.model.CallCenterVerification;
+import com.metaverse.workflow.model.CallCenterVerificationStatus;
 import com.metaverse.workflow.model.Question;
 import org.springframework.stereotype.Component;
 
@@ -28,12 +28,12 @@ public class CallCenterResponseMapper {
     }
 
 
-    public static ParticipantVerificationResponse mapParticipantVerification(ParticipantVerification participantVerification, ParticipantVerificationStatus verificationStatus) {
+    public static ParticipantVerificationResponse mapParticipantVerification(CallCenterVerification callCenterVerification, CallCenterVerificationStatus verificationStatus) {
         return ParticipantVerificationResponse.builder()
-                .participantVerificationId(participantVerification.getParticipantVerificationId())
-                .verifiedBy(participantVerification.getVerifiedBy().getUserId())
-                .transactionDate(DateUtil.dateToString(participantVerification.getTransactionDate(),"dd-MM-yyyy"))
-                .questionAnswers(participantVerification.getQuestionAnswers())
+                .participantVerificationId(callCenterVerification.getCcVerificationId())
+                .verifiedBy(callCenterVerification.getVerifiedBy().getUserId())
+                .transactionDate(DateUtil.dateToString(callCenterVerification.getTransactionDate(),"dd-MM-yyyy"))
+                .questionAnswers(callCenterVerification.getQuestionAnswers())
                 .verificationStatus(verificationStatus.getVerificationDetails())
                 .build();
     }

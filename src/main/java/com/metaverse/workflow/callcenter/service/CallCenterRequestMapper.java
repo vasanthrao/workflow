@@ -30,13 +30,13 @@ public class CallCenterRequestMapper {
     {
         return QuestionAnswers.builder().question(question).answers(answer).build();
     }
-    public static ParticipantVerification mapParticipantVerification(ParticipantVerificationRequest request, List<QuestionAnswers> questionAnswersList, User user)
+    public static CallCenterVerification mapParticipantVerification(ParticipantVerificationRequest request, List<QuestionAnswers> questionAnswersList, User user)
     {
-       return ParticipantVerification.builder()
+       return CallCenterVerification.builder()
                .verifiedBy(user)
                .transactionDate(DateUtil.stringToDate(request.getTransactionDate(),"dd-MM-yyyy"))
                .questionAnswers(questionAnswersList)
-               .participantVerificationStatusId(request.getVerificationStatusId())
+               //.participantVerificationDetails(request.getVerificationStatusId())
                .build();
     }
 }

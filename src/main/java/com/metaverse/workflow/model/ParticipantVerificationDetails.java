@@ -1,9 +1,6 @@
 package com.metaverse.workflow.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,13 +21,15 @@ public class ParticipantVerificationDetails {
     @EmbeddedId
     private ParticipantVerificationId participantVerificationId;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cc_verification_id", referencedColumnName = "cc_verification_id")
     private CallCenterVerification callCenterVerification;
 
     @Column(name="program_attendance_data")
     private String programAttendanceData;
 
     @Column(name="program_raw_material")
-    private String programRawMaterial;
+    private Character programRawMaterial;
 
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp

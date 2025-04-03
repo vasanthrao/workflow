@@ -13,12 +13,12 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="participant_verification_status")
-public class ParticipantVerificationStatus {
+@Table(name="call_center_verification_status")
+public class CallCenterVerificationStatus {
     @Id
-    @Column(name="verification_status_id")
+    @Column(name="cc_verification_status_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer verificationId;
+    private Integer ccVerificationStatusId;
 
     @Column(name="verification_details")
     private String verificationDetails;
