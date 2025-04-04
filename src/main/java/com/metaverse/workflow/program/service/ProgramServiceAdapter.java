@@ -9,6 +9,7 @@ import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.ProgramRepository;
 import com.metaverse.workflow.program.repository.ProgramSessionFileRepository;
 import com.metaverse.workflow.program.repository.ProgramSessionRepository;
+import com.metaverse.workflow.program.repository.ProgramTypeRepository;
 import com.metaverse.workflow.resouce.repository.ResourceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class ProgramServiceAdapter implements ProgramService {
     @Autowired
     ProgramSessionFileRepository programSessionFileRepository;
 
+    @Autowired
+    ProgramTypeRepository programTypeRepository;
 
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
@@ -107,16 +110,46 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     @Transactional
     public WorkflowResponse updateProgram(ProgramRequest request) {
-        Optional<Program> programOptional= programRepository.findById(request.getProgramId());
-        if (!programOptional.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
+        Optional<Program> programOptional = programRepository.findById(request.getProgramId());
+        if (!programOptional.isPresent())
+            return WorkflowResponse.builder().status(400).message("Invalid Program").build();
 
         Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
         if (!agency.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
         Optional<Location> location = locationRepository.findById(request.getLocationId());
         if (!location.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Location").build();
 
-        Program program = programRepository.save(ProgramRequestMapper.mapUpdate(request, agency.get(), location.get(),programOptional.get()));
+        Program program = programRepository.save(ProgramRequestMapper.mapUpdate(request, agency.get(), location.get(), programOptional.get()));
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.map(program)).build();
+    }
+
+    @Override
+    public WorkflowResponse saveProgramType(ProgramTypeRequest programTypeRequest) {
+        Optional<Agency> agency = agencyRepository.findById(programTypeRequest.getAgencyId());
+        if (!agency.isPresent()) return WorkflowResponse.builder().status(400).message("Agency not found").build();
+        ProgramType programType = ProgramType.builder().programType(programTypeRequest.getProgramType())
+                .agency(agency.get()).build();
+        ProgramType response = programTypeRepository.save(programType);
+
+        return WorkflowResponse.builder().status(200).message("Program type saved successfully").data(response).build();
+    }
+
+    @Override
+    public WorkflowResponse getAllProgramTypes() {
+        List<ProgramType> programTypeList = programTypeRepository.findAll();
+        List<ProgramTypeResponse> typeResponses = programTypeList.stream().map(ProgramTypeResponseMapper::map).toList();
+        return WorkflowResponse.builder().status(200).message("Success").data(typeResponses).build();
+
+    }
+
+    @Override
+    public WorkflowResponse getAllProgramTypeByAgencyId(Long agencyId) {
+        List<ProgramType> programTypeList = programTypeRepository.findByAgencyAgencyId(agencyId);
+        if (programTypeList.isEmpty())
+            return WorkflowResponse.builder().status(400).message("Program types is not found for this agency").build();
+        List<ProgramTypeResponse> typeResponses = programTypeList.stream().map(ProgramTypeResponseMapper::map).toList();
+        return WorkflowResponse.builder().status(200).message("Success").data(typeResponses).build();
+
     }
 }
 

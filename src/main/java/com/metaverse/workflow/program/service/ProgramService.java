@@ -13,4 +13,9 @@ public interface ProgramService {
     public WorkflowResponse getPrograms();
 
     WorkflowResponse updateProgram(ProgramRequest request);
+
+    WorkflowResponse saveProgramType(ProgramTypeRequest programTypeRequest);
+    WorkflowResponse getAllProgramTypes();
+    WorkflowResponse getAllProgramTypeByAgencyId(Long agencyId);
+
 }

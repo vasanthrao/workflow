@@ -4,6 +4,7 @@ import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.program.service.ProgramRequest;
 import com.metaverse.workflow.program.service.ProgramService;
 import com.metaverse.workflow.program.service.ProgramSessionRequest;
+import com.metaverse.workflow.program.service.ProgramTypeRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -83,6 +84,23 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
-
+    @PostMapping("/save/program/type")
+    public ResponseEntity<WorkflowResponse> saveProgramTypes(@RequestBody ProgramTypeRequest request)
+    {
+        WorkflowResponse response = programService.saveProgramType(request);
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/program/types")
+    public ResponseEntity<WorkflowResponse> getAllProgramTypes()
+    {
+        WorkflowResponse response = programService.getAllProgramTypes();
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/program/types/agency/id/{agencyId}")
+    public ResponseEntity<WorkflowResponse> getAllProgramTypesByAgencyId(@PathVariable Long agencyId)
+    {
+        WorkflowResponse response = programService.getAllProgramTypeByAgencyId(agencyId);
+        return ResponseEntity.ok(response);
+    }
 
 }
