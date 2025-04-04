@@ -21,7 +21,7 @@ public class QuestionAnswers {
     private Long questionAnswersId;
 
     @ManyToOne
-    @JoinColumn(name="question")
+    @JoinColumn(name="question_id")
     private Question question;
 
     @Column(name = "answer_value")

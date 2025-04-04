@@ -8,7 +8,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParticipantVerificationRequest {
+public class CallCenterVerificationRequest {
 
     private String verifiedBy;
     private String transactionDate;

@@ -2,8 +2,8 @@ package com.metaverse.workflow.callcenter.service;
 
 import com.metaverse.workflow.activity.repository.SubActivityRepository;
 import com.metaverse.workflow.callcenter.dto.*;
-import com.metaverse.workflow.callcenter.repository.ParticipantVerificationRepository;
-import com.metaverse.workflow.callcenter.repository.ParticipantVerificationStatusRepository;
+import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
+import com.metaverse.workflow.callcenter.repository.CallCenterVerificationStatusRepository;
 import com.metaverse.workflow.callcenter.repository.QuestionRepository;
 import com.metaverse.workflow.callcenter.repository.SubActivityQuestionsRepository;
 import com.metaverse.workflow.common.response.WorkflowResponse;
@@ -23,13 +23,13 @@ public class CallCenterServiceAdepter implements CallCenterService {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    ParticipantVerificationStatusRepository participantVerificationStatusRepository;
+    CallCenterVerificationStatusRepository ccVerificationStatusRepository ;
     @Autowired
     SubActivityRepository subActivityRepository;
     @Autowired
     SubActivityQuestionsRepository subActivityQuestionsRepository;
     @Autowired
-    ParticipantVerificationRepository participantVerificationRepository;
+    CallCenterVerificationRepository ccVerificationRepository;
     @Autowired
     LoginRepository loginRepository;
     @Override
@@ -59,7 +59,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
 
     @Override
     public WorkflowResponse getAllVerificationStatus() {
-        List<CallCenterVerificationStatus> statusList = participantVerificationStatusRepository.findAll();
+        List<CallCenterVerificationStatus> statusList = ccVerificationStatusRepository.findAll();
         if(statusList.isEmpty())
             return WorkflowResponse.builder().message("Status Not found").status(400).build();
 
@@ -100,10 +100,10 @@ public class CallCenterServiceAdepter implements CallCenterService {
     }
 
     @Override
-    public WorkflowResponse saveParticipantVerification(ParticipantVerificationRequest request) {
+    public WorkflowResponse saveCallCenterVerification(CallCenterVerificationRequest request) {
         if(request.getQuestionId().size()!=request.getAnswers().size())
             return WorkflowResponse.builder().message("Must give an answer for every question.").status(422).build();
-        Optional<CallCenterVerificationStatus> verificationStatus = participantVerificationStatusRepository.findById(request.getVerificationStatusId());
+        Optional<CallCenterVerificationStatus> verificationStatus =ccVerificationStatusRepository .findById(request.getVerificationStatusId());
         if(!verificationStatus.isPresent())
             return WorkflowResponse.builder().message("Give  a valid verification status").status(422).build();
         List<Question> questionList = questionRepository.findAllById(request.getQuestionId());
@@ -112,7 +112,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
                 .collect(Collectors.toList());
         Optional<User> user = loginRepository.findById(request.getVerifiedBy());
         if(!user.isPresent()) return WorkflowResponse.builder().message("User not found").status(4).build();
-        CallCenterVerification callCenterVerification = participantVerificationRepository.save(CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get()));
+        CallCenterVerification callCenterVerification = ccVerificationRepository.save(CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get()));
 
 
         return WorkflowResponse.builder().message("Participant Verification data is saved successfully").status(200).data(callCenterVerification).build();
@@ -120,18 +120,18 @@ public class CallCenterServiceAdepter implements CallCenterService {
     }
 
     @Override
-    public WorkflowResponse getAllParticipantVerificationData() {
+    public WorkflowResponse getAllCallCenterVerificationData() {
 
-        List<CallCenterVerification> callCenterVerificationList = participantVerificationRepository.findAll();
+        List<CallCenterVerification> callCenterVerificationList = ccVerificationRepository.findAll();
         if(callCenterVerificationList.isEmpty())
             return WorkflowResponse.builder().message("Verification list empty").status(400).build();
-        List<ParticipantVerificationResponse> verificationResponses = callCenterVerificationList.stream().map(callCenterVerification -> CallCenterResponseMapper.mapParticipantVerification(callCenterVerification
+        List<CallCenterVerificationResponse> verificationResponses = callCenterVerificationList.stream().map(callCenterVerification -> CallCenterResponseMapper.mapParticipantVerification(callCenterVerification
                 , getVerificationStatusByID(callCenterVerification.getCcVerificationStatus().getCcVerificationStatusId()))).collect(Collectors.toList());
         return WorkflowResponse.builder().message("Success").status(200).data(verificationResponses).build();
     }
 
    public CallCenterVerificationStatus getVerificationStatusByID(Integer participantVerificationStatusId) {
-       Optional<CallCenterVerificationStatus> status = participantVerificationStatusRepository.findById(participantVerificationStatusId);
+       Optional<CallCenterVerificationStatus> status = ccVerificationStatusRepository.findById(participantVerificationStatusId);
        return status.get();
     }
 

@@ -33,6 +33,9 @@ public class ParticipantServiceAdapter implements ParticipantService {
 
     @Override
     public WorkflowResponse saveParticipant(ParticipantRequest request) {
+        Participant participantByMobileNo = participantRepository.findByMobileNo(request.getMobileNo());
+        if(participantByMobileNo != null)
+            return WorkflowResponse.builder().status(400).message("This participant is already Registered").build();
         List<Program> programList = null;
         Optional<Organization> organization = Optional.empty();
         Participant participant;

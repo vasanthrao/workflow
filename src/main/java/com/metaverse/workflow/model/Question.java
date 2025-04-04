@@ -6,7 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Getter
@@ -32,6 +34,9 @@ public class Question {
 
     @Column(name = "option_value")
     private String options ;
+
+    @OneToMany(mappedBy = "question")
+    private List<QuestionAnswers> answers = new ArrayList<>();
 
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp

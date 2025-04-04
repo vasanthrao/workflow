@@ -1,6 +1,6 @@
 package com.metaverse.workflow.callcenter.controller;
 
-import com.metaverse.workflow.callcenter.dto.ParticipantVerificationRequest;
+import com.metaverse.workflow.callcenter.dto.CallCenterVerificationRequest;
 import com.metaverse.workflow.callcenter.dto.QuestionRequest;
 import com.metaverse.workflow.callcenter.dto.SubActivityQuestionsRequest;
 import com.metaverse.workflow.callcenter.service.CallCenterService;
@@ -47,16 +47,16 @@ public class CallCenterController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/save/participant/verification/data")
-    public ResponseEntity<WorkflowResponse> saveParticipantVerification(@RequestBody ParticipantVerificationRequest request)
+    @PostMapping("/save/calcenter/verification/data")
+    public ResponseEntity<WorkflowResponse> saveCallCenterVerification(@RequestBody CallCenterVerificationRequest request)
     {
-        WorkflowResponse response =  callCenterService.saveParticipantVerification(request);
+        WorkflowResponse response =  callCenterService.saveCallCenterVerification(request);
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/get/all/participant/verification/data")
-    public ResponseEntity<WorkflowResponse> getAllParticipantVerificationData()
+    @GetMapping("/get/all/callcenter/verification/data")
+    public ResponseEntity<WorkflowResponse> getAllCallCenterVerificationData()
     {
-        WorkflowResponse response =  callCenterService.getAllParticipantVerificationData();
+        WorkflowResponse response =  callCenterService.getAllCallCenterVerificationData();
         return ResponseEntity.ok(response);
     }
 }

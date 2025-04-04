@@ -1,6 +1,6 @@
-package com.metaverse.workflow.callcenter.service;
+package com.metaverse.workflow.callcenter.dto;
 
-public class ProgramParticipantStatusResponse {
+public class CallCenterResponse {
 
     private Long ProgramParticipantStatusId;
     private String  participantName;

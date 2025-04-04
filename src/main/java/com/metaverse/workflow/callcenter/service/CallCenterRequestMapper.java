@@ -1,6 +1,6 @@
 package com.metaverse.workflow.callcenter.service;
 
-import com.metaverse.workflow.callcenter.dto.ParticipantVerificationRequest;
+import com.metaverse.workflow.callcenter.dto.CallCenterVerificationRequest;
 import com.metaverse.workflow.callcenter.dto.QuestionRequest;
 import com.metaverse.workflow.callcenter.dto.SubActivityQuestionsRequest;
 import com.metaverse.workflow.common.util.DateUtil;
@@ -30,7 +30,7 @@ public class CallCenterRequestMapper {
     {
         return QuestionAnswers.builder().question(question).answers(answer).build();
     }
-    public static CallCenterVerification mapParticipantVerification(ParticipantVerificationRequest request, List<QuestionAnswers> questionAnswersList, User user)
+    public static CallCenterVerification mapParticipantVerification(CallCenterVerificationRequest request, List<QuestionAnswers> questionAnswersList, User user)
     {
        return CallCenterVerification.builder()
                .verifiedBy(user)

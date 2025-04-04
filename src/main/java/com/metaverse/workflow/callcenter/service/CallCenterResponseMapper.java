@@ -1,6 +1,6 @@
 package com.metaverse.workflow.callcenter.service;
 
-import com.metaverse.workflow.callcenter.dto.ParticipantVerificationResponse;
+import com.metaverse.workflow.callcenter.dto.CallCenterVerificationResponse;
 import com.metaverse.workflow.callcenter.dto.QuestionResponse;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.CallCenterVerification;
@@ -28,8 +28,8 @@ public class CallCenterResponseMapper {
     }
 
 
-    public static ParticipantVerificationResponse mapParticipantVerification(CallCenterVerification callCenterVerification, CallCenterVerificationStatus verificationStatus) {
-        return ParticipantVerificationResponse.builder()
+    public static CallCenterVerificationResponse mapParticipantVerification(CallCenterVerification callCenterVerification, CallCenterVerificationStatus verificationStatus) {
+        return CallCenterVerificationResponse.builder()
                 .participantVerificationId(callCenterVerification.getCcVerificationId())
                 .verifiedBy(callCenterVerification.getVerifiedBy().getUserId())
                 .transactionDate(DateUtil.dateToString(callCenterVerification.getTransactionDate(),"dd-MM-yyyy"))

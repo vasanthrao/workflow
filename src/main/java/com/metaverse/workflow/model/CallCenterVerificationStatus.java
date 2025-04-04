@@ -20,7 +20,7 @@ public class CallCenterVerificationStatus {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer ccVerificationStatusId;
 
-    @Column(name="verification_details")
+    @Column(name="cc_verification_details")
     private String verificationDetails;
 
     @Column(name="created_on",insertable = true,updatable = false)

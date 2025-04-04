@@ -10,11 +10,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParticipantVerificationResponse {
+public class CallCenterVerificationResponse {
+
     private Long participantVerificationId;
     private String verifiedBy;
     private String transactionDate;
     private List<QuestionAnswers> questionAnswers;
     private String verificationStatus;
+    
 }
 
