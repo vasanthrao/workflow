@@ -46,6 +46,4 @@ public class CallCenterVerification {
     @UpdateTimestamp
     private Date updatedOn;
 
-    @OneToOne(mappedBy = "callCenterVerification")
-    private ParticipantVerificationDetails participantVerificationDetails;
 }
