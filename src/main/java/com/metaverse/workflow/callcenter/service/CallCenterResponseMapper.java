@@ -28,8 +28,8 @@ public class CallCenterResponseMapper {
 
     public static CallCenterVerificationResponse mapParticipantVerification(CallCenterVerification callCenterVerification, CallCenterVerificationStatus verificationStatus) {
         return CallCenterVerificationResponse.builder()
-                .participantId(callCenterVerification.getCallCenterVerificationId().getParticipantId())
-                .programId(callCenterVerification.getCallCenterVerificationId().getProgramId())
+                .participantId(callCenterVerification.getParticipantId())
+                .programId(callCenterVerification.getProgramId())
                 .verifiedBy(callCenterVerification.getVerifiedBy().getUserId())
                 .verificationDate(DateUtil.dateToString(callCenterVerification.getVerificationDate(),"dd-MM-yyyy"))
                 .questionAnswers(callCenterVerification.getQuestionAnswers())

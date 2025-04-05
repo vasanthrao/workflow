@@ -32,7 +32,8 @@ public class CallCenterRequestMapper {
                .verifiedBy(user)
                .verificationDate(DateUtil.stringToDate(request.getVerificationDate(),"dd-MM-yyyy"))
                .questionAnswers(questionAnswersList)
-               .callCenterVerificationId(CallCenterVerificationId.builder().participantId(request.getParticipantId()).programId(request.getProgramId()).build())
+               .participantId(request.getParticipantId())
+               .programId(request.getProgramId())
                .build();
     }
 }

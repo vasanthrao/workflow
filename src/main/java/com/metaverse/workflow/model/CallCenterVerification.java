@@ -15,10 +15,20 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="call_center_verification")
+@Table(name="call_center_verification", uniqueConstraints = { @UniqueConstraint(columnNames = { "program_id", "participant_id" }) })
 public class CallCenterVerification {
-    @EmbeddedId
-    private CallCenterVerificationId callCenterVerificationId;
+    /*@EmbeddedId
+    private CallCenterVerificationId callCenterVerificationId;*/
+
+    @Id
+    @Column(name="call_center_verification_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer callCenterVerificationId;
+
+    @Column(name = "program_id", nullable = false)
+    private Long programId;
+    @Column(name = "participant_id", nullable = false)
+    private Long participantId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
