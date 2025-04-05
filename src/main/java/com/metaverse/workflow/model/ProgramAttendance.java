@@ -17,7 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name="participant_verification_Details")
+@Table(name="program_attendance")
 @Entity
 public class ProgramAttendance {
 

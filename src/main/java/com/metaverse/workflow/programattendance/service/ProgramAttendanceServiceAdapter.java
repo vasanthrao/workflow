@@ -34,7 +34,7 @@ public class ProgramAttendanceServiceAdapter implements ProgramAttendanceService
         Set<String> dateSet = program.get().getProgramSessionList().stream().map(session -> DateUtil.dateToString(session.getSessionDate(), "dd-mm-yyyy")).collect(Collectors.toSet());
         ProgramAttendanceResponse response = populateParticipantAttendace(programId, program.get().getParticipants(), dateSet.size());
         List<ProgramAttendance> list = programAttendanceRepository.findByProgramAttendances(programId);
-        if (list == null) {
+        if (list == null || list.size() == 0) {
             return WorkflowResponse.builder().status(200).message("Success").data(response).build();
         } else {
             response = updateParticipantAttendances(list, response);
@@ -46,7 +46,7 @@ public class ProgramAttendanceServiceAdapter implements ProgramAttendanceService
     public WorkflowResponse updateProgramAttendance(ProgramAttendanceRequest request) {
         List<ProgramAttendance> attendanceList = ProgramAttendanceRequestMapper.map(request);
         List<ProgramAttendance> response = programAttendanceRepository.saveAll(attendanceList);
-        return WorkflowResponse.builder().status(200).message("Success").data(response).build();
+        return WorkflowResponse.builder().status(200).message("Success").data(ProgramAttendanceResponseMapper.map(response)).build();
 
     }
 
