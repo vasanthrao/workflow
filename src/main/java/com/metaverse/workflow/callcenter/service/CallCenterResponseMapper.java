@@ -1,7 +1,5 @@
 package com.metaverse.workflow.callcenter.service;
 
-import com.metaverse.workflow.callcenter.dto.CallCenterVerificationResponse;
-import com.metaverse.workflow.callcenter.dto.QuestionResponse;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.CallCenterVerification;
 import com.metaverse.workflow.model.CallCenterVerificationStatus;
@@ -19,20 +17,21 @@ public class CallCenterResponseMapper {
     {
         return QuestionResponse.builder()
                 .QuestionId(question.getQuestionId())
-                .question(question.getQuestion())
-                .questionFieldType(question.getQuestionFieldType())
-                .options(question.getOptions()==null ? Collections.emptyList()
+                .question(question.getQuestionName())
+                .questionFieldType(question.getQuestionType())
+                /*.options(question.getOptions()==null ? Collections.emptyList()
                         : Arrays.stream(question.getOptions().split(","))
-                        .collect(Collectors.toList()))
+                        .collect(Collectors.toList()))*/
                 .build();
     }
 
 
     public static CallCenterVerificationResponse mapParticipantVerification(CallCenterVerification callCenterVerification, CallCenterVerificationStatus verificationStatus) {
         return CallCenterVerificationResponse.builder()
-                .participantVerificationId(callCenterVerification.getCcVerificationId())
+                .participantId(callCenterVerification.getCallCenterVerificationId().getParticipantId())
+                .programId(callCenterVerification.getCallCenterVerificationId().getProgramId())
                 .verifiedBy(callCenterVerification.getVerifiedBy().getUserId())
-                .transactionDate(DateUtil.dateToString(callCenterVerification.getTransactionDate(),"dd-MM-yyyy"))
+                .verificationDate(DateUtil.dateToString(callCenterVerification.getVerificationDate(),"dd-MM-yyyy"))
                 .questionAnswers(callCenterVerification.getQuestionAnswers())
                 .verificationStatus(verificationStatus.getVerificationDetails())
                 .build();

@@ -1,4 +1,4 @@
-package com.metaverse.workflow.callcenter.dto;
+package com.metaverse.workflow.callcenter.service;
 
 public class CallCenterResponse {
 

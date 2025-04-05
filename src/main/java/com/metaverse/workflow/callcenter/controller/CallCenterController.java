@@ -1,8 +1,8 @@
 package com.metaverse.workflow.callcenter.controller;
 
-import com.metaverse.workflow.callcenter.dto.CallCenterVerificationRequest;
-import com.metaverse.workflow.callcenter.dto.QuestionRequest;
-import com.metaverse.workflow.callcenter.dto.SubActivityQuestionsRequest;
+import com.metaverse.workflow.callcenter.service.CallCenterVerificationRequest;
+import com.metaverse.workflow.callcenter.service.QuestionRequest;
+import com.metaverse.workflow.callcenter.service.SubActivityQuestionsRequest;
 import com.metaverse.workflow.callcenter.service.CallCenterService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import org.springframework.beans.factory.annotation.Autowired;

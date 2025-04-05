@@ -1,7 +1,6 @@
 package com.metaverse.workflow.callcenter.service;
 
 import com.metaverse.workflow.activity.repository.SubActivityRepository;
-import com.metaverse.workflow.callcenter.dto.*;
 import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
 import com.metaverse.workflow.callcenter.repository.CallCenterVerificationStatusRepository;
 import com.metaverse.workflow.callcenter.repository.QuestionRepository;
@@ -12,10 +11,12 @@ import com.metaverse.workflow.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 public class CallCenterServiceAdepter implements CallCenterService {
@@ -23,7 +24,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
     @Autowired
     QuestionRepository questionRepository;
     @Autowired
-    CallCenterVerificationStatusRepository ccVerificationStatusRepository ;
+    CallCenterVerificationStatusRepository ccVerificationStatusRepository;
     @Autowired
     SubActivityRepository subActivityRepository;
     @Autowired
@@ -32,35 +33,37 @@ public class CallCenterServiceAdepter implements CallCenterService {
     CallCenterVerificationRepository ccVerificationRepository;
     @Autowired
     LoginRepository loginRepository;
+
     @Override
     public WorkflowResponse saveQuestion(QuestionRequest request) {
-        Question question=CallCenterRequestMapper.mapQuestion(request);
+        Question question = CallCenterRequestMapper.mapQuestion(request);
         Question savedQuestion = questionRepository.save(question);
         return WorkflowResponse.builder().message("Question saved successfully").status(200).data(savedQuestion).build();
     }
 
     @Override
     public WorkflowResponse getAllQuestion() {
-        List<Question> questionList=questionRepository.findAll();
-        if(questionList.isEmpty())
+        List<Question> questionList = questionRepository.findAll();
+        if (questionList.isEmpty())
             return WorkflowResponse.builder().message("Question Not found").status(400).build();
-        List<QuestionResponse> questionResponses = questionList.stream().map(question -> CallCenterResponseMapper.mapQuestion(question)).collect(Collectors.toList());
+        List<QuestionResponse> questionResponses = questionList.stream().map(questions -> CallCenterResponseMapper.mapQuestion(questions)).collect(Collectors.toList());
         return WorkflowResponse.builder().message("Success").status(200).data(questionResponses).build();
     }
+
     @Override
     public WorkflowResponse getQuestionById(Integer id) {
 
         Optional<Question> question = questionRepository.findById(id);
-        if(!question.isPresent())return WorkflowResponse.builder().message(id+" is a wrong Question id ").status(400).build();
+        if (!question.isPresent())
+            return WorkflowResponse.builder().message(id + " is a wrong Question id ").status(400).build();
         return WorkflowResponse.builder().message("success").status(200).data(question.get()).build();
     }
-
 
 
     @Override
     public WorkflowResponse getAllVerificationStatus() {
         List<CallCenterVerificationStatus> statusList = ccVerificationStatusRepository.findAll();
-        if(statusList.isEmpty())
+        if (statusList.isEmpty())
             return WorkflowResponse.builder().message("Status Not found").status(400).build();
 
         return WorkflowResponse.builder().message("Success").status(200).data(statusList).build();
@@ -70,8 +73,9 @@ public class CallCenterServiceAdepter implements CallCenterService {
     @Override
     public WorkflowResponse saveSubActivityQuestions(SubActivityQuestionsRequest request) {
 
-        Optional< SubActivity> subActivity = subActivityRepository.findById(request.getSubActivityId());
-        if(!subActivity.isPresent())return WorkflowResponse.builder().message("SubActivity  Not found").status(400).build();
+        Optional<SubActivity> subActivity = subActivityRepository.findById(request.getSubActivityId());
+        if (!subActivity.isPresent())
+            return WorkflowResponse.builder().message("SubActivity  Not found").status(400).build();
         List<SubActivityQuestions> allExistingQuestions = subActivityQuestionsRepository.findAll();
 
         boolean exists = allExistingQuestions.stream()
@@ -91,48 +95,59 @@ public class CallCenterServiceAdepter implements CallCenterService {
         return WorkflowResponse.builder().message("SubActivityQuestion saved successfully")
                 .status(200).data(subActivityQuestions).build();
     }
+
     @Override
     public WorkflowResponse getQuestionBySubActivityId(Long subActivityId) {
         SubActivityQuestions subActivityQuestions = subActivityQuestionsRepository.findBySubActivityId(subActivityId);
-        if(subActivityQuestions ==null)return  WorkflowResponse.builder().message("SubActivity not not found").status(400).build();
+        if (subActivityQuestions == null)
+            return WorkflowResponse.builder().message("SubActivity not not found").status(400).build();
         List<Question> questions = questionRepository.findAllById(subActivityQuestions.getQuestionsIds());
-        return  WorkflowResponse.builder().message("success").status(200).data(questions).build();
+        return WorkflowResponse.builder().message("success").status(200).data(questions).build();
     }
 
     @Override
     public WorkflowResponse saveCallCenterVerification(CallCenterVerificationRequest request) {
-        if(request.getQuestionId().size()!=request.getAnswers().size())
-            return WorkflowResponse.builder().message("Must give an answer for every question.").status(422).build();
-        Optional<CallCenterVerificationStatus> verificationStatus =ccVerificationStatusRepository .findById(request.getVerificationStatusId());
-        if(!verificationStatus.isPresent())
-            return WorkflowResponse.builder().message("Give  a valid verification status").status(422).build();
-        List<Question> questionList = questionRepository.findAllById(request.getQuestionId());
-        List<QuestionAnswers> questionAnswersList = IntStream.range(0, request.getQuestionId().size())
-                .mapToObj(i -> CallCenterRequestMapper.mapQuestionAnswer(questionList.get(i), request.getAnswers().get(i)))
-                .collect(Collectors.toList());
+        Optional<CallCenterVerificationStatus> verificationStatus = ccVerificationStatusRepository.findById(request.getVerificationStatusId());
+        if (!verificationStatus.isPresent()) return WorkflowResponse.builder().message("invalid verification status").status(400).build();
         Optional<User> user = loginRepository.findById(request.getVerifiedBy());
-        if(!user.isPresent()) return WorkflowResponse.builder().message("User not found").status(4).build();
+        if (!user.isPresent()) return WorkflowResponse.builder().message("User not found").status(400).build();
+        List<QuestionAnswers> questionAnswersList = new ArrayList<>();
+        if (request.getQuestionAnswerList() != null && request.getQuestionAnswerList().size() > 0) {
+            List<Integer> questionIds = request.getQuestionAnswerList().stream().map(questionAnswer -> questionAnswer.getQuestionId()).collect(Collectors.toList());
+            List<Question> questions = questionRepository.findAllById(questionIds);
+            questionAnswersList = populateQuestionAnswers(questions, request.getQuestionAnswerList());
+        }
         CallCenterVerification callCenterVerification = ccVerificationRepository.save(CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get()));
-
-
         return WorkflowResponse.builder().message("Participant Verification data is saved successfully").status(200).data(callCenterVerification).build();
-
     }
 
     @Override
     public WorkflowResponse getAllCallCenterVerificationData() {
 
         List<CallCenterVerification> callCenterVerificationList = ccVerificationRepository.findAll();
-        if(callCenterVerificationList.isEmpty())
+        if (callCenterVerificationList.isEmpty())
             return WorkflowResponse.builder().message("Verification list empty").status(400).build();
         List<CallCenterVerificationResponse> verificationResponses = callCenterVerificationList.stream().map(callCenterVerification -> CallCenterResponseMapper.mapParticipantVerification(callCenterVerification
                 , getVerificationStatusByID(callCenterVerification.getCcVerificationStatus().getCcVerificationStatusId()))).collect(Collectors.toList());
         return WorkflowResponse.builder().message("Success").status(200).data(verificationResponses).build();
     }
 
-   public CallCenterVerificationStatus getVerificationStatusByID(Integer participantVerificationStatusId) {
-       Optional<CallCenterVerificationStatus> status = ccVerificationStatusRepository.findById(participantVerificationStatusId);
-       return status.get();
+    public CallCenterVerificationStatus getVerificationStatusByID(Integer participantVerificationStatusId) {
+        Optional<CallCenterVerificationStatus> status = ccVerificationStatusRepository.findById(participantVerificationStatusId);
+        return status.get();
+    }
+
+    private List<QuestionAnswers> populateQuestionAnswers(List<Question> questions, List<CallCenterVerificationRequest.QuestionAnswer> questionAnswerList) {
+        Map<Integer, Question> questionMap = questions.stream().collect(Collectors.toMap(question -> question.getQuestionId(), question -> question));
+        List<QuestionAnswers> questionAnswersList = new ArrayList<>();
+        for (CallCenterVerificationRequest.QuestionAnswer questionAnswer : questionAnswerList) {
+            questionAnswersList.add(QuestionAnswers
+                    .builder()
+                    .question(questionMap.get(questionAnswer.getQuestionId()))
+                    .answers(Stream.of(questionAnswer.getAnswers()).collect(Collectors.joining(",")))
+                    .build());
+        }
+        return questionAnswersList;
     }
 
 

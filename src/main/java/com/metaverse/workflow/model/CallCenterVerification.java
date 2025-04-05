@@ -17,18 +17,16 @@ import java.util.List;
 @Entity
 @Table(name="call_center_verification")
 public class CallCenterVerification {
-    @Id
-    @Column(name="cc_verification_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long ccVerificationId;
+    @EmbeddedId
+    private CallCenterVerificationId callCenterVerificationId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User verifiedBy;
 
-    @Column(name="transaction_date")
-    private Date transactionDate;
+    @Column(name="verification_date")
+    private Date verificationDate;
 
     @OneToMany(mappedBy ="questionAnswersId",cascade = CascadeType.ALL )
     @Column(name="question_answers")

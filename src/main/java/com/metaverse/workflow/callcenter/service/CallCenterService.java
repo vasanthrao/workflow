@@ -1,8 +1,5 @@
 package com.metaverse.workflow.callcenter.service;
 
-import com.metaverse.workflow.callcenter.dto.CallCenterVerificationRequest;
-import com.metaverse.workflow.callcenter.dto.QuestionRequest;
-import com.metaverse.workflow.callcenter.dto.SubActivityQuestionsRequest;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 
 public interface CallCenterService {

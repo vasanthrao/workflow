@@ -6,9 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Builder
 @Getter
@@ -16,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "question")
+@Table(name = "questions")
 public class Question {
 
     @Id
@@ -24,19 +22,14 @@ public class Question {
     @Column(name = "question_id")
     private Integer questionId;
 
-    @Column(name = "question_field_type")
-    private String questionFieldType;
+    @Column(name = "question_type")
+    private String questionType;
 
-
-    @Column(name = "question")
-    private String question;
-
+    @Column(name = "question_name")
+    private String questionName;
 
     @Column(name = "option_value")
-    private String options ;
-
-    @OneToMany(mappedBy = "question")
-    private List<QuestionAnswers> answers = new ArrayList<>();
+    private String answers;
 
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp

@@ -2,10 +2,6 @@ package com.metaverse.workflow.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.util.Date;
 
 @Builder
 @Getter
@@ -18,7 +14,7 @@ public class QuestionAnswers {
     @Id
     @Column(name="question_answers_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long questionAnswersId;
+    private Integer questionAnswersId;
 
     @ManyToOne
     @JoinColumn(name="question_id")
@@ -26,13 +22,5 @@ public class QuestionAnswers {
 
     @Column(name = "answer_value")
     private String answers ;
-
-    @Column(name="created_on",insertable = true,updatable = false)
-    @CreationTimestamp
-    private Date createdOn;
-
-    @Column(name="updated_on",insertable = false,updatable = true)
-    @UpdateTimestamp
-    private Date updatedOn;
 
 }
