@@ -41,4 +41,9 @@ public class AgencyServiceImpl implements AgencyService{
 		return WorkflowResponse.builder().message("Success").status(200).data(response).build();
 	}
 
+	@Override
+	public List<Agency> getAllAgencies() {
+		return agencyRepository.findAll();
+	}
+
 }

@@ -1,12 +1,10 @@
 package com.metaverse.workflow.common.util;
 
 import com.metaverse.workflow.activity.sevice.ActivityService;
+import com.metaverse.workflow.agency.service.AgencyService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.districtswithmandals.service.DistrictService;
-import com.metaverse.workflow.model.Activity;
-import com.metaverse.workflow.model.District;
-import com.metaverse.workflow.model.Mandal;
-import com.metaverse.workflow.model.SubActivity;
+import com.metaverse.workflow.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +26,15 @@ public class CommonUtil {
     @Autowired
     ActivityService activityService;
 
+    @Autowired
+    AgencyService agencyService;
+
     public static Map<Integer, String> districtMap;
     public static Map<Integer, String> mandalMap;
     public static Map<Long, String> activityMap;
     public static Map<Long, String> subActivityMap;
+
+    public static Map<Long, String> agencyMap;
 
 
     public void init() {
@@ -47,7 +50,8 @@ public class CommonUtil {
         List<SubActivity> subActivityList = activityService.getSubActivityEntities();
         subActivityMap = subActivityList.stream().collect(Collectors.toMap(subactivity -> subactivity.getSubActivityId(), subactivity -> subactivity.getSubActivityName()));
 
-
+        List<Agency> agencyList = agencyService.getAllAgencies();
+        agencyMap = agencyList.stream().collect(Collectors.toMap(agency -> agency.getAgencyId(), agency -> agency.getAgencyName()));
 
     }
 
