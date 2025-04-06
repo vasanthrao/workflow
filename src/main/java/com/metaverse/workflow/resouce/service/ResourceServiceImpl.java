@@ -47,4 +47,9 @@ public class ResourceServiceImpl implements ResourceService {
 		return WorkflowResponse.builder().message("Success").status(200).data(response).build();
 	}
 
+	@Override
+	public List<Resource> getResourceEntities() {
+		return repository.findAll();
+	}
+
 }

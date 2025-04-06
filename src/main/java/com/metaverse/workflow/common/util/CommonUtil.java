@@ -2,7 +2,6 @@ package com.metaverse.workflow.common.util;
 
 import com.metaverse.workflow.activity.sevice.ActivityService;
 import com.metaverse.workflow.agency.service.AgencyService;
-import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.districtswithmandals.service.DistrictService;
 import com.metaverse.workflow.model.*;
 import lombok.AllArgsConstructor;
@@ -22,19 +21,20 @@ public class CommonUtil {
 
     @Autowired
     DistrictService districtService;
-
     @Autowired
     ActivityService activityService;
-
     @Autowired
     AgencyService agencyService;
+
+    /*@Autowired
+    ResourceService resourceService;*/
 
     public static Map<Integer, String> districtMap;
     public static Map<Integer, String> mandalMap;
     public static Map<Long, String> activityMap;
     public static Map<Long, String> subActivityMap;
-
     public static Map<Long, String> agencyMap;
+    //public static Map<Long, String> resourceMap;
 
 
     public void init() {
@@ -53,6 +53,8 @@ public class CommonUtil {
         List<Agency> agencyList = agencyService.getAllAgencies();
         agencyMap = agencyList.stream().collect(Collectors.toMap(agency -> agency.getAgencyId(), agency -> agency.getAgencyName()));
 
+        /*List<Resource> resourceList = resourceService.getResourceEntities();
+        resourceMap = resourceList.stream().collect(Collectors.toMap(resource -> resource.getResourceId(), resource -> resource.getName()));*/
     }
 
 

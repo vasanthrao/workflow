@@ -1,5 +1,6 @@
 package com.metaverse.workflow.program.service;
 
+import com.metaverse.workflow.common.util.CommonUtil;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.model.Program;
@@ -21,10 +22,13 @@ public class ProgramResponseMapper {
                 .programId(program.getProgramId())
                 .activityId(program.getActivityId())
                 .subActivityId(program.getSubActivityId())
+                .activityName(CommonUtil.activityMap.get(program.getActivityId()))
+                .subActivityName(CommonUtil.subActivityMap.get(program.getSubActivityId()))
                 .programType(program.getProgramType())
                 .programDetails(program.getProgramDetails())
                 .programTitle(program.getProgramTitle())
                 .agencyId(program.getAgency().getAgencyId())
+                .agencyName(program.getAgency().getAgencyName())
                 .startDate(DateUtil.dateToString(program.getStartDate(), "dd-mm-yyyy"))
                 .endDate(DateUtil.dateToString(program.getEndDate(), "dd-mm-yyyy"))
                 .startTime(program.getStartTime())
@@ -47,6 +51,7 @@ public class ProgramResponseMapper {
                 .sessionTypeName(session.getSessionTypeName())
                 .sessionTypeMethodology(session.getSessionTypeMethodology())
                 .resourceId(session.getResource().getResourceId())
+                .resourceName(session.getResource().getName())
                 .programId(session.getProgram().getProgramId())
                 .sessionStreamingUrl(session.getSessionStreamingUrl())
                 .files(mapSessionFile(sessionFiles))
@@ -65,10 +70,13 @@ public class ProgramResponseMapper {
                 .programId(program.getProgramId())
                 .activityId(program.getActivityId())
                 .subActivityId(program.getSubActivityId())
+                .activityName(CommonUtil.activityMap.get(program.getActivityId()))
+                .subActivityName(CommonUtil.subActivityMap.get(program.getSubActivityId()))
                 .programType(program.getProgramType())
                 .programDetails(program.getProgramDetails())
                 .programTitle(program.getProgramTitle())
                 .agencyId(program.getAgency().getAgencyId())
+                .agencyName(program.getAgency().getAgencyName())
                 .startDate(DateUtil.dateToString(program.getStartDate(), "dd-mm-yyyy"))
                 .endDate(DateUtil.dateToString(program.getEndDate(), "dd-mm-yyyy"))
                 .startTime(program.getStartTime())

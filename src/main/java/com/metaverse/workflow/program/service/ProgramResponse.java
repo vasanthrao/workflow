@@ -17,6 +17,10 @@ public class ProgramResponse {
     private Long programId;
     private Long activityId;
     private Long subActivityId;
+    private String programName;
+    private String activityName;
+    private String subActivityName;
+    private String agencyName;
     private String programType;
     private String programDetails;
     private String programTitle;
@@ -49,6 +53,7 @@ public class ProgramResponse {
         private String sessionTypeMethodology;
         private String sessionDetails;
         private Long resourceId;
+        private String resourceName;
         private String uploaFile;
         private String coverageType;
         private List<String> videoUrls;

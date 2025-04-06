@@ -22,6 +22,7 @@ public class ProgramSessionResponse {
     private String sessionTypeMethodology;
     private String sessionDetails;
     private Long resourceId;
+    private String resourceName;
     private Long programId;
     private List<ProgramSessionFile> files;
     private String image1;
