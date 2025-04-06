@@ -2,6 +2,7 @@ package com.metaverse.workflow;
 
 import com.metaverse.workflow.common.fileservice.StorageProperties;
 import com.metaverse.workflow.common.fileservice.StorageService;
+import com.metaverse.workflow.common.util.CommonUtil;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -36,10 +37,11 @@ public class WorkflowApplication extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	CommandLineRunner init(StorageService storageService) {
+	CommandLineRunner init(StorageService storageService, CommonUtil commonUtil) {
 		return (args) -> {
-			storageService.deleteAll();
+			//storageService.deleteAll();
 			storageService.init();
+			commonUtil.init();
 		};
 	}
 

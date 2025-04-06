@@ -49,6 +49,16 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public List<Activity> getActivityEntities() {
+        return activityRepository.findAll();
+    }
+
+    @Override
+    public List<SubActivity> getSubActivityEntities() {
+        return subActivityRepository.findAll();
+    }
+
+    @Override
     public WorkflowResponse getSubActivityById(Long id) {
         Optional<SubActivity> subActivity = subActivityRepository.findById(id);
         if (!subActivity.isPresent()) return WorkflowResponse.builder()
