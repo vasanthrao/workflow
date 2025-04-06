@@ -117,7 +117,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
             List<Question> questions = questionRepository.findAllById(questionIds);
             questionAnswersList = populateQuestionAnswers(questions, request.getQuestionAnswerList());
         }
-        CallCenterVerification callCenterVerification = ccVerificationRepository.save(CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get()));
+        CallCenterVerification callCenterVerification = ccVerificationRepository.save(CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get(),verificationStatus.get()));
         return WorkflowResponse.builder().message("Participant Verification data is saved successfully").status(200).data(callCenterVerification).build();
     }
 

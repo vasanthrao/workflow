@@ -26,7 +26,7 @@ public class CallCenterRequestMapper {
     {
         return QuestionAnswers.builder().question(question).answers(answer).build();
     }
-    public static CallCenterVerification mapParticipantVerification(CallCenterVerificationRequest request, List<QuestionAnswers> questionAnswersList, User user)
+    public static CallCenterVerification mapParticipantVerification(CallCenterVerificationRequest request, List<QuestionAnswers> questionAnswersList, User user,CallCenterVerificationStatus ccVerificationStatus)
     {
        return CallCenterVerification.builder()
                .verifiedBy(user)
@@ -34,6 +34,7 @@ public class CallCenterRequestMapper {
                .questionAnswers(questionAnswersList)
                .participantId(request.getParticipantId())
                .programId(request.getProgramId())
+               .ccVerificationStatus(ccVerificationStatus)
                .build();
     }
 }

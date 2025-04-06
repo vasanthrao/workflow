@@ -47,7 +47,7 @@ public class CallCenterController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/save/calcenter/verification/data")
+    @PostMapping("/save/callcenter/verification/data")
     public ResponseEntity<WorkflowResponse> saveCallCenterVerification(@RequestBody CallCenterVerificationRequest request)
     {
         WorkflowResponse response =  callCenterService.saveCallCenterVerification(request);

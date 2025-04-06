@@ -28,12 +28,12 @@ insert into activity_sub_activity(activity_id,sub_activity_id) values(1,1);
 insert into activity_sub_activity(activity_id,sub_activity_id) values(2,2);
 
 -- Insert script for Question table
-insert into question(question_id,question_field_type,question,option_value)
+insert into questions(question_id,question_type,question_name,option_value)
 values(1,'RadioButton','How is the food Provided','Bad,Avg,good,Not provided');
-insert into question(question_id,question_field_type,question,option_value)
+insert into questions(question_id,question_type,question_name,option_value)
 values(2,'RadioButton','How is the trainer','Bad,Avg,Good');
-insert into question(question_id,question_field_type,question,option_value)
-values(3,'checkBox','Which facility are given their','Watter,Tea/Coffee,Food,Snacks');
+insert into questions(question_id,question_type,question_name,option_value)
+values(3,'checkBox','Which facilitys are given their','Watter,Tea/Coffee,Food,snackes');
 
 -- Insert script for call_center_verification_status table
 INSERT INTO call_center_verification_status (cc_verification_status_id, cc_verification_details)
