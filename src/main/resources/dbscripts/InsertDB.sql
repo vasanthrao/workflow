@@ -20,9 +20,9 @@ insert into district(district_id,district_name) values (1,'Adilabad'),(2,'Hydera
 insert into mandal(mandal_id,mandal_name,district) values(1,'Adilabad(Rural)',1),(2,'Adilabad(urbarn)',1);
 
 -- Insert Activity & Sub Activity table script
-insert into activity(activity_id,activity_name,agency) values(1,'Sample Activity1',1);
+insert into activity(activity_id,activity_name,agency_id) values(1,'Sample Activity1',1);
 insert into sub_activity(sub_activity_id,sub_activity_name) values(1,'Sample Sub Activity1');
-insert into activity(activity_id,activity_name,agency) values(2,'Sample Activity2',1);
+insert into activity(activity_id,activity_name,agency_id) values(2,'Sample Activity2',1);
 insert into sub_activity(sub_activity_id,sub_activity_name) values(2,'Sample Sub Activity2');
 insert into activity_sub_activity(activity_id,sub_activity_id) values(1,1);
 insert into activity_sub_activity(activity_id,sub_activity_id) values(2,2);
