@@ -6,6 +6,7 @@ import com.metaverse.workflow.model.ProgramAttendanceId;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ProgramAttendanceRequestMapper {
     public static List<ProgramAttendance> map(ProgramAttendanceRequest request) {
         List<ProgramAttendance> list = new ArrayList<>();
