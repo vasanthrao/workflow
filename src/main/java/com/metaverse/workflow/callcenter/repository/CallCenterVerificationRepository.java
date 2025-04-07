@@ -1,10 +1,14 @@
 package com.metaverse.workflow.callcenter.repository;
 
 import com.metaverse.workflow.model.CallCenterVerification;
-import com.metaverse.workflow.model.CallCenterVerificationId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-public interface CallCenterVerificationRepository extends JpaRepository<CallCenterVerification, CallCenterVerificationId> {
+import java.util.List;
 
+public interface CallCenterVerificationRepository extends JpaRepository<CallCenterVerification, Long> {
+
+    @Query("FROM CallCenterVerification  WHERE programId = :programId")
+    List<CallCenterVerification> findByProgramId(Long programId);
 
 }

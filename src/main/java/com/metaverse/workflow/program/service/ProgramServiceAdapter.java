@@ -1,6 +1,7 @@
 package com.metaverse.workflow.program.service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
+import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
 import com.metaverse.workflow.common.fileservice.StorageService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.location.repository.LocationRepository;
@@ -49,6 +50,9 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     ProgramTypeRepository programTypeRepository;
+
+    @Autowired
+    CallCenterVerificationRepository callCenterVerificationRepository;
 
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
@@ -150,6 +154,18 @@ public class ProgramServiceAdapter implements ProgramService {
         List<ProgramTypeResponse> typeResponses = programTypeList.stream().map(ProgramTypeResponseMapper::map).toList();
         return WorkflowResponse.builder().status(200).message("Success").data(typeResponses).build();
 
+    }
+
+    @Override
+    public WorkflowResponse getProgramParticipantAndVerifications(Long id) {
+        Optional<Program> program = programRepository.findById(id);
+        if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
+        List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(program.get().getParticipants());
+        List<Participant> participantList = program.get().getParticipants();
+        if (participantList == null || participantList.size() ==0) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
+        List<CallCenterVerification> callCenterVerificationList = callCenterVerificationRepository.findByProgramId(id);
+        List<ParticipantVerificationResponse> responseList = ProgramResponseMapper.mapProgramParticipantVerification(participantList, callCenterVerificationList);
+        return WorkflowResponse.builder().status(200).message("Success").data(responseList).build();
     }
 }
 

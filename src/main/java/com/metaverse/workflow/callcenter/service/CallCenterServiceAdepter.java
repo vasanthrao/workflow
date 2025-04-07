@@ -132,7 +132,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
         return WorkflowResponse.builder().message("Success").status(200).data(verificationResponses).build();
     }
 
-    public CallCenterVerificationStatus getVerificationStatusByID(Integer participantVerificationStatusId) {
+    public CallCenterVerificationStatus getVerificationStatusByID(Long participantVerificationStatusId) {
         Optional<CallCenterVerificationStatus> status = ccVerificationStatusRepository.findById(participantVerificationStatusId);
         return status.get();
     }
