@@ -103,4 +103,11 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/program/participant-verification/{programId}")
+    public ResponseEntity<WorkflowResponse> getParticipantAndVerificationByProgramId(@PathVariable("programId") Long programId)
+    {
+        WorkflowResponse response = programService.getProgramParticipantAndVerifications(programId);
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -2,16 +2,15 @@ package com.metaverse.workflow.program.service;
 
 import com.metaverse.workflow.common.util.CommonUtil;
 import com.metaverse.workflow.common.util.DateUtil;
-import com.metaverse.workflow.model.Participant;
-import com.metaverse.workflow.model.Program;
-import com.metaverse.workflow.model.ProgramSession;
-import com.metaverse.workflow.model.ProgramSessionFile;
+import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.participant.service.ParticipantResponseMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -128,6 +127,32 @@ public class ProgramResponseMapper {
         return participantList != null ? participantList.stream().map(participant ->
                         ParticipantResponseMapper.map(participant))
                 .collect(Collectors.toList()) : null;
+    }
+
+    public static List<ParticipantVerificationResponse> mapProgramParticipantVerification(List<Participant> participantList, List<CallCenterVerification> callCenterVerificationList) {
+        List<ParticipantVerificationResponse> responseList = new ArrayList<>();
+        final Map<Long, CallCenterVerification> verificationMap = callCenterVerificationList != null && callCenterVerificationList.size() > 0 ? callCenterVerificationList.stream().collect(Collectors.toMap(callCenterVerification -> callCenterVerification.getParticipantId(), callCenterVerification -> callCenterVerification)) : new HashMap<>();
+        if(participantList != null && participantList.size() > 0) {
+            responseList = participantList.stream().map(participant ->
+                ParticipantVerificationResponse
+                        .builder()
+                        .participantId(participant.getParticipantId())
+                        .email(participant.getEmail())
+                        .ccVerificationStatusId(verificationMap.get(participant.getParticipantId()) != null ? verificationMap.get(participant.getParticipantId()).getCcVerificationStatus().getCcVerificationStatusId() : null)
+                        .ccVerificationStatus(verificationMap.get(participant.getParticipantId()) != null ? verificationMap.get(participant.getParticipantId()).getCcVerificationStatus().getVerificationDetails() : null)
+                        .verifiedBy(verificationMap.get(participant.getParticipantId()) != null ? verificationMap.get(participant.getParticipantId()).getVerifiedBy().getUserId() : null)
+                        .aadharNo(participant.getAadharNo())
+                        .mobileNo(participant.getMobileNo())
+                        .participantName(participant.getParticipantName())
+                        .organizationName(participant.getOrganization() != null ? participant.getOrganization().getOrganizationName() : null)
+                        .gender(participant.getGender())
+                        .designation(participant.getDesignation())
+                        .disability(participant.getDisability())
+                        .memberId(participant.getMemberId())
+                        .build()
+            ).collect(Collectors.toList());
+        }
+        return responseList;
     }
 
 

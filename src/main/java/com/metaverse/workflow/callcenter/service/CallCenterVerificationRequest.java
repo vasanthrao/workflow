@@ -15,7 +15,7 @@ public class CallCenterVerificationRequest {
     private String verifiedBy;
     private String verificationDate;
     private List<QuestionAnswer> questionAnswerList;
-    private Integer verificationStatusId;
+    private Long verificationStatusId;
 
     @Builder
     @AllArgsConstructor

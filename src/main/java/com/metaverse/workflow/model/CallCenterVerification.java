@@ -23,7 +23,7 @@ public class CallCenterVerification {
     @Id
     @Column(name="call_center_verification_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer callCenterVerificationId;
+    private Long callCenterVerificationId;
 
     @Column(name = "program_id", nullable = false)
     private Long programId;

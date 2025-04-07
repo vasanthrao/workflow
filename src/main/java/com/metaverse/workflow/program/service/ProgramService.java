@@ -11,11 +11,10 @@ public interface ProgramService {
     WorkflowResponse getProgramById(Long id);
     WorkflowResponse getProgramParticipants(Long id);
     public WorkflowResponse getPrograms();
-
     WorkflowResponse updateProgram(ProgramRequest request);
-
     WorkflowResponse saveProgramType(ProgramTypeRequest programTypeRequest);
     WorkflowResponse getAllProgramTypes();
     WorkflowResponse getAllProgramTypeByAgencyId(Long agencyId);
+    WorkflowResponse getProgramParticipantAndVerifications(Long id);
 
 }

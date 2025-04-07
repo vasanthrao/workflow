@@ -1,13 +1,21 @@
 package com.metaverse.workflow.callcenter.repository;
 
 import com.metaverse.workflow.model.CallCenterVerification;
-import com.metaverse.workflow.model.CallCenterVerificationId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+<<<<<<< HEAD
 import java.util.Optional;
 
 public interface CallCenterVerificationRepository extends JpaRepository<CallCenterVerification, CallCenterVerificationId> {
     Optional<CallCenterVerification> findByProgramIdAndParticipantId(Long programId, Long participantId);
+=======
+import java.util.List;
+>>>>>>> 3c901d47afac22cc5a771209d332fb4cf1b00624
 
+public interface CallCenterVerificationRepository extends JpaRepository<CallCenterVerification, Long> {
+
+    @Query("FROM CallCenterVerification  WHERE programId = :programId")
+    List<CallCenterVerification> findByProgramId(Long programId);
 
 }

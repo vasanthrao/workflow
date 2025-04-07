@@ -18,7 +18,7 @@ public class CallCenterVerificationStatus {
     @Id
     @Column(name="cc_verification_status_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer ccVerificationStatusId;
+    private Long ccVerificationStatusId;
 
     @Column(name="cc_verification_details")
     private String verificationDetails;
