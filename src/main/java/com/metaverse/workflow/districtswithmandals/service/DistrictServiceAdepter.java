@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class DistrictServiceImpl implements DistrictService {
+public class DistrictServiceAdepter implements DistrictService {
 
     @Autowired
     private DistrictRepository districtRepository;

@@ -26,6 +26,7 @@ public class CallCenterVerificationStatus {
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp
     private Date createdOn;
+
     @Column(name="updated_on",insertable = false,updatable = true)
     @UpdateTimestamp
     private Date updatedOn;

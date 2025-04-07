@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class ActivityServiceImpl implements ActivityService {
+public class ActivityServiceAdepter implements ActivityService {
 
     @Autowired
     ActivityRepository activityRepository;

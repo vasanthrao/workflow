@@ -19,9 +19,9 @@ public class CallCenterResponseMapper {
                 .QuestionId(question.getQuestionId())
                 .question(question.getQuestionName())
                 .questionFieldType(question.getQuestionType())
-                /*.options(question.getOptions()==null ? Collections.emptyList()
-                        : Arrays.stream(question.getOptions().split(","))
-                        .collect(Collectors.toList()))*/
+                .options(question.getAnswers()==null ? Collections.emptyList()
+                        : Arrays.stream(question.getAnswers().split(","))
+                        .collect(Collectors.toList()))
                 .build();
     }
 

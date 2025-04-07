@@ -35,7 +35,7 @@ public class ParticipantServiceAdapter implements ParticipantService {
     public WorkflowResponse saveParticipant(ParticipantRequest request) {
         Participant participantByMobileNo = participantRepository.findByMobileNo(request.getMobileNo());
         if(participantByMobileNo != null)
-            return WorkflowResponse.builder().status(400).message("This participant is already Registered").build();
+            return WorkflowResponse.builder().status(400).message("This Mobile Number is already Registered").build();
         List<Program> programList = null;
         Optional<Organization> organization = Optional.empty();
         Participant participant;
@@ -155,7 +155,7 @@ public class ParticipantServiceAdapter implements ParticipantService {
         List<Participant> participantList = participantRepository.findByProgramType(typeOfProgram);
         if (participantList.isEmpty())
             return WorkflowResponse.builder()
-                .message("Not found such type of program.")
+                .message("Participant not found for this program.")
                 .status(400).build();
         List<ParticipantResponse> response = participantList.stream().map(participant -> ParticipantResponseMapper.map(participant)).collect(Collectors.toList());
         return WorkflowResponse.builder().message("Success")

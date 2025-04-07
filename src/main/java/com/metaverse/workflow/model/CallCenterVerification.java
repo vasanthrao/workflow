@@ -42,7 +42,7 @@ public class CallCenterVerification {
     @Column(name="question_answers")
     List<QuestionAnswers> questionAnswers;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cc_verification_status_id", referencedColumnName = "cc_verification_status_id")
     private CallCenterVerificationStatus ccVerificationStatus;
 
