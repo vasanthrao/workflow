@@ -78,7 +78,18 @@ public class ProgramRowMaterialServiceAdepter implements ProgramRawMaterialServi
 
 
     private ProgramRawMaterialResponse populateParticipantRawMaterial(Long programId, List<Participant> participants, Integer days) {
-        List<ProgramRawMaterialResponse.ParticipantRawMaterial> list = participants.stream().map(participant -> ProgramRawMaterialResponse.ParticipantRawMaterial.builder().participantId(participant.getParticipantId()).rawMaterialData(populateRawmaterialdata(days)).build()).collect(Collectors.toList());
+        List<ProgramRawMaterialResponse.ParticipantRawMaterial> list = participants.stream().map(participant ->
+                ProgramRawMaterialResponse.ParticipantRawMaterial.builder()
+                        .participantId(participant.getParticipantId())
+                        .participantName(participant.getParticipantName())
+                        .memberId(participant.getMemberId())
+                        .SHGName(participant.getOrganization().getNameOfTheSHG())
+                        .mobileNo(participant.getMobileNo())
+                        .email(participant.getEmail())
+                        .aadharNo(participant.getAadharNo())
+                        .designation(participant.getDesignation())
+                        .rawMaterialData(populateRawmaterialdata(days))
+                        .build()).collect(Collectors.toList());
         return ProgramRawMaterialResponse.builder().programId(programId).participantRawMaterialList(list).build();
     }
 

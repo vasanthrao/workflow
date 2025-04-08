@@ -24,6 +24,13 @@ public class ProgramRawMaterialResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ParticipantRawMaterial {
         private Long participantId;
+        private String participantName;
+        private String memberId;
+        private String SHGName;
+        private Long mobileNo;
+        private String email;
+        private Long aadharNo;
+        private String designation;
         private Character[] rawMaterialData;
     }
 

@@ -1,5 +1,6 @@
 package com.metaverse.workflow.programrawmaterial.service;
 
+import com.metaverse.workflow.common.util.CommonUtil;
 import com.metaverse.workflow.model.ProgramRawMaterial;
 
 import java.util.ArrayList;
@@ -26,7 +27,14 @@ public class ProgramRawMaterialResponseMapper {
             list.add(ProgramRawMaterialResponse.ParticipantRawMaterial
                     .builder()
                     .participantId(rawMaterial.getProgramAttendanceId().getParticipantId())
-                    .rawMaterialData(charArray)
+                    /*.participantName(CommonUtil.participantMap.get(rawMaterial.getProgramAttendanceId().getParticipantId()).getParticipantName())
+                    .email(CommonUtil.participantMap.get(rawMaterial.getProgramAttendanceId().getParticipantId()).getEmail())
+                    .aadharNo(CommonUtil.participantMap.get(rawMaterial.getProgramAttendanceId().getParticipantId()).getAadharNo())
+                    .designation(CommonUtil.participantMap.get(rawMaterial.getProgramAttendanceId().getParticipantId()).getDesignation())
+                    .SHGName(CommonUtil.participantMap.get(rawMaterial.getProgramAttendanceId().getParticipantId()).getOrganization().getNameOfTheSHG())
+                    .mobileNo(CommonUtil.participantMap.get(rawMaterial.getProgramAttendanceId().getParticipantId()).getMobileNo())
+                    .memberId(CommonUtil.participantMap.get(rawMaterial.getProgramAttendanceId().getParticipantId()).getMemberId())
+                    */.rawMaterialData(charArray)
                     .build());
         }
         return ProgramRawMaterialResponse.builder().programId(programId).participantRawMaterialList(list).build();

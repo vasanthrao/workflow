@@ -51,7 +51,18 @@ public class ProgramAttendanceServiceAdapter implements ProgramAttendanceService
     }
 
     private ProgramAttendanceResponse populateParticipantAttendace(Long programId, List<Participant> participants, Integer days) {
-        List<ProgramAttendanceResponse.ParticipantAttendance> list = participants.stream().map(participant -> ProgramAttendanceResponse.ParticipantAttendance.builder().participantId(participant.getParticipantId()).attendanceData(populateAttendaceData(days)).build()).collect(Collectors.toList());
+        List<ProgramAttendanceResponse.ParticipantAttendance> list = participants.stream().map(participant ->
+                ProgramAttendanceResponse.ParticipantAttendance.builder()
+                        .participantId(participant.getParticipantId())
+                        .participantName(participant.getParticipantName())
+                        .memberId(participant.getMemberId())
+                        .SHGName(participant.getOrganization().getNameOfTheSHG())
+                        .mobileNo(participant.getMobileNo())
+                        .email(participant.getEmail())
+                        .aadharNo(participant.getAadharNo())
+                        .designation(participant.getDesignation())
+                        .attendanceData(populateAttendaceData(days))
+                        .build()).collect(Collectors.toList());
         return ProgramAttendanceResponse.builder().programId(programId).participantAttendanceList(list).build();
     }
 
