@@ -56,7 +56,9 @@ public class ProgramAttendanceServiceAdapter implements ProgramAttendanceService
                         .participantId(participant.getParticipantId())
                         .participantName(participant.getParticipantName())
                         .memberId(participant.getMemberId())
-                        .SHGName(participant.getOrganization().getNameOfTheSHG())
+                        .SHGName(participant.getOrganization() != null
+                                ? participant.getOrganization().getNameOfTheSHG()
+                                : null)
                         .mobileNo(participant.getMobileNo())
                         .email(participant.getEmail())
                         .aadharNo(participant.getAadharNo())
