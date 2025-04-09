@@ -33,5 +33,11 @@ public class OrganizationController {
 		WorkflowResponse response = organizationService.getOrganizations();
 		return ResponseEntity.ok(response);
 	}
+	@GetMapping("/organization/mobileno/exist/{mobileNo}")
+	public ResponseEntity<Boolean> isParticipantsMobileNoExist(@PathVariable Long mobileNo)
+	{
+		Boolean mobileNumberExists = organizationService.isMobileNumberExists(mobileNo);
+		return ResponseEntity.ok(mobileNumberExists);
+	}
 
 }

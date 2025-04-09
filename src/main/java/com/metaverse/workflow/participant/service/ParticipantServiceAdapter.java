@@ -162,4 +162,16 @@ public class ParticipantServiceAdapter implements ParticipantService {
                 .status(200).data(response).build();
     }
 
+    @Override
+    public List<Participant> getAllParticipants() {
+        return participantRepository.findAll();
+    }
+
+    @Override
+    public Boolean isMobileNumberExists(Long mobileNo) {
+        Participant participant = participantRepository.findByMobileNo(mobileNo);
+        if(participant == null)return false;
+        return true;
+    }
+
 }

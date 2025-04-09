@@ -58,4 +58,11 @@ public class ParticipantController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/participant/mobileno/exist/{mobileNo}")
+	public ResponseEntity<Boolean> isParticipantsMobileNoExist(@PathVariable Long mobileNo)
+	{
+		Boolean mobileNumberExists = participantService.isMobileNumberExists(mobileNo);
+		return ResponseEntity.ok(mobileNumberExists);
+	}
+
 }

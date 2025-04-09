@@ -13,4 +13,6 @@ public interface OrganizationService {
 	public Optional<Organization> getOrganizationById(Long organizationId);
 
 	public WorkflowResponse getOrganizations();
+
+	Boolean isMobileNumberExists(Long mobileNo);
 }

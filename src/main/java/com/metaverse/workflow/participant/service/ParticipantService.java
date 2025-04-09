@@ -3,6 +3,7 @@ package com.metaverse.workflow.participant.service;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.model.Participant;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ParticipantService {
@@ -21,5 +22,9 @@ public interface ParticipantService {
     public WorkflowResponse getOrganizationByParticipant(Long participantId);
 
     public  WorkflowResponse getParticipantByTypeOfProgram(String typeOfProgram);
+
+    List<Participant> getAllParticipants();
+
+    Boolean isMobileNumberExists(Long mobileNo);
 
 }

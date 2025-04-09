@@ -1,7 +1,9 @@
 package com.metaverse.workflow.organization.service;
 
 import java.util.Date;
+import java.util.List;
 
+import com.metaverse.workflow.model.Sector;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,5 +43,6 @@ public class OrganizationRequest {
 	    private String nameOfTheSHG;
 	    private String nameOfTheVO;
 	    private String gramaPanchayat;
+	    private List<Integer> sectorIds;
 	    
 }
