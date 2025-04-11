@@ -1,6 +1,8 @@
 package com.metaverse.workflow.program.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.metaverse.workflow.model.Question;
+import com.metaverse.workflow.model.QuestionAnswers;
 import lombok.*;
 
 import java.util.List;
@@ -27,4 +29,18 @@ public class ParticipantVerificationResponse {
     private Long ccVerificationStatusId;
     private String ccVerificationStatus;
     private String memberId;
+    private List<QuestionAnswers> questionAnswersList;
+
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    @Getter
+//    @Setter
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    public static class QuestionAnswers {
+//
+//        private Question question;
+//        private String answers ;
+//
+//    }
 }
+

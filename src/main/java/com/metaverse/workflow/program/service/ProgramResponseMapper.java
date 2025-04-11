@@ -149,8 +149,10 @@ public class ProgramResponseMapper {
                         .designation(participant.getDesignation())
                         .disability(participant.getDisability())
                         .memberId(participant.getMemberId())
+                        .questionAnswersList(verificationMap.get(participant.getParticipantId()) != null ? verificationMap.get(participant.getParticipantId()).getQuestionAnswers() : null)
                         .build()
             ).collect(Collectors.toList());
+
         }
         return responseList;
     }
