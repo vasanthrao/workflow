@@ -31,16 +31,17 @@ public class ParticipantVerificationResponse {
     private String memberId;
     private List<QuestionAnswers> questionAnswersList;
 
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    @Getter
-//    @Setter
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    public static class QuestionAnswers {
-//
-//        private Question question;
-//        private String answers ;
-//
-//    }
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class QuestionAnswers {
+
+        private Question question;
+        private String answers ;
+
+    }
 }
 

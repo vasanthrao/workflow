@@ -129,7 +129,7 @@ public class ProgramResponseMapper {
                 .collect(Collectors.toList()) : null;
     }
 
-    public static List<ParticipantVerificationResponse> mapProgramParticipantVerification(List<Participant> participantList, List<CallCenterVerification> callCenterVerificationList) {
+   /* public static List<ParticipantVerificationResponse> mapProgramParticipantVerification(List<Participant> participantList, List<CallCenterVerification> callCenterVerificationList) {
         List<ParticipantVerificationResponse> responseList = new ArrayList<>();
         final Map<Long, CallCenterVerification> verificationMap = callCenterVerificationList != null && callCenterVerificationList.size() > 0 ? callCenterVerificationList.stream().collect(Collectors.toMap(callCenterVerification -> callCenterVerification.getParticipantId(), callCenterVerification -> callCenterVerification)) : new HashMap<>();
         if(participantList != null && participantList.size() > 0) {
@@ -155,7 +155,46 @@ public class ProgramResponseMapper {
 
         }
         return responseList;
+    }*/
+    public static List<ParticipantVerificationResponse> mapProgramParticipantVerification(List<Participant> participantList, List<CallCenterVerification> callCenterVerificationList) {
+        List<ParticipantVerificationResponse> responseList = new ArrayList<>();
+        final Map<Long, CallCenterVerification> verificationMap = (callCenterVerificationList != null && !callCenterVerificationList.isEmpty())   ? callCenterVerificationList.stream().collect(Collectors.toMap(CallCenterVerification::getParticipantId, verification -> verification)) : new HashMap<>();
+        if (participantList != null && !participantList.isEmpty()) {
+            responseList = participantList.stream().map(participant -> {
+                CallCenterVerification verification = verificationMap.get(participant.getParticipantId());
+                List<ParticipantVerificationResponse.QuestionAnswers> mappedAnswers = null;
+                if (verification != null && verification.getQuestionAnswers() != null) {
+                    mappedAnswers = verification.getQuestionAnswers().stream().map(answer ->
+                            ParticipantVerificationResponse.QuestionAnswers.builder()
+                                    .question(answer.getQuestion())
+                                    .answers(answer.getAnswers())
+                                    .build()
+                    ).collect(Collectors.toList());
+                }
+
+                return ParticipantVerificationResponse.builder()
+                        .participantId(participant.getParticipantId())
+                        .participantName(participant.getParticipantName())
+                        .gender(participant.getGender())
+                        .category(participant.getCategory()) // Assuming `getCategory()` exists
+                        .disability(participant.getDisability())
+                        .aadharNo(participant.getAadharNo())
+                        .mobileNo(participant.getMobileNo())
+                        .email(participant.getEmail())
+                        .designation(participant.getDesignation())
+                        .organizationName(participant.getOrganization() != null ? participant.getOrganization().getOrganizationName() : null)
+                        .verifiedBy(verification != null && verification.getVerifiedBy() != null? verification.getVerifiedBy().getUserId() : null)
+                        .ccVerificationStatusId(verification != null && verification.getCcVerificationStatus() != null ? verification.getCcVerificationStatus().getCcVerificationStatusId() : null)
+                        .ccVerificationStatus(verification != null && verification.getCcVerificationStatus() != null ? verification.getCcVerificationStatus().getVerificationDetails() : null)
+                        .memberId(participant.getMemberId())
+                        .questionAnswersList(mappedAnswers)
+                        .build();
+            }).collect(Collectors.toList());
+        }
+
+        return responseList;
     }
+
 
 
 
