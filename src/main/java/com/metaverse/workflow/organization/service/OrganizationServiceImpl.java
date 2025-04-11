@@ -24,9 +24,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 	private SectorRepository sectorRepository;
 	@Override
 	public OrganizationResponse saveOrganization(OrganizationRequest organizationRequest) {
-		List<Sector> sectors = sectorRepository.findAllById(organizationRequest.getSectorIds());
-
-		Organization organization = OrganizationRequestMapper.map(organizationRequest,sectors);
+		//List<Sector> sectors = sectorRepository.findAllById(organizationRequest.getSectorIds());
+		//Organization organization = OrganizationRequestMapper.map(organizationRequest,sectors);
+		Organization organization = OrganizationRequestMapper.map(organizationRequest);
 		Organization SavedOrganization = repository.save(organization);
 		return OrganizationResponseMapper.map(SavedOrganization);
 	}
