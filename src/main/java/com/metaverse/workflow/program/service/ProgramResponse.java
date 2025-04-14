@@ -32,6 +32,7 @@ public class ProgramResponse {
     private String spocName;
     private Long spocContactNo;
     private Long programLocation;
+    private String programLocationName;
     private String kpi;
     private Date createdOn;
     private Date updatedOn;
