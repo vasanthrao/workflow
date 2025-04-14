@@ -72,11 +72,15 @@ public class ProgramServiceAdapter implements ProgramService {
         if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
         ProgramSession session = ProgramRequestMapper.mapSession(request, resource.get(), program.get());
         ProgramSession programSession = programSessionRepository.save(session);
-        List<String> filePaths = storageProgramFiles(files, programSession.getProgramSessionId());
-        List<ProgramSessionFile> sessionFiles = ProgramRequestMapper.mapProgramFiles(request.getVideoUrls(), filePaths);
-        sessionFiles.stream().forEach(file -> file.setProgramSession(session));
-        sessionFiles = programSessionFileRepository.saveAll(sessionFiles);
-        return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.mapSession(programSession, sessionFiles)).build();
+        if(files != null && files.size() > 0) {
+            List<String> filePaths = storageProgramFiles(files, programSession.getProgramSessionId());
+            List<ProgramSessionFile> sessionFiles = ProgramRequestMapper.mapProgramFiles(request.getVideoUrls(), filePaths);
+            sessionFiles.stream().forEach(file -> file.setProgramSession(session));
+            sessionFiles = programSessionFileRepository.saveAll(sessionFiles);
+            return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.mapSession(programSession, sessionFiles)).build();
+        }else {
+            return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.mapSession(programSession, null)).build();
+        }
     }
 
     @Override

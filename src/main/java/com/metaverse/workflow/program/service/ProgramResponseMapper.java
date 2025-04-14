@@ -54,7 +54,7 @@ public class ProgramResponseMapper {
                 .resourceName(session.getResource().getName())
                 .programId(session.getProgram().getProgramId())
                 .sessionStreamingUrl(session.getSessionStreamingUrl())
-                .files(mapSessionFile(sessionFiles))
+                .files(sessionFiles != null ? mapSessionFile(sessionFiles) : null)
                 .image1(session.getImage1())
                 .image2(session.getImage2())
                 .image3(session.getImage3())

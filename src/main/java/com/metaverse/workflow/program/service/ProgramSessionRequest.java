@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 public class ProgramSessionRequest {
     private Long programId;
+    private Long programSessionId;
     private String sessionDate;
     private String startTime;
     private String endTime;
