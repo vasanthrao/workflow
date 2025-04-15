@@ -11,8 +11,6 @@ public class MandalResponceMapper {
         MandalResponce response =  MandalResponce.builder()
                 .mandalId(mandal.getMandalId())
                 .mandalName(mandal.getMandalName())
-                .createdOn(mandal.getCreatedOn())
-                .updatedOn(mandal.getUpdatedOn())
                 .build();
 
         return response;

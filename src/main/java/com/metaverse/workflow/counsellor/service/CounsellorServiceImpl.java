@@ -37,7 +37,7 @@ public class CounsellorServiceImpl implements CounsellorService {
         log.info("service counsellor");
         CounsellorRegistration counsellorRegistration = CounsellorRegistrationRequestMapper.map(counsellorRequest);
 
-        Optional<Mandal> mandal = mandalRepositrory.findById(counsellorRequest.mandalId);
+        Optional<Mandal> mandal = mandalRepositrory.findById(counsellorRequest.getMandalId());
         if (!mandal.isPresent()) {
             return WorkflowResponse.builder().message("Mandal not found").status(400).build();
         }
@@ -46,7 +46,7 @@ public class CounsellorServiceImpl implements CounsellorService {
 
         CounsellorAllotment counsellorAllotment = CounsellorAllotmentMapper.map(counsellorRegistration);
 
-        Optional<Mandal> allocatedMandal = mandalRepositrory.findById(counsellorRequest.allortedMandalId);
+        Optional<Mandal> allocatedMandal = mandalRepositrory.findById(counsellorRequest.getAllortedMandalId());
         if (!allocatedMandal.isPresent()) {
             return WorkflowResponse.builder().message("AllortedMandal not found").status(400).build();
         }

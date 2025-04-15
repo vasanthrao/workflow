@@ -12,8 +12,7 @@ public class DistrictResponceMapper {
         DistrictResponce response =  DistrictResponce.builder()
                 .districtId(district.getDistrictId())
                 .districtName(district.getDistrictName())
-                .createdOn(district.getCreatedOn())
-                .updatedOn(district.getUpdatedOn())
+
                 .build();
 
         return response;

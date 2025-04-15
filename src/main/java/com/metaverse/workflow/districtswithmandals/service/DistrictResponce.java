@@ -16,7 +16,6 @@ public class DistrictResponce {
 
     private Integer districtId;
     private String districtName;
-    private Date createdOn;
-    private Date updatedOn;
+
 
 }

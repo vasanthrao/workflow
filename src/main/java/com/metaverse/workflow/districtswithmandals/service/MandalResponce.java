@@ -17,8 +17,7 @@ public class MandalResponce {
 
     private Integer mandalId;
     private String mandalName;
-    private Date createdOn;
-    private Date updatedOn;
+
 
 }
 
