@@ -6,18 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 
 @Getter
 @Builder
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MandalResponce {
-
+public class MandalResponse {
     private Integer mandalId;
     private String mandalName;
-
-
 }
 

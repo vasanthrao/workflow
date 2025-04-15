@@ -63,7 +63,7 @@ public class DistrictServiceAdepter implements DistrictService {
     @Override
     public WorkflowResponse getAllDistricts() {
         List<District> districtList = districtRepository.findAll();
-        List<DistrictResponce> responces = districtList.stream()
+        List<DistrictResponse> responces = districtList.stream()
                 .map(district -> DistrictResponceMapper.map(district))
                 .collect(Collectors.toList());
 
@@ -79,7 +79,7 @@ public class DistrictServiceAdepter implements DistrictService {
     @Override
     public WorkflowResponse getAllMandals() {
         List<Mandal> mandaltList = mandalRepositrory.findAll();
-        List<MandalResponce> responces = mandaltList.stream()
+        List<MandalResponse> responces = mandaltList.stream()
                 .map(mandal -> MandalResponceMapper.map(mandal))
                 .collect(Collectors.toList());
 
@@ -92,15 +92,23 @@ public class DistrictServiceAdepter implements DistrictService {
 
     @Override
     public WorkflowResponse getAllPanchayatByMandalId(Integer mandalId) {
-        List<GramPanchayat> pantchayts = gramPanchayatRepository.findByMandalMandalId(mandalId);
-        
-        return null;
+        List<GramPanchayat> pantchaytsList = gramPanchayatRepository.findByMandalMandalId(mandalId);
+        if(pantchaytsList.isEmpty())return WorkflowResponse.builder().message("Gram Panchyat Not found")
+                .status(400).build();
+        List<GramPanchayatResponse> responces = pantchaytsList.stream()
+                .map(gp -> GramPanchayatResponse.builder().gramPanchayatID(gp.getGramPanchayatID()).gramPanchayatName(gp.getGramPanchayatName()).build())
+                .collect(Collectors.toList());
+        return WorkflowResponse.builder()
+                .message("Success")
+                .status(200)
+                .data(responces)
+                .build();
     }
 
     @Override
     public WorkflowResponse getAllMandalOfDistrict(Integer districtaId) {
         List<Mandal> mandalList = mandalRepositrory.findByDistrictId(districtaId);
-        List<MandalResponce> mandalResponce = mandalList.stream()
+        List<MandalResponse> mandalResponce = mandalList.stream()
                 .map(mandal -> MandalResponceMapper.map(mandal))
                 .collect(Collectors.toList());
 
@@ -115,7 +123,7 @@ public class DistrictServiceAdepter implements DistrictService {
     @Override
     public WorkflowResponse getDistrictById(Integer districtId) {
         Optional<District> district = districtRepository.findById(districtId);
-        DistrictResponce districtResponce = DistrictResponceMapper.map(district.get());
+        DistrictResponse districtResponce = DistrictResponceMapper.map(district.get());
 
         return WorkflowResponse.builder()
                 .message("District get successfully")

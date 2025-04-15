@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
+import java.util.List;
 
 
 @Builder
@@ -36,4 +37,8 @@ public class Mandal {
     @Column(name="updated_on",insertable = false,updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
+
+    @Column(name = "gram_panchayats_list")
+    @OneToMany(mappedBy = "mandal", cascade = CascadeType.ALL)
+    private List<GramPanchayat> gramPanchayats;
 }
