@@ -46,7 +46,7 @@ public class ProgramController {
     })
     @PostMapping(value = "/program/session/create",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkflowResponse> createSession(@RequestPart("data") String data, @RequestPart("files") List<MultipartFile> files) throws ParseException {
+    public ResponseEntity<WorkflowResponse> createSession(@RequestPart("data") String data, @RequestPart(value="files", required = false) List<MultipartFile> files) throws ParseException {
         log.info("Program controller, title : {}", data);
         JSONParser parser = new JSONParser();
         ProgramSessionRequest request = parser.parse(data, ProgramSessionRequest.class);

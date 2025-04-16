@@ -23,12 +23,15 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Autowired
 	private SectorRepository sectorRepository;
 	@Override
-	public OrganizationResponse saveOrganization(OrganizationRequest organizationRequest) {
-		//List<Sector> sectors = sectorRepository.findAllById(organizationRequest.getSectorIds());
-		//Organization organization = OrganizationRequestMapper.map(organizationRequest,sectors);
-		Organization organization = OrganizationRequestMapper.map(organizationRequest);
+	public WorkflowResponse saveOrganization(OrganizationRequest organizationRequest) {
+		List<Sector> sectors = sectorRepository.findAllById(organizationRequest.getSectorIds());
+		if(sectors.size()!=organizationRequest.getSectorIds().size())
+			return WorkflowResponse.builder().message("Some sectors are not found").status(400).build();
+		Organization organization = OrganizationRequestMapper.map(organizationRequest,sectors);
+		//Organization organization = OrganizationRequestMapper.map(organizationRequest);
 		Organization SavedOrganization = repository.save(organization);
-		return OrganizationResponseMapper.map(SavedOrganization);
+		OrganizationResponse response= OrganizationResponseMapper.map(SavedOrganization);
+		return WorkflowResponse.builder().message("Oraganization saved successfully").status(200).data(response).build();
 	}
 	@Override
 	public Optional<Organization> getOrganizationById(Long organizationId) {

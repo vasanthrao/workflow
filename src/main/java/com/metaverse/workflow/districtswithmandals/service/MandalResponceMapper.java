@@ -6,13 +6,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class MandalResponceMapper {
 
-    public static MandalResponce map(Mandal mandal)
+    public static MandalResponse map(Mandal mandal)
     {
-        MandalResponce response =  MandalResponce.builder()
+        MandalResponse response =  MandalResponse.builder()
                 .mandalId(mandal.getMandalId())
                 .mandalName(mandal.getMandalName())
-                .createdOn(mandal.getCreatedOn())
-                .updatedOn(mandal.getUpdatedOn())
                 .build();
 
         return response;

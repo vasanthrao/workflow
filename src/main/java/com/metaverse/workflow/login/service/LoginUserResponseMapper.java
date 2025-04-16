@@ -13,13 +13,16 @@ public class LoginUserResponseMapper {
     public static LoginUserResponse map(User user) {
         return LoginUserResponse.builder()
                 .userId(user.getUserId())
+                .address(user.getAddress())
                 .email(user.getEmail())
                 .mobileNo(user.getMobileNo())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .password(user.getPassword())
+                .gender(user.getGender())
                 .userRole(UserRole.valueOf(user.getUserRole()))
                 .agencyId(user.getAgency() != null ? user.getAgency().getAgencyId() : null)
+                .agencyName(user.getAgency() != null ? user.getAgency().getAgencyName() : null)
                 .build();
     }
 
@@ -30,11 +33,15 @@ public class LoginUserResponseMapper {
     public static LoginUserResponse mapUser(User user) {
         return LoginUserResponse.builder()
                 .userId(user.getUserId())
+                .address(user.getAddress())
                 .email(user.getEmail())
                 .mobileNo(user.getMobileNo())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .password(user.getPassword())
+                .gender(user.getGender())
                 .userRole(UserRole.valueOf(user.getUserRole()))
+                .agencyId(user.getAgency() != null ? user.getAgency().getAgencyId() : null)
                 .agencyName(user.getAgency() != null ? user.getAgency().getAgencyName() : null)
                 .build();
     }

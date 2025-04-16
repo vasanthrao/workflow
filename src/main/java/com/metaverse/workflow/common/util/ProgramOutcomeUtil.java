@@ -1,10 +1,5 @@
 package com.metaverse.workflow.common.util;
 
-import com.metaverse.workflow.common.response.WorkflowResponse;
-import com.metaverse.workflow.districtswithmandals.service.DistrictResponce;
-import com.metaverse.workflow.districtswithmandals.service.MandalResponce;
-import com.metaverse.workflow.model.District;
-import com.metaverse.workflow.model.Mandal;
 import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import com.metaverse.workflow.programoutcome.service.ProgramOutcomeService;
 import lombok.AllArgsConstructor;

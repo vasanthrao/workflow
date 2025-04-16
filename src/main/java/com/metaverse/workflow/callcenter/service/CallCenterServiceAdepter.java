@@ -123,29 +123,18 @@ public class CallCenterServiceAdepter implements CallCenterService {
     }*/
     @Override
     public WorkflowResponse saveCallCenterVerification(CallCenterVerificationRequest request) {
-        Optional<CallCenterVerificationStatus> verificationStatus =
-                ccVerificationStatusRepository.findById(request.getVerificationStatusId());
-        if (!verificationStatus.isPresent())
-            return WorkflowResponse.builder().message("Invalid verification status").status(400).build();
-
+        Optional<CallCenterVerificationStatus> verificationStatus = ccVerificationStatusRepository.findById(request.getVerificationStatusId());
+        if (!verificationStatus.isPresent()) return WorkflowResponse.builder().message("Invalid verification status").status(400).build();
         Optional<User> user = loginRepository.findById(request.getVerifiedBy());
-        if (!user.isPresent())
-            return WorkflowResponse.builder().message("User not found").status(400).build();
-
+        if (!user.isPresent()) return WorkflowResponse.builder().message("User not found").status(400).build();
         List<QuestionAnswers> questionAnswersList = new ArrayList<>();
         if (request.getQuestionAnswerList() != null && !request.getQuestionAnswerList().isEmpty()) {
-            List<Integer> questionIds = request.getQuestionAnswerList().stream()
-                    .map(qa -> qa.getQuestionId()).collect(Collectors.toList());
+            List<Integer> questionIds = request.getQuestionAnswerList().stream().map(qa -> qa.getQuestionId()).collect(Collectors.toList());
             List<Question> questions = questionRepository.findAllById(questionIds);
             questionAnswersList = populateQuestionAnswers(questions, request.getQuestionAnswerList());
         }
-
-
-        Optional<CallCenterVerification> existing = ccVerificationRepository
-                .findByProgramIdAndParticipantId(request.getProgramId(), request.getParticipantId());
-
+        Optional<CallCenterVerification> existing = ccVerificationRepository.findByProgramIdAndParticipantId(request.getProgramId(), request.getParticipantId());
         CallCenterVerification callCenterVerification;
-
         if (existing.isPresent()) {
             // 🔄 Update existing record
             callCenterVerification = existing.get();
@@ -159,8 +148,7 @@ public class CallCenterServiceAdepter implements CallCenterService {
 
         } else {
             // 🆕 New record
-            callCenterVerification = CallCenterRequestMapper.mapParticipantVerification(
-                    request, questionAnswersList, user.get(), verificationStatus.get());
+            callCenterVerification = CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get(), verificationStatus.get());
         }
 
         // Save (will insert or update depending on the presence of ID)

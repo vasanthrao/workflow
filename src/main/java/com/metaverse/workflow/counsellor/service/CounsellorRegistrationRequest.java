@@ -8,28 +8,28 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 public class CounsellorRegistrationRequest {
-    String dateOfRegistration;
-    String nameOfCounsellor;
-    String dateOfBirth;
-    String gender;
-    String socialCategory;
-    String educationalQualification;
-    Integer districtId;
-    Integer mandalId;
-    String village;
-    String houseNo;
-    String streetName;
-    Integer pincode;
-    String landmark;
-    Integer expriance;
-    String designation;
-    String specialzation;
-    Long contactNo;
-    Long altContactNo;
-    String emailId;
-    Integer allortedDistrictId;
-    Integer allortedMandalId;
-    String dateOfSelection;
+    private  String dateOfRegistration;
+    private String nameOfCounsellor;
+    private String dateOfBirth;
+    private String gender;
+    private String socialCategory;
+    private String educationalQualification;
+    private Integer districtId;
+    private Integer mandalId;
+    private String village;
+    private String houseNo;
+    private  String streetName;
+    private  Integer pincode;
+    private  String landmark;
+    private Integer expriance;
+    private String designation;
+    private String specialzation;
+    private  Long contactNo;
+    private  Long altContactNo;
+    private String emailId;
+    private Integer allortedDistrictId;
+    private Integer allortedMandalId;
+    private String dateOfSelection;
 
 
 

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface OrganizationService {
 	
-	public OrganizationResponse saveOrganization(OrganizationRequest organizationRequest);
+	public WorkflowResponse saveOrganization(OrganizationRequest organizationRequest);
 	
 	public Optional<Organization> getOrganizationById(Long organizationId);
 

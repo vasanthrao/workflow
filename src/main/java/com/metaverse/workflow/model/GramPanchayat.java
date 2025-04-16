@@ -5,9 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import java.util.Date;
-import java.util.List;
 
+import java.util.Date;
 
 @Builder
 @Getter
@@ -15,20 +14,20 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="mandal")
-public class Mandal {
+@Table(name="Gram_panchayat")
+public class GramPanchayat {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "mandal_id")
-    private Integer mandalId;
+    @Column(name = "Gram_panchayat_id")
+    private Integer gramPanchayatID;
 
-    @Column(name ="mandal_Name")
-    private  String mandalName;
+    @Column(name ="Gram_panchayat_Name")
+    private  String gramPanchayatName;
 
     @ManyToOne
-    @JoinColumn(name="district")
+    @JoinColumn(name = "mandal")
     @JsonIgnore
-    private District district;
+    private Mandal mandal;
 
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp
@@ -38,7 +37,4 @@ public class Mandal {
     @UpdateTimestamp
     private Date updatedOn;
 
-    @Column(name = "gram_panchayats_list")
-    @OneToMany(mappedBy = "mandal", cascade = CascadeType.ALL)
-    private List<GramPanchayat> gramPanchayats;
 }

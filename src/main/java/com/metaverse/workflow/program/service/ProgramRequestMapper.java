@@ -31,6 +31,7 @@ public class ProgramRequestMapper {
 
     public static ProgramSession mapSession(ProgramSessionRequest session, Resource resource, Program program) {
         return ProgramSession.builder()
+                .programSessionId(session.getProgramSessionId())
                 .sessionDate(DateUtil.stringToDate(session.getSessionDate(), "dd-mm-yyyy"))
                 .startTime(session.getStartTime())
                 .endTime(session.getEndTime())

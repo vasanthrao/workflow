@@ -25,7 +25,7 @@ public class CounsellorRegistrationRequestMapper {
                 .contactNo(counsllorRequest.getContactNo())
                 .altContactNo(counsllorRequest.getAltContactNo())
                 .emailId(counsllorRequest.getEmailId())
-                .dateOfSelection(DateUtil.stringToDate(counsllorRequest.dateOfSelection, "dd-mm-yyyy"))
+                .dateOfSelection(DateUtil.stringToDate(counsllorRequest.getDateOfSelection(), "dd-mm-yyyy"))
 //                .district(DistrictUtil.districtEntityList.get(counsllorRequest.districtId))
 //                .mandal(DistrictUtil.mandalEntityList.get(counsllorRequest.mandalId))
 //                .allotedDistrict(DistrictUtil.districtEntityList.get(counsllorRequest.allortedDistrictId))
