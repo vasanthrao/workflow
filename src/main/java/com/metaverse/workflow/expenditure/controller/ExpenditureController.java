@@ -1,0 +1,26 @@
+package com.metaverse.workflow.expenditure.controller;
+
+import com.metaverse.workflow.ESDPTraining.service.ESDPTrainingRequest;
+import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.exceptions.ActivityDetailsException;
+import com.metaverse.workflow.exceptions.ProgramDetailsException;
+import com.metaverse.workflow.exceptions.SubActivityDetailsException;
+import com.metaverse.workflow.expenditure.service.ExpenditureRequest;
+import com.metaverse.workflow.expenditure.service.ExpenditureService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ExpenditureController {
+    @Autowired
+    ExpenditureService expenditureService;
+     @GetMapping("/expenditure/save")
+    public ResponseEntity<WorkflowResponse> saveExpenditure(@RequestBody ExpenditureRequest request) throws SubActivityDetailsException, ProgramDetailsException, ActivityDetailsException {
+        return ResponseEntity.ok(expenditureService.saveExpenditure(request));
+    }
+}
+
+

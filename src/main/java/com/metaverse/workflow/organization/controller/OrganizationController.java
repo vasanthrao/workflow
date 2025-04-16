@@ -16,28 +16,26 @@ import java.util.List;
 
 @RestController
 public class OrganizationController {
-	
-	@Autowired
-	private OrganizationService organizationService;
-	
-	@PostMapping("/organization/save")
-	public ResponseEntity<WorkflowResponse> saveOrganization(@RequestBody OrganizationRequest request)
-	{
-		OrganizationResponse organizationResponse = organizationService.saveOrganization(request);
-		return ResponseEntity.ok(WorkflowResponse.builder().message("Created").status(200).data(organizationResponse).build());
-	}
 
-	@GetMapping("/organization/list")
-	public ResponseEntity<WorkflowResponse> getResourcesByAgencyId()
-	{
-		WorkflowResponse response = organizationService.getOrganizations();
-		return ResponseEntity.ok(response);
-	}
-	@GetMapping("/organization/mobileno/exist/{mobileNo}")
-	public ResponseEntity<Boolean> isParticipantsMobileNoExist(@PathVariable Long mobileNo)
-	{
-		Boolean mobileNumberExists = organizationService.isMobileNumberExists(mobileNo);
-		return ResponseEntity.ok(mobileNumberExists);
-	}
+    @Autowired
+    private OrganizationService organizationService;
+
+    @PostMapping("/organization/save")
+    public ResponseEntity<WorkflowResponse> saveOrganization(@RequestBody OrganizationRequest request) {
+        WorkflowResponse response = organizationService.saveOrganization(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/organization/list")
+    public ResponseEntity<WorkflowResponse> getResourcesByAgencyId() {
+        WorkflowResponse response = organizationService.getOrganizations();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/organization/mobileno/exist/{mobileNo}")
+    public ResponseEntity<Boolean> isParticipantsMobileNoExist(@PathVariable Long mobileNo) {
+        Boolean mobileNumberExists = organizationService.isMobileNumberExists(mobileNo);
+        return ResponseEntity.ok(mobileNumberExists);
+    }
 
 }

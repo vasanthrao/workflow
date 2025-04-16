@@ -13,13 +13,16 @@ import java.util.List;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ESDPTrainingResponse {
-    Long ESDPTrainingApplicationId;
-    String SHGName;
-    String memberId;
-    String memberName;
-    List<Sector> SHGSector;
-    String dateOfAwarenessProgram;
-    String interestedInAttending15Days;
-    String dateOfApplicationReceived;
-    String selectedForTraining;
+    private Long ESDPTrainingApplicationId;
+    private String SHGName;
+    private String memberId;
+    private String memberName;
+    private List<Sector> SHGSector;
+    private Long participantId;
+    private Long organizationId;
+    private Long agencyId;
+    private String dateOfAwarenessProgram;
+    private String interestedInAttending15Days;
+    private String dateOfApplicationReceived;
+    private String selectedForTraining;
 }

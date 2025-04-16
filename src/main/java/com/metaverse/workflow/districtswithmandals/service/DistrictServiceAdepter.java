@@ -24,7 +24,6 @@ public class DistrictServiceAdepter implements DistrictService {
     private DistrictRepository districtRepository;
     @Autowired
     private MandalRepositrory mandalRepositrory;
-
     @Autowired
     GramPanchayatRepository gramPanchayatRepository;
 

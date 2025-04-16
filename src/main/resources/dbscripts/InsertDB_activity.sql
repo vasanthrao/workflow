@@ -21,7 +21,7 @@ insert into sub_activity(sub_activity_id,sub_activity_name) values(25,'Brain Sto
 insert into activity_sub_activity(activity_id,sub_activity_id)values(7,25),(7,26);
 
 -- Insert Activity SubActivity for RICH_6B agency
-insert into activity(activity_id,activity_name,agency_id) values(8,'Workshop',4),(9,'Awareness Program'),(10,'Event');
+insert into activity(activity_id,activity_name,agency_id) values(8,'Workshop',4),(9,'Awareness Program',4),(10,'Event',4);
 INSERT INTO sub_activity (sub_activity_id, sub_activity_name) VALUES(27, 'Roundtable Discussions for Project Strategy and Implementation Planning');
 insert into activity_sub_activity(activity_id,sub_activity_id)values(8,27);
 INSERT INTO sub_activity (sub_activity_id, sub_activity_name) VALUES(28, 'Awareness on Govt Schemes'),(29, 'Awareness on Skilling'),(30, 'Carbon Footprint Reduction'),
@@ -42,7 +42,7 @@ insert into activity_sub_activity(activity_id,sub_activity_id)values(11,47),(12,
 -- Insert Activity SubActivity for CIPET_!! agency
 insert into activity(activity_id,activity_name,agency_id) values(13,'Awareness Program',6),(14,'Workshop',6);
 INSERT INTO sub_activity (sub_activity_id, sub_activity_name) VALUES
-(48, 'Orientation Program on Component'),
+(103,'Orientation Program on Component'),
 (49, 'To Identify the CFCs & Prototypes for Plastics & Polymers Sector'),
 (50, 'To identify the CFCs & Prototypes for Tool, Die & Mould Manufacturers Clusters'),
 (51, 'To identify the CFCs & Prototypes for Rubber Products'),
@@ -53,7 +53,7 @@ INSERT INTO sub_activity (sub_activity_id, sub_activity_name) VALUES
 (56, 'To identify the CFCs & Prototypes for composite'),
 (57, 'To identify the CFCs & Prototypes for Electricals, Electronics & Batteries Sector'),
 (58, 'To identify the CFCs & Prototypes for Mechanical & Civil Design Sector');
-insert into activity_sub_activity(activity_id,sub_activity_id)values(13,49),(14,50),(14,51),(14,52),(14,53),(14,54),(14,55),(14,56),(14,57),(14,58);
+insert into activity_sub_activity(activity_id,sub_activity_id)values(13,103),(14,49),(14,50),(14,51),(14,52),(14,53),(14,54),(14,55),(14,56),(14,57),(14,58);
 
 -- Insert Activity SubActivity for WeHub agency
 insert into activity(activity_id,activity_name,agency_id) values(15,'Awareness Program',7),(16,'Training',7),(17,'Event',7);
@@ -76,7 +76,7 @@ INSERT INTO sub_activity (sub_activity_id, sub_activity_name) VALUES(74, 'PMEGP'
 (91, 'PM Viswakarma'),(92, 'National SC/ST Hub'),(93, 'SIDBI ASPIRE'),(94, 'Training on Access to Finance'),(95, 'Traning on Market'),(96, 'Training on Technology and Skilling'),
 (97, 'Training on MSME Promotional Policy, Procedure and Compliance'),(98,'Vendor Development Program');
 insert into activity_sub_activity(activity_id,sub_activity_id)values(19,74),(19,75),(19,76),(19,77),(19,75),(19,76),(19,77),(19,78),(19,79),(19,80),(19,81),(19,82),
-(19,83),(19,84),(19,85),(19,86),(19,87),(19,88),(19,89),(19,90),(19,91),(19,92),(19,93),(19,94),(19,95),(19,96),(19,97),(20,98);
+(19,83),(19,84),(19,85),(19,86),(19,88),(19,89),(19,90),(19,91),(19,92),(19,93),(19,94),(19,95),(19,96),(19,97),(20,98);
 
 -- Insert Activity SubActivity for Aleap agency
 insert into activity(activity_id,activity_name,agency_id) values(21,'Awareness Program',9),(22,'Training',9);

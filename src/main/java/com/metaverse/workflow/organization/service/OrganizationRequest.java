@@ -43,6 +43,8 @@ public class OrganizationRequest {
 	    private String nameOfTheSHG;
 	    private String nameOfTheVO;
 	    private String gramaPanchayat;
-	   // private List<Integer> sectorIds;
+	    private List<Integer> sectorIds;
+
+
 	    
 }
