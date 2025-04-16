@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-
 @Service
 public class ExpenditureServiceAdepter implements ExpenditureService {
     @Autowired
@@ -34,19 +33,19 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
             SubActivityDetailsException, ProgramDetailsException {
         Activity activity = activityRepository.findById(expenditureRequest.getActivityId())
                 .orElseThrow(() -> new ActivityDetailsException(
-                        "Activity details for the activity id " + expenditureRequest.getActivityId() + "do not exist",
+                        "Activity details for the activity id " + expenditureRequest.getActivityId() + " do not exist",
                         "ACTIVITY-DETAILS-NOT-FOUND",
                         400
                 ));
         SubActivity subActivity = subActivityRepository.findById(expenditureRequest.getSubActivityId())
                 .orElseThrow(() -> new SubActivityDetailsException(
-                        "SubActivity details for the subactivity id " + expenditureRequest.getActivityId() + "do not exist",
+                        "SubActivity details for the subactivity id " + expenditureRequest.getActivityId() + " do not exist",
                         "SUB-ACTIVITY-DETAILS-NOT-FOUND",
                         400
                 ));
         Program program = programRepository.findById(expenditureRequest.getProgramId())
                 .orElseThrow(() -> new ProgramDetailsException(
-                        "Program details for the program id " + expenditureRequest.getActivityId() + "do not exist",
+                        "Program details for the program id " + expenditureRequest.getActivityId() + " do not exist",
                         "PROGRAM-NOT-FOUND",
                         400
                 ));
