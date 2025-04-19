@@ -1,6 +1,7 @@
 package com.metaverse.workflow.login.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.exceptions.UserDetailsException;
 import com.metaverse.workflow.login.service.LoginService;
 import com.metaverse.workflow.login.service.LoginUserRequest;
 import com.metaverse.workflow.login.service.LoginUserResponse;
@@ -72,7 +73,25 @@ public class LoginController {
         WorkflowResponse response = loginService.getUsers();
         log.info("users requested closed success fully");
         return ResponseEntity.ok(response);
+
     }
 
+    @Operation(summary = "Change user password", responses = {
+            @ApiResponse(responseCode = "200", description = "Password changed successfully",
+                    content = @Content(schema = @Schema(implementation = WorkflowResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid user or password",
+                    content = @Content(schema = @Schema(implementation = Exception.class)))
+    })
+    @PutMapping(value = "/login/change-password", produces = {"application/json"})
+    public ResponseEntity<WorkflowResponse> changePassword(@RequestHeader("userId") String userId, @RequestHeader("oldPassword") String oldPassword, @RequestHeader("newPassword") String newPassword) throws UserDetailsException {
+        log.info("Change password controller, userId: {}", userId);
 
+        return ResponseEntity.ok(loginService.changePassword(userId, oldPassword, newPassword));
+
+    }
 }
+
+
+
+
+

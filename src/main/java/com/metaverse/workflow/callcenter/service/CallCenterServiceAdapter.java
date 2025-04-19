@@ -7,6 +7,8 @@ import com.metaverse.workflow.callcenter.repository.QuestionRepository;
 import com.metaverse.workflow.callcenter.repository.SubActivityQuestionsRepository;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.DateUtil;
+import com.metaverse.workflow.exceptions.CallCenterVerificationStatusException;
+import com.metaverse.workflow.exceptions.UserNotFoundException;
 import com.metaverse.workflow.login.repository.LoginRepository;
 import com.metaverse.workflow.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class CallCenterServiceAdepter implements CallCenterService {
+public class CallCenterServiceAdapter implements CallCenterService {
 
     @Autowired
     QuestionRepository questionRepository;
@@ -122,36 +124,36 @@ public class CallCenterServiceAdepter implements CallCenterService {
         return WorkflowResponse.builder().message("Participant Verification data is saved successfully").status(200).data(callCenterVerification).build();
     }*/
     @Override
-    public WorkflowResponse saveCallCenterVerification(CallCenterVerificationRequest request) {
-        Optional<CallCenterVerificationStatus> verificationStatus = ccVerificationStatusRepository.findById(request.getVerificationStatusId());
-        if (!verificationStatus.isPresent()) return WorkflowResponse.builder().message("Invalid verification status").status(400).build();
-        Optional<User> user = loginRepository.findById(request.getVerifiedBy());
-        if (!user.isPresent()) return WorkflowResponse.builder().message("User not found").status(400).build();
+    public WorkflowResponse saveCallCenterVerification(CallCenterVerificationRequest request) throws CallCenterVerificationStatusException, UserNotFoundException {
+        CallCenterVerification callCenterVerification;
         List<QuestionAnswers> questionAnswersList = new ArrayList<>();
+
+        CallCenterVerificationStatus verificationStatus = ccVerificationStatusRepository.findById(request.getVerificationStatusId())
+                .orElseThrow(() -> new CallCenterVerificationStatusException("Invalid verification status", "VERIFICATION_STATUS_NOT_FOUND", 400));
+
+        User user = loginRepository.findById(request.getVerifiedBy())
+                .orElseThrow(() -> new UserNotFoundException("User details found", "USER_NOT_FOUND", 400));
+
         if (request.getQuestionAnswerList() != null && !request.getQuestionAnswerList().isEmpty()) {
-            List<Integer> questionIds = request.getQuestionAnswerList().stream().map(qa -> qa.getQuestionId()).collect(Collectors.toList());
+            List<Integer> questionIds = request.getQuestionAnswerList().
+                    stream().map(CallCenterVerificationRequest.QuestionAnswer::getQuestionId).collect(Collectors.toList());
+
             List<Question> questions = questionRepository.findAllById(questionIds);
             questionAnswersList = populateQuestionAnswers(questions, request.getQuestionAnswerList());
         }
-        Optional<CallCenterVerification> existing = ccVerificationRepository.findByProgramIdAndParticipantId(request.getProgramId(), request.getParticipantId());
-        CallCenterVerification callCenterVerification;
-        if (existing.isPresent()) {
-            // 🔄 Update existing record
-            callCenterVerification = existing.get();
-            callCenterVerification.setVerifiedBy(user.get());
-            callCenterVerification.setVerificationDate(DateUtil.stringToDate(request.getVerificationDate(), "dd-MM-yyyy"));
-            callCenterVerification.setCcVerificationStatus(verificationStatus.get());
 
-            // Replace old questionAnswers with new
+        Optional<CallCenterVerification> existing = ccVerificationRepository.findByProgramIdAndParticipantId(request.getProgramId(), request.getParticipantId());
+
+        if (existing.isPresent()) {
+            callCenterVerification = existing.get();
+            callCenterVerification.setVerifiedBy(user);
+            callCenterVerification.setVerificationDate(DateUtil.stringToDate(request.getVerificationDate(), "dd-MM-yyyy"));
+            callCenterVerification.setCcVerificationStatus(verificationStatus);
             callCenterVerification.getQuestionAnswers().clear();
             callCenterVerification.getQuestionAnswers().addAll(questionAnswersList);
-
         } else {
-            // 🆕 New record
-            callCenterVerification = CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user.get(), verificationStatus.get());
+            callCenterVerification = CallCenterRequestMapper.mapParticipantVerification(request, questionAnswersList, user, verificationStatus);
         }
-
-        // Save (will insert or update depending on the presence of ID)
         CallCenterVerification saved = ccVerificationRepository.save(callCenterVerification);
 
         return WorkflowResponse.builder()
@@ -179,13 +181,13 @@ public class CallCenterServiceAdepter implements CallCenterService {
     }
 
     private List<QuestionAnswers> populateQuestionAnswers(List<Question> questions, List<CallCenterVerificationRequest.QuestionAnswer> questionAnswerList) {
-        Map<Integer, Question> questionMap = questions.stream().collect(Collectors.toMap(question -> question.getQuestionId(), question -> question));
+        Map<Integer, Question> questionMap = questions.stream().collect(Collectors.toMap(Question::getQuestionId, question -> question));
         List<QuestionAnswers> questionAnswersList = new ArrayList<>();
         for (CallCenterVerificationRequest.QuestionAnswer questionAnswer : questionAnswerList) {
             questionAnswersList.add(QuestionAnswers
                     .builder()
                     .question(questionMap.get(questionAnswer.getQuestionId()))
-                    .answers(Stream.of(questionAnswer.getAnswers()).collect(Collectors.joining(",")))
+                    .answers(String.join(",", questionAnswer.getAnswers()))
                     .build());
         }
         return questionAnswersList;

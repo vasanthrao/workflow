@@ -1,7 +1,12 @@
 package com.metaverse.workflow.model;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.metaverse.workflow.model.CallCenterVerification;
+import com.metaverse.workflow.model.Question;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -15,6 +20,11 @@ public class QuestionAnswers {
     @Column(name="question_answers_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer questionAnswersId;
+
+    @ManyToMany(mappedBy = "questionAnswers", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JsonBackReference
+    private List<CallCenterVerification> callCenterVerifications;
 
     @ManyToOne
     @JoinColumn(name="question_id")
