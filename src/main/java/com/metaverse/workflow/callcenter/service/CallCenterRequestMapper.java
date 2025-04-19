@@ -5,6 +5,7 @@ import com.metaverse.workflow.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CallCenterRequestMapper {
@@ -12,8 +13,8 @@ public class CallCenterRequestMapper {
     {
         return Question.builder().questionName(request.getQuestion())
                 .questionType(request.getQuestionFieldType())
-                /*.options(request.getOptions()== null ? "" :
-                        request.getOptions().stream().collect(Collectors.joining(",")))*/
+                .answers(request.getOptions()== null ? "" :
+                String.join(",", request.getOptions()))
                 .build();
     }
     public static SubActivityQuestions mapSubActivityQuestions(SubActivityQuestionsRequest request)

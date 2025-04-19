@@ -5,6 +5,10 @@ import com.metaverse.workflow.callcenter.service.QuestionRequest;
 import com.metaverse.workflow.callcenter.service.SubActivityQuestionsRequest;
 import com.metaverse.workflow.callcenter.service.CallCenterService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.common.util.ApplicationAPIResponse;
+import com.metaverse.workflow.common.util.RestControllerBase;
+import com.metaverse.workflow.exceptions.CallCenterVerificationStatusException;
+import com.metaverse.workflow.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,10 +52,15 @@ public class CallCenterController {
     }
 
     @PostMapping("/save/callcenter/verification/data")
-    public ResponseEntity<WorkflowResponse> saveCallCenterVerification(@RequestBody CallCenterVerificationRequest request)
+    public ResponseEntity<?> saveCallCenterVerification(@RequestBody CallCenterVerificationRequest request)
     {
-        WorkflowResponse response =  callCenterService.saveCallCenterVerification(request);
-        return ResponseEntity.ok(response);
+        try {
+            WorkflowResponse response = callCenterService.saveCallCenterVerification(request);
+            return ResponseEntity.ok(response);
+        }
+        catch (CallCenterVerificationStatusException | UserNotFoundException ex) {
+            return RestControllerBase.error(ex);
+        }
     }
     @GetMapping("/get/all/callcenter/verification/data")
     public ResponseEntity<WorkflowResponse> getAllCallCenterVerificationData()

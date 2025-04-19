@@ -1,6 +1,7 @@
 package com.metaverse.workflow.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,6 +28,7 @@ public class CallCenterVerification {
 
     @Column(name = "program_id", nullable = false)
     private Long programId;
+
     @Column(name = "participant_id", nullable = false)
     private Long participantId;
 
@@ -38,9 +40,14 @@ public class CallCenterVerification {
     @Column(name="verification_date")
     private Date verificationDate;
 
-    @OneToMany(mappedBy ="questionAnswersId",cascade = CascadeType.ALL )
-    @Column(name="question_answers")
-    List<QuestionAnswers> questionAnswers;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "call_center_verification_question_answers",
+            joinColumns = @JoinColumn(name = "call_center_verification_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_answers_id")
+    )
+    @JsonManagedReference
+    private List<QuestionAnswers> questionAnswers;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cc_verification_status_id", referencedColumnName = "cc_verification_status_id")
