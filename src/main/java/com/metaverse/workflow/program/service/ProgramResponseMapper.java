@@ -112,7 +112,6 @@ public class ProgramResponseMapper {
                         .sessionTypeName(session.getSessionTypeName())
                         .sessionTypeMethodology(session.getSessionTypeMethodology())
                         .sessionStreamingUrl(session.getSessionStreamingUrl())
-                        .coverageType(session.getCoverageType())
                         .videoUrls(session.getProgramSessionFileList().stream().map(file -> file.getFilePath()).collect(Collectors.toList()))
                         .image1(session.getImage1())
                         .image2(session.getImage2())

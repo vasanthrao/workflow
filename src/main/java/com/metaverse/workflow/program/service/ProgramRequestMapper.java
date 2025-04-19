@@ -41,32 +41,9 @@ public class ProgramRequestMapper {
                 .program(program)
                 .sessionDetails(session.getSessionDetails())
                 .sessionStreamingUrl(session.getSessionStreamingUrl())
-                .image1(session.getImage1())
-                .image2(session.getImage2())
-                .image3(session.getImage3())
-                .image4(session.getImage4())
-                .image5(session.getImage5())
                 .build();
     }
 
-    private static List<ProgramSession> getProgramSessions(List<ProgramRequest.ProgramSession> sessions) {
-        return sessions.stream().map(session -> ProgramSession.builder()
-                        .sessionDate(DateUtil.stringToDate(session.getSessionDate(), "dd-mm-yyyy"))
-                        .startTime(session.getStartTime())
-                        .endTime(session.getEndTime())
-                        .sessionTypeName(session.getSessionTypeName())
-                        .sessionTypeMethodology(session.getSessionTypeMethodology())
-                        //.resourceId(session.getResourceId())
-                        .sessionStreamingUrl(session.getSessionStreamingUrl())
-                        //.programSessionFileList(session.getVideoUrls() != null ? getProgramSessionFile(session.getVideoUrls()) : null)
-                        .image1(session.getImage1())
-                        .image2(session.getImage2())
-                        .image3(session.getImage3())
-                        .image4(session.getImage4())
-                        .image5(session.getImage5())
-                        .build())
-                .collect(Collectors.toList());
-    }
 
     public static List<ProgramSessionFile> mapProgramFiles(List<String> videos, List<String> files){
         List<ProgramSessionFile> programSessionFileList = new ArrayList<>();
