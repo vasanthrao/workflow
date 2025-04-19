@@ -30,6 +30,10 @@ public class BulkExpenditure {
     @JoinColumn(name = "agency_id")
     private Agency agency;
 
+    @ManyToOne
+    @JoinColumn(name="expense_id")
+    private HeadOfExpense headOfExpense;
+
     @Column(name = "item_name")
     private String itemName;
 

@@ -14,5 +14,5 @@ public interface LoginService {
     List<LoginUserResponse> getUserByMobileNo(Long mobileNo);
 
     WorkflowResponse getUsers();
-    WorkflowResponse changePassword(String userId,String oldPassword,String newPassword) throws UserDetailsException;
+    WorkflowResponse changePassword(ChangePasswordRequest request) throws UserDetailsException;
 }

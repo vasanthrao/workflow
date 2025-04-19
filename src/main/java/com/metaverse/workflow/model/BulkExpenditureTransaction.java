@@ -29,6 +29,10 @@ public class BulkExpenditureTransaction {
     private Activity activity;
 
     @ManyToOne
+    @JoinColumn(name = "bulk_expenditure_id")
+    private BulkExpenditure expenditure;
+
+    @ManyToOne
     @JoinColumn(name = "sub_activity_id")
     private SubActivity subActivity;
 

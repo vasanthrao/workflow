@@ -2,6 +2,7 @@ package com.metaverse.workflow.login.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.exceptions.UserDetailsException;
+import com.metaverse.workflow.login.service.ChangePasswordRequest;
 import com.metaverse.workflow.login.service.LoginService;
 import com.metaverse.workflow.login.service.LoginUserRequest;
 import com.metaverse.workflow.login.service.LoginUserResponse;
@@ -83,10 +84,10 @@ public class LoginController {
                     content = @Content(schema = @Schema(implementation = Exception.class)))
     })
     @PutMapping(value = "/login/change-password", produces = {"application/json"})
-    public ResponseEntity<WorkflowResponse> changePassword(@RequestHeader("userId") String userId, @RequestHeader("oldPassword") String oldPassword, @RequestHeader("newPassword") String newPassword) throws UserDetailsException {
-        log.info("Change password controller, userId: {}", userId);
+    public ResponseEntity<WorkflowResponse> changePassword(@RequestBody ChangePasswordRequest request) throws UserDetailsException {
+        log.info("Change password controller, userId: {}", request.getUserId());
 
-        return ResponseEntity.ok(loginService.changePassword(userId, oldPassword, newPassword));
+        return ResponseEntity.ok(loginService.changePassword(request));
 
     }
 }
