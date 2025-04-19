@@ -41,8 +41,6 @@ public class ProgramSession {
     private List<ProgramSessionFile> programSessionFileList;
     @Column(name="session_streaming_url")
     private String sessionStreamingUrl;
-    @Column(name="coverage_type")
-    private String coverageType;
     @Column(name="image1")
     private String image1;
     @Column(name="image2")

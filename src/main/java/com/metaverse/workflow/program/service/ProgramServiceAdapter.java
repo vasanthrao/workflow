@@ -73,7 +73,7 @@ public class ProgramServiceAdapter implements ProgramService {
         ProgramSession session = ProgramRequestMapper.mapSession(request, resource.get(), program.get());
         ProgramSession programSession = programSessionRepository.save(session);
         if(files != null && files.size() > 0) {
-            List<String> filePaths = storageProgramFiles(files, programSession.getProgramSessionId());
+            List<String> filePaths = storageProgramFiles(files, program.get().getProgramId(), "files");
             List<ProgramSessionFile> sessionFiles = ProgramRequestMapper.mapProgramFiles(request.getVideoUrls(), filePaths);
             sessionFiles.stream().forEach(file -> file.setProgramSession(session));
             sessionFiles = programSessionFileRepository.saveAll(sessionFiles);
@@ -99,10 +99,10 @@ public class ProgramServiceAdapter implements ProgramService {
         return WorkflowResponse.builder().status(200).message("Success").data(response).build();
     }
 
-    private List<String> storageProgramFiles(List<MultipartFile> files, Long sessionId) {
+    private List<String> storageProgramFiles(List<MultipartFile> files, Long sessionId, String folderType) {
         List<String> uploadFilePaths = new ArrayList<>();
         files.stream().forEach(file -> {
-            String filePath = storageService.store(file, sessionId);
+            String filePath = storageService.store(file, sessionId, folderType);
             uploadFilePaths.add(filePath);
         });
         return uploadFilePaths;

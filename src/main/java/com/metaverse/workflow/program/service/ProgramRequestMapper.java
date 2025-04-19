@@ -80,8 +80,8 @@ public class ProgramRequestMapper {
     private static List<MediaCoverage> getMediaCoverages(List<ProgramRequest.MediaCoverage> mediaCoverages) {
         return mediaCoverages.stream().map(mediaCoverage -> MediaCoverage.builder()
                         .coverageType(mediaCoverage.getCoverageType())
-                        .videoUrl(mediaCoverage.getVideoUrl())
-                        .images(mediaCoverage.getImages())
+                        .mediaCoverageUrl(mediaCoverage.getMediaCoverageUrl())
+                        .image1(mediaCoverage.getImage1())
                         .build())
                 .collect(Collectors.toList());
     }

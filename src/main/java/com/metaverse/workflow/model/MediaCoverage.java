@@ -5,9 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -22,13 +23,21 @@ public class MediaCoverage {
     private Long coverageId;
     @Column(name="coverage_type")
     private String coverageType;
-    @Column(name="images")
-    private List<String> images;
-    @Column(name="video_url")
-    private String videoUrl;
-    @Column(name="created_on")
+    @Column(name="image1")
+    private String image1;
+    @Column(name="image2")
+    private String image2;
+    @Column(name="image3")
+    private String image3;
+    @Column(name="media_coverage_url")
+    private String mediaCoverageUrl;
+    @Column(name="date")
+    private Date date;
+    @Column(name="created_on",insertable = true,updatable = false)
+    @CreationTimestamp
     private Date createdOn;
-    @Column(name="updated_on")
+    @Column(name="updated_on",insertable = false,updatable = true)
+    @UpdateTimestamp
     private Date updatedOn;
     @ManyToOne
     @JoinColumn(name = "program_id")

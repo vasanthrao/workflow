@@ -43,15 +43,11 @@ public class ProgramRequest {
         private String sessionTypeMethodology;
         private String sessionDetails;
         private Long resourceId;
-        /*private List<MultipartFile> uploaFiles;
-        private List<String> uploaFilePaths;*/
-        private List<String> videoUrls;
         private String image1;
         private String image2;
         private String image3;
         private String image4;
         private String image5;
-        //Video url of live streaming of session in youtube channel
         private String sessionStreamingUrl;
     }
 
@@ -61,8 +57,11 @@ public class ProgramRequest {
     @Setter
     public static class MediaCoverage {
         private String coverageType;
-        private List<String> images;
-        private String videoUrl;
+        private String image1;
+        private String image2;
+        private String image3;
+        private String mediaCoverageUrl;
+        private String date;
     }
 
 }
