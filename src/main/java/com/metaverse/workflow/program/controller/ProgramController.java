@@ -110,4 +110,53 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+
+
+    @PostMapping(value = "/program/session/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkflowResponse> editProgramSession(@RequestPart("data") String data, @RequestPart(value = "files", required = false) List<MultipartFile> files) throws ParseException {
+        log.info("Program controller, title : {}", data);
+        JSONParser parser = new JSONParser();
+        ProgramSessionRequest request = parser.parse(data, ProgramSessionRequest.class);
+        WorkflowResponse response = programService.editProgramSession(request, files);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/program/execution/images", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkflowResponse> saveSessionImages(@RequestPart("sessionId") Long sessionId,
+                                                              @RequestPart(value = "sessionStreamingUrl", required = false) String sessionStreamingUrl,
+                                                              @RequestPart(value = "image1") MultipartFile image1,
+                                                              @RequestPart(value = "image2") MultipartFile image2,
+                                                              @RequestPart(value = "image3") MultipartFile image3,
+                                                              @RequestPart(value = "image4", required = false) MultipartFile image4,
+                                                              @RequestPart(value = "image5", required = false) MultipartFile image5) throws ParseException {
+        log.info("Program controller save session images, sessionId : {}", sessionId);
+        WorkflowResponse response = programService.saveSessionImages(sessionId, sessionStreamingUrl, image1, image2, image3, image4, image5);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/program/execution/media-coverage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WorkflowResponse> saveMediaCoverage(@RequestPart("programId") Long programId,
+                                                             @RequestPart(value = "mediaCoverageId", required = false) Long mediaCoverageId,
+                                                             @RequestPart(value = "mediaCoverageUrl", required = false) String mediaCoverageUrl,
+                                                             @RequestPart("mediaCoverageType") String mediaCoverageType,
+                                                             @RequestPart("date") String date,
+                                                             @RequestPart(value = "image1") MultipartFile image1,
+                                                             @RequestPart(value = "image2", required = false) MultipartFile image2,
+                                                             @RequestPart(value = "image3", required = false) MultipartFile image3) throws ParseException {
+        log.info("Program controller save program media, programId : {}", programId);
+        WorkflowResponse response = programService.saveMediaCoverage(programId, mediaCoverageId, mediaCoverageUrl, mediaCoverageType, date, image1, image2, image3);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/program/file/download/{fileId}")
+    public ResponseEntity<MultipartFile> getProgramFile(@PathVariable("fileId") Long fileId)
+    {
+        MultipartFile response = programService.getProgramFile(fileId);
+        return ResponseEntity.ok(response);
+    }
+
+
 }

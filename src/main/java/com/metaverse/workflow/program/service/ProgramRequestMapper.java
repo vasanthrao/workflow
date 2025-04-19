@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class ProgramRequestMapper {
@@ -44,24 +43,33 @@ public class ProgramRequestMapper {
                 .build();
     }
 
+    public static ProgramSession mapSession(ProgramSessionRequest request, ProgramSession session) {
+        session.setSessionDate(DateUtil.stringToDate(request.getSessionDate(), "dd-mm-yyyy"));
+        session.setStartTime(request.getStartTime());
+        session.setEndTime(request.getEndTime());
+        session.setSessionTypeName(request.getSessionTypeName());
+        session.setSessionTypeMethodology(request.getSessionTypeMethodology());
+        session.setSessionDetails(request.getSessionDetails());
+        session.setSessionStreamingUrl(request.getSessionStreamingUrl());
+        return session;
+    }
 
-    public static List<ProgramSessionFile> mapProgramFiles(List<String> videos, List<String> files){
+
+    public static List<ProgramSessionFile> mapProgramFiles(List<String> files){
         List<ProgramSessionFile> programSessionFileList = new ArrayList<>();
         if (files != null && files.size() > 0)
             files.stream().forEach(file -> programSessionFileList.add(ProgramSessionFile.builder().fileType("FILE").filePath(file).build()));
-        if (videos != null && videos.size() > 0)
-            videos.stream().forEach(file -> programSessionFileList.add(ProgramSessionFile.builder().fileType("VIDEO").filePath(file).build()));
         return programSessionFileList;
     }
 
-    private static List<MediaCoverage> getMediaCoverages(List<ProgramRequest.MediaCoverage> mediaCoverages) {
+    /*private static List<MediaCoverage> getMediaCoverages(List<ProgramRequest.MediaCoverage> mediaCoverages) {
         return mediaCoverages.stream().map(mediaCoverage -> MediaCoverage.builder()
-                        .coverageType(mediaCoverage.getCoverageType())
+                        .mediaCoverageType(mediaCoverage.getMediaCoverageType())
                         .mediaCoverageUrl(mediaCoverage.getMediaCoverageUrl())
                         .image1(mediaCoverage.getImage1())
                         .build())
                 .collect(Collectors.toList());
-    }
+    }*/
 
     public static Program mapUpdate(ProgramRequest programRequest, Agency agency, Location location, Program exisitingProgram) {
 
@@ -82,7 +90,6 @@ public class ProgramRequestMapper {
         program.setLocation(location);
         return program;
     }
-
 
 
 }

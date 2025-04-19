@@ -29,7 +29,6 @@ public class ProgramRequest {
     private Long locationId;
     private String kpi;
     private List<ProgramSession> programSessionList;
-    private List<MediaCoverage> mediaCoverageList;
 
     @Builder
     @AllArgsConstructor
@@ -49,19 +48,6 @@ public class ProgramRequest {
         private String image4;
         private String image5;
         private String sessionStreamingUrl;
-    }
-
-    @Builder
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class MediaCoverage {
-        private String coverageType;
-        private String image1;
-        private String image2;
-        private String image3;
-        private String mediaCoverageUrl;
-        private String date;
     }
 
 }

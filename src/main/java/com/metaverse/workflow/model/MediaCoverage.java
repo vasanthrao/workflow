@@ -1,10 +1,7 @@
 package com.metaverse.workflow.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,20 +12,21 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @Table(name="media_coverage")
 public class MediaCoverage {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name="coverage_id")
-    private Long coverageId;
-    @Column(name="coverage_type")
-    private String coverageType;
+    @Column(name="media_coverage_id")
+    private Long mediaCoverageId;
+    @Column(name="media_coverage_type")
+    private String mediaCoverageType;
     @Column(name="image1")
-    private String image1;
+    private Long image1;
     @Column(name="image2")
-    private String image2;
+    private Long image2;
     @Column(name="image3")
-    private String image3;
+    private Long image3;
     @Column(name="media_coverage_url")
     private String mediaCoverageUrl;
     @Column(name="date")

@@ -55,14 +55,11 @@ public class ProgramResponse {
         private String sessionDetails;
         private Long resourceId;
         private String resourceName;
-        private String uploaFile;
-        private String coverageType;
-        private List<String> videoUrls;
-        private String image1;
-        private String image2;
-        private String image3;
-        private String image4;
-        private String image5;
+        private Long image1;
+        private Long image2;
+        private Long image3;
+        private Long image4;
+        private Long image5;
         private String sessionStreamingUrl;
         private Date createdOn;
         private Date updatedOn;
@@ -75,10 +72,13 @@ public class ProgramResponse {
     @Setter
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class MediaCoverage {
-        private Long coverageId;
-        private String coverageType;
-        private List<String> images;
-        private String videoUrl;
+        private Long mediaCoverageId;
+        private String mediaCoverageType;
+        private String image1;
+        private String image2;
+        private String image3;
+        private String mediaCoverageUrl;
+        private String date;
         private Date createdOn;
         private Date updatedOn;
     }

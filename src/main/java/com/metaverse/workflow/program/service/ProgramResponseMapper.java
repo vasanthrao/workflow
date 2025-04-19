@@ -112,7 +112,6 @@ public class ProgramResponseMapper {
                         .sessionTypeName(session.getSessionTypeName())
                         .sessionTypeMethodology(session.getSessionTypeMethodology())
                         .sessionStreamingUrl(session.getSessionStreamingUrl())
-                        .videoUrls(session.getProgramSessionFileList().stream().map(file -> file.getFilePath()).collect(Collectors.toList()))
                         .image1(session.getImage1())
                         .image2(session.getImage2())
                         .image3(session.getImage3())
@@ -197,6 +196,17 @@ public class ProgramResponseMapper {
     }
 
 
-
+    public static MediaCoverageResponse mapMediaCoverage(MediaCoverage mediaCoverage) {
+        return MediaCoverageResponse
+                .builder()
+                .mediaCoverageType(mediaCoverage.getMediaCoverageType())
+                .mediaCoverageId(mediaCoverage.getMediaCoverageId())
+                .mediaCoverageUrl(mediaCoverage.getMediaCoverageUrl())
+                .date(DateUtil.dateToString(mediaCoverage.getDate(), "dd-mm-yyyy"))
+                .image1(mediaCoverage.getImage1())
+                .image2(mediaCoverage.getImage2())
+                .image3(mediaCoverage.getImage3())
+                .build();
+    }
 
 }

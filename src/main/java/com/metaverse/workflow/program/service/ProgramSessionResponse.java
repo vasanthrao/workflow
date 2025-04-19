@@ -25,11 +25,11 @@ public class ProgramSessionResponse {
     private String resourceName;
     private Long programId;
     private List<ProgramSessionFile> files;
-    private String image1;
-    private String image2;
-    private String image3;
-    private String image4;
-    private String image5;
+    private Long image1;
+    private Long image2;
+    private Long image3;
+    private Long image4;
+    private Long image5;
     private String sessionStreamingUrl;
     private Date createdOn;
     private Date updatedOn;
