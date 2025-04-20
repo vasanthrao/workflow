@@ -1,6 +1,7 @@
 package com.metaverse.workflow.expenditure.controller;
 
 import com.metaverse.workflow.common.enums.ExpenditureType;
+import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.*;
 import com.metaverse.workflow.expenditure.service.BulkExpenditureRequest;
@@ -23,16 +24,14 @@ public class ExpenditureController {
         catch(AgencyDetailsException | HeadOfExpenseException exception)
         {
             return RestControllerBase.error(exception);
-        }
+        } 
     }
-        @PostMapping("/program/expenditure/save")
+    @PostMapping("/program/expenditure/save")
     public ResponseEntity<?> saveProgramExpenditure(@RequestBody ProgramExpenditureRequest request) {
         try {
             return ResponseEntity.ok(expenditureService.saveProgramExpenditure(request));
         }
-        catch (AgencyDetailsException | SubActivityDetailsException |
-               ProgramDetailsException | ActivityDetailsException |
-               HeadOfExpenseException exception) {
+        catch (DataException exception) {
             return RestControllerBase.error(exception);
         }
     }
@@ -43,7 +42,7 @@ public class ExpenditureController {
     }
 
     @GetMapping("/bulk/expenditure")
-    public ResponseEntity<?> getAllProgramExpenditure() {
+    public ResponseEntity<WorkflowResponse> getAllBulkExpenditure( ) {
         return ResponseEntity.ok(expenditureService.getAllBulkExpenditure());
     }
 

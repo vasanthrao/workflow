@@ -2,6 +2,13 @@ package com.metaverse.workflow.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.metaverse.workflow.common.enums.ExpenditureType;
+import com.metaverse.workflow.common.enums.PaymentType;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,8 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "bulk_expenditure")
 public class BulkExpenditure {
@@ -25,6 +31,10 @@ public class BulkExpenditure {
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
+
+    @ManyToOne
+    @JoinColumn(name="expense_id")
+    private HeadOfExpense headOfExpense;
 
     @Column(name = "item_name")
     private String itemName;
@@ -49,10 +59,6 @@ public class BulkExpenditure {
 
     @Column(name = "bill_no")
     private Integer billNo;
-
-    @ManyToOne
-    @JoinColumn(name="expense_id")
-    private HeadOfExpense headOfExpense;
 
     @Column(name = "bill_date")
     private Date billDate;

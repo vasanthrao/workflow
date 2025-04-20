@@ -15,6 +15,7 @@ public class ExpenditureResponseMapper {
                 .agencyName(expenditure.getAgency().getAgencyName())
                 .itemName(expenditure.getItemName())
                 .purchaseDate(expenditure.getBillDate())
+                .headOfExpense(expenditure.getHeadOfExpense().getExpenseName())
                 .purchasedQuantity(expenditure.getPurchasedQuantity())
                 .unitCost(expenditure.getUnitCost())
                 .totalCost(expenditure.getTotalCost())
@@ -31,6 +32,7 @@ public class ExpenditureResponseMapper {
     public static ProgramExpenditureResponse mapProgramExpenditure(ProgramExpenditure  expenditure)
     {
         return ProgramExpenditureResponse.builder()
+                .programExpenditureId(expenditure.getProgramExpenditureId())
                 .activityId(expenditure.getActivity().getActivityId())
                 .activityName(expenditure.getActivity().getActivityName())
                 .subActivityId(expenditure.getSubActivity().getSubActivityId())
@@ -50,6 +52,18 @@ public class ExpenditureResponseMapper {
                 .modeOfPayment(expenditure.getModeOfPayment())
                 .purpose(expenditure.getPurpose())
                 .uploadBillUrl(expenditure.getUploadBillUrl())
+                .build();
+
+    }
+
+    public static BulkExpenditureLookupResponse mapBulkExpenditureDetails(BulkExpenditure  expenditure)
+    {
+        return BulkExpenditureLookupResponse.builder()
+                .purchasedQuantity(expenditure.getPurchasedQuantity())
+                .unitCost(expenditure.getUnitCost())
+                .purchaseDate(expenditure.getPurchaseDate())
+                .consumedQuantity(expenditure.getConsumedQuantity())
+                .availableQuantity(expenditure.getAvailableQuantity())
                 .build();
 
     }

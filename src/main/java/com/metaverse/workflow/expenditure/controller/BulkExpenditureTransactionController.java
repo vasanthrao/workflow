@@ -2,11 +2,7 @@ package com.metaverse.workflow.expenditure.controller;
 
 import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.*;
-import com.metaverse.workflow.expenditure.service.BulkExpenditureLookupRequest;
-import com.metaverse.workflow.expenditure.service.BulkExpenditureTransactionRequest;
-import com.metaverse.workflow.expenditure.service.BulkExpenditureTransactionResponse;
-import com.metaverse.workflow.expenditure.service.BulkExpenditureTransactionService;
-import com.metaverse.workflow.model.BulkExpenditure;
+import com.metaverse.workflow.expenditure.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +32,7 @@ public class BulkExpenditureTransactionController {
     public ResponseEntity<?> getExpendituresByExpenseAndItem(
             @RequestBody BulkExpenditureLookupRequest request) throws DataException {
         try {
-            BulkExpenditure result = service.getBulkExpendituresByExpenseAndItem(request);
+            BulkExpenditureLookupResponse result = service.getBulkExpendituresByExpenseAndItem(request);
             return ResponseEntity.ok(result);
         }
         catch (DataException ex) {

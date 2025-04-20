@@ -18,6 +18,7 @@ public class BulkExpenditureResponse {
     private String agencyName;
     private String itemName;
     private Date purchaseDate;
+    private String headOfExpense;
     private Integer purchasedQuantity;
     private Double unitCost;
     private Double totalCost;

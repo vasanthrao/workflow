@@ -3,6 +3,7 @@ package com.metaverse.workflow.exceptions;
 import java.util.List;
 
 public class HeadOfExpenseException extends DataException {
+
     public HeadOfExpenseException(String message, String errorCode) {
         super(message, errorCode);
     }

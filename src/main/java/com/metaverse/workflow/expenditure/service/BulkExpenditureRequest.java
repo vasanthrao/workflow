@@ -12,10 +12,10 @@ public class BulkExpenditureRequest {
     private Long agencyId;
     private String itemName;
     private String purchaseDate;
+    private Integer headOfExpenseId;
     private Integer purchasedQuantity;
     private Double unitCost;
     private Integer billNo;
-    private Integer expenseId;
     private String billDate;
     private String payeeName;
     private String bankName;

@@ -3,6 +3,7 @@ package com.metaverse.workflow.exceptions;
 import java.util.List;
 
 public class AgencyDetailsException extends DataException {
+
     public AgencyDetailsException(String message, String errorCode) {
         super(message, errorCode);
     }

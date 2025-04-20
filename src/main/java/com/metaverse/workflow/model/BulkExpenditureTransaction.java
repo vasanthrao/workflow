@@ -48,6 +48,7 @@ public class BulkExpenditureTransaction {
     @JoinColumn(name="expense_id")
     private HeadOfExpense headOfExpense;
 
+
     @Column(name = "consumed_quantity")
     private Integer consumedQuantity;
 
@@ -61,5 +62,4 @@ public class BulkExpenditureTransaction {
     @Column(name="updated_on", insertable = false, updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
-
 }

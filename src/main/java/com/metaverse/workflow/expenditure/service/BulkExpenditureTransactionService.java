@@ -74,12 +74,12 @@ public class BulkExpenditureTransactionService implements BulkExpenditureService
 
         BulkExpenditureTransaction saved = transactionRepo.save(transaction);
 
-        if (expenditureRepo != null && request.getConsumedQuantity() != null) {
+        if (bulkExpenditure != null && request.getConsumedQuantity() != null) {
             int updatedAvailableQty = 0;
             if (bulkExpenditure.getAvailableQuantity() > request.getConsumedQuantity()) {
                 updatedAvailableQty = bulkExpenditure.getAvailableQuantity() - request.getConsumedQuantity();
             }
-            bulkExpenditure.setPurchasedQuantity(updatedAvailableQty);
+            bulkExpenditure.setAvailableQuantity(updatedAvailableQty);
             bulkExpenditure.setConsumedQuantity(bulkExpenditure.getConsumedQuantity() + request.getConsumedQuantity());
             expenditureRepo.save(bulkExpenditure);
         }
@@ -95,10 +95,11 @@ public class BulkExpenditureTransactionService implements BulkExpenditureService
     }
 
     @Override
-    public BulkExpenditure getBulkExpendituresByExpenseAndItem(BulkExpenditureLookupRequest request) throws DataException {
+    public BulkExpenditureLookupResponse getBulkExpendituresByExpenseAndItem(BulkExpenditureLookupRequest request) throws DataException {
         HeadOfExpense headOfExpense = expenseRepo.findById(request.getExpenseId())
                 .orElseThrow(() -> new DataException("Head of Expense not found", "HEAD-OF-EXPENSE-NOT-FOUND", 400));
-        return expenditureRepo.findByHeadOfExpenseAndItemNameIgnoreCase(headOfExpense, request.getItemName());
+        BulkExpenditure bulkExpenditure = expenditureRepo.findByHeadOfExpenseAndItemNameIgnoreCase(headOfExpense, request.getItemName());
+        return ExpenditureResponseMapper.mapBulkExpenditureDetails(bulkExpenditure);
     }
 
     @Override
