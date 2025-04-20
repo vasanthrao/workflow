@@ -60,6 +60,7 @@ public class ExpenditureResponseMapper {
     {
         return BulkExpenditureLookupResponse.builder()
                 .purchasedQuantity(expenditure.getPurchasedQuantity())
+                .bulkExpenditureId(expenditure.getBulkExpenditureId())
                 .unitCost(expenditure.getUnitCost())
                 .purchaseDate(expenditure.getPurchaseDate())
                 .consumedQuantity(expenditure.getConsumedQuantity())
