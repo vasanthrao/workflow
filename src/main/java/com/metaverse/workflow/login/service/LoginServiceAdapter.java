@@ -66,12 +66,12 @@ public class LoginServiceAdapter implements LoginService {
     }
 
     @Override
-    public WorkflowResponse changePassword(String userId, String oldPassword, String newPassword) throws UserDetailsException {
-        Optional<User> user = loginRepository.findById(userId);
+    public WorkflowResponse changePassword(ChangePasswordRequest request) throws UserDetailsException {
+        Optional<User> user = loginRepository.findById(request.getUserId());
         if (user.isPresent()) {
             User user1 = user.get();
-            if (user1 != null && user1.getPassword().equals(oldPassword)) {
-                user1.setPassword(newPassword);
+            if (user1 != null && user1.getPassword().equals(request.getOldPassword())) {
+                user1.setPassword(request.getNewPassword());
                 User updatedUser = loginRepository.save(user1);
                 return WorkflowResponse.builder().status(200).message("Success").data(LoginUserResponseMapper.map(updatedUser)).build();
 

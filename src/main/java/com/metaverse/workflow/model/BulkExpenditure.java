@@ -1,5 +1,7 @@
 package com.metaverse.workflow.model;
 
+import jakarta.persistence.*;
+import lombok.*;
 import com.metaverse.workflow.common.enums.ExpenditureType;
 import com.metaverse.workflow.common.enums.PaymentType;
 import jakarta.persistence.*;
@@ -16,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
+@Data
 @Entity
 @Table(name = "bulk_expenditure")
 public class BulkExpenditure {
@@ -30,6 +32,10 @@ public class BulkExpenditure {
     @JoinColumn(name = "agency_id")
     private Agency agency;
 
+    @ManyToOne
+    @JoinColumn(name="expense_id")
+    private HeadOfExpense headOfExpense;
+
     @Column(name = "item_name")
     private String itemName;
 
@@ -41,6 +47,12 @@ public class BulkExpenditure {
 
     @Column(name = "unit_cost")
     private Double unitCost;
+
+    @Column(name = "consumed_quantity")
+    private Integer consumedQuantity;
+
+    @Column(name = "available_quantity")
+    private Integer availableQuantity;
 
     @Column(name = "total_cost")
     private Double totalCost;
@@ -76,8 +88,4 @@ public class BulkExpenditure {
     @Column(name="updated_on", insertable = false, updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
-
-
-
-
 }

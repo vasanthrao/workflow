@@ -1,8 +1,7 @@
 package com.metaverse.workflow.model;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.metaverse.workflow.model.CallCenterVerification;
-import com.metaverse.workflow.model.Question;
 import jakarta.persistence.*;
 import lombok.*;
 

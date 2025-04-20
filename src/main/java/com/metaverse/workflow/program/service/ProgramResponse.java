@@ -15,6 +15,7 @@ import java.util.List;
 public class ProgramResponse {
 
     private Long programId;
+    private String locationName;
     private Long activityId;
     private Long subActivityId;
     private String programName;

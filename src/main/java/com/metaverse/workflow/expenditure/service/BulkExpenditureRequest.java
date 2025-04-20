@@ -1,10 +1,7 @@
 package com.metaverse.workflow.expenditure.service;
 
-import com.metaverse.workflow.common.enums.ExpenditureType;
 import com.metaverse.workflow.common.enums.PaymentType;
 import lombok.*;
-
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +12,7 @@ public class BulkExpenditureRequest {
     private Long agencyId;
     private String itemName;
     private String purchaseDate;
+    private Integer headOfExpenseId;
     private Integer purchasedQuantity;
     private Double unitCost;
     private Integer billNo;

@@ -20,10 +20,10 @@ public class ProgramSessionRequest {
     private String sessionDetails;
     private Long resourceId;
     private List<String> videoUrls;
-    private String image1;
-    private String image2;
-    private String image3;
-    private String image4;
-    private String image5;
+    private Long image1;
+    private Long image2;
+    private Long image3;
+    private Long image4;
+    private Long image5;
     private String sessionStreamingUrl;
 }

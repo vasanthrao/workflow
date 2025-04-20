@@ -5,7 +5,6 @@ import com.metaverse.workflow.callcenter.service.QuestionRequest;
 import com.metaverse.workflow.callcenter.service.SubActivityQuestionsRequest;
 import com.metaverse.workflow.callcenter.service.CallCenterService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
-import com.metaverse.workflow.common.util.ApplicationAPIResponse;
 import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.CallCenterVerificationStatusException;
 import com.metaverse.workflow.exceptions.UserNotFoundException;

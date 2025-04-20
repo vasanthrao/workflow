@@ -20,7 +20,7 @@ import java.util.Date;
 @Entity
 @Table(name = "program_expenditure")
 public class ProgramExpenditure {
-    
+
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         @Column(name="program_expenditure_id")
