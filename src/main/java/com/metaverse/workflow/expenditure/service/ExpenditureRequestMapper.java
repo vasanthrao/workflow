@@ -1,46 +1,54 @@
 package com.metaverse.workflow.expenditure.service;
 
 import com.metaverse.workflow.common.util.DateUtil;
-import com.metaverse.workflow.expenditure.repository.ProgramExpenditureRepository;
 import com.metaverse.workflow.model.*;
 
 public class ExpenditureRequestMapper {
-    public static ProgramExpenditure mapProgramExpenditure(ExpenditureRequest expenditureRequest, Activity activity, SubActivity subActivity, Program program)
+
+
+    public static BulkExpenditure mapBulkExpenditure(BulkExpenditureRequest request, Agency agency, HeadOfExpense headOfExpense)
+    {
+       return BulkExpenditure.builder()
+                .agency(agency)
+                .itemName(request.getItemName())
+                .purchaseDate(DateUtil.stringToDate(request.getPurchaseDate(),"dd-MM-yyyy"))
+                .purchasedQuantity(request.getPurchasedQuantity())
+                .availableQuantity(request.getPurchasedQuantity())
+                .consumedQuantity(0)
+                .headOfExpense(headOfExpense)
+                .unitCost(request.getUnitCost())
+                .totalCost(request.getUnitCost()*request.getPurchasedQuantity())
+                .billNo(request.getBillNo())
+                .billDate(DateUtil.stringToDate(request.getBillDate(),"dd-MM-yyyy"))
+                .payeeName(request.getPayeeName())
+                .bankName(request.getBankName())
+                .ifscCode(request.getIfscCode())
+                .modeOfPayment(request.getModeOfPayment().toString())
+                .remarks(request.getRemarks())
+                .uploadBillUrl(request.getUploadBillUrl())
+               .build();
+
+    }
+    public static ProgramExpenditure mapProgramExpenditure(ProgramExpenditureRequest request,Activity activity,SubActivity subActivity,Program program, Agency agency,HeadOfExpense headOfExpense)
     {
         return ProgramExpenditure.builder()
                 .activity(activity)
                 .subActivity(subActivity)
                 .program(program)
-                .expenditureType(expenditureRequest.getExpenditureType().toString())
-                .headOfExpense(expenditureRequest.getHeadOfExpense())
-                .amount(expenditureRequest.getAmount())
-                .billNo(expenditureRequest.getBillNo())
-                .billDate(DateUtil.stringToDate(expenditureRequest.getBillDate(),"dd-MM-yyyy"))
-                .payeeName(expenditureRequest.getPayeeName())
-                .bankName(expenditureRequest.getBankName())
-                .ifscCode(expenditureRequest.getIfscCode())
-                .modeOfPayment(expenditureRequest.getModeOfPayment())
-                .purpose(expenditureRequest.getPurpose())
-                .uploadBillUrl(expenditureRequest.getUploadBillUrl())
+                .agency(agency)
+                .expenditureType(request.getExpenditureType())
+                .headOfExpense(headOfExpense)
+                .cost(request.getCost())
+                .billNo(request.getBillNo())
+                .billDate(DateUtil.stringToDate(request.getBillDate(),"dd-MM-yyyy"))
+                .payeeName(request.getPayeeName())
+                .bankName(request.getBankName())
+                .ifscCode(request.getIfscCode())
+                .modeOfPayment(request.getModeOfPayment().toString())
+                .purpose(request.getPurpose())
+                .uploadBillUrl(request.getUploadBillUrl())
                 .build();
+
     }
-    public static CommonExpenditure mapCommonExpenditure(ExpenditureRequest expenditureRequest, Activity activity, SubActivity subActivity, Program program)
-    {
-        return CommonExpenditure.builder()
-                .activity(activity)
-                .subActivity(subActivity)
-                .program(program)
-                .expenditureType(expenditureRequest.getExpenditureType())
-                .headOfExpense(expenditureRequest.getHeadOfExpense())
-                .amount(expenditureRequest.getAmount())
-                .billNo(expenditureRequest.getBillNo())
-                .billDate(DateUtil.stringToDate(expenditureRequest.getBillDate(),"dd-MM-yyyy"))
-                .payeeName(expenditureRequest.getPayeeName())
-                .bankName(expenditureRequest.getBankName())
-                .ifscCode(expenditureRequest.getIfscCode())
-                .modeOfPayment(expenditureRequest.getModeOfPayment())
-                .purpose(expenditureRequest.getPurpose())
-                .uploadBillUrl(expenditureRequest.getUploadBillUrl())
-                .build();
-    }
+
 }

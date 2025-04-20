@@ -1,29 +1,32 @@
 package com.metaverse.workflow.expenditure.service;
 
 import com.metaverse.workflow.common.enums.ExpenditureType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.metaverse.workflow.common.enums.PaymentType;
+import com.metaverse.workflow.model.HeadOfExpense;
+import com.metaverse.workflow.model.ProgramExpenditure;
+import lombok.*;
 
-import java.util.Date;
-@AllArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
-public class ExpenditureResponse {
-    private Long expenditureId;
+public class ProgramExpenditureResponse {
+
+    private Long programExpenditureId;
     private Long activityId;
     private Long subActivityId;
     private Long programId;
+    private Long agencyId;
     private String activityName;
     private String subActivityName;
     private String programName;
+    private String agencyName;
     private String expenditureType;
     private String headOfExpense;
-    private Double amount;
+    private Double cost;
     private Integer billNo;
-    private Date billDate;
+    private String billDate;
     private String payeeName;
     private String bankName;
     private String ifscCode;
