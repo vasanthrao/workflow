@@ -1,10 +1,7 @@
 package com.metaverse.workflow.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @Table(name="program_session")
 public class ProgramSession {
     @Id
@@ -41,18 +39,16 @@ public class ProgramSession {
     private List<ProgramSessionFile> programSessionFileList;
     @Column(name="session_streaming_url")
     private String sessionStreamingUrl;
-    @Column(name="coverage_type")
-    private String coverageType;
     @Column(name="image1")
-    private String image1;
+    private Long image1;
     @Column(name="image2")
-    private String image2;
+    private Long image2;
     @Column(name="image3")
-    private String image3;
+    private Long image3;
     @Column(name="image4")
-    private String image4;
+    private Long image4;
     @Column(name="image5")
-    private String image5;
+    private Long image5;
     @Column(name="created_on",insertable = true,updatable = false)
     @CreationTimestamp
     private Date createdOn;

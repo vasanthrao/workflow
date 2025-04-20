@@ -29,7 +29,6 @@ public class ProgramRequest {
     private Long locationId;
     private String kpi;
     private List<ProgramSession> programSessionList;
-    private List<MediaCoverage> mediaCoverageList;
 
     @Builder
     @AllArgsConstructor
@@ -43,26 +42,12 @@ public class ProgramRequest {
         private String sessionTypeMethodology;
         private String sessionDetails;
         private Long resourceId;
-        /*private List<MultipartFile> uploaFiles;
-        private List<String> uploaFilePaths;*/
-        private List<String> videoUrls;
         private String image1;
         private String image2;
         private String image3;
         private String image4;
         private String image5;
-        //Video url of live streaming of session in youtube channel
         private String sessionStreamingUrl;
-    }
-
-    @Builder
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class MediaCoverage {
-        private String coverageType;
-        private List<String> images;
-        private String videoUrl;
     }
 
 }
