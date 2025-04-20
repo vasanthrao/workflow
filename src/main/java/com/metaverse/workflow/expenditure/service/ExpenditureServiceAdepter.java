@@ -35,20 +35,32 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     HeadOfExpenseRepository headOfExpenseRepository;
 
     @Override
-    public WorkflowResponse saveBulkExpenditure(BulkExpenditureRequest expenditureRequest) throws AgencyDetailsException, HeadOfExpenseException {
+    public WorkflowResponse saveBulkExpenditure(BulkExpenditureRequest expenditureRequest) throws DataException {
         Agency agency = agencyRepository.findById(expenditureRequest.getAgencyId())
-                .orElseThrow(() -> new AgencyDetailsException(
+                .orElseThrow(() -> new DataException(
                         "Agency details for the agency id " + expenditureRequest.getAgencyId() + " do not exist.",
                         "AGENCY-DETAILS-NOT-FOUND",
                         400
                 ));
 
         HeadOfExpense headOfExpense = headOfExpenseRepository.findById(expenditureRequest.getHeadOfExpenseId())
-                .orElseThrow(() -> new HeadOfExpenseException(
+                .orElseThrow(() -> new DataException(
                         "HeadOfExpense details for the HeadOfExpense id " + expenditureRequest.getHeadOfExpenseId() + " do not exist.",
                         "HEAD-OF-EXPENSE-DETAILS-NOT-FOUND",
                         400
                 ));
+
+        boolean exists = bulkExpenditureRepository.existsByAgencyAndHeadOfExpenseAndItemName(
+                agency,
+                headOfExpense,
+                expenditureRequest.getItemName()
+        );
+
+        if (exists) {
+            throw new DataException("BulkExpenditure with given agency " + agency.getAgencyName(), " head of expense " + headOfExpense.getExpenseName() +
+                    " and items " + expenditureRequest.getItemName()  + " already exists." , 400);
+        }
+
 
         return WorkflowResponse.builder()
                 .message("BulkExpenditure saved successfully")

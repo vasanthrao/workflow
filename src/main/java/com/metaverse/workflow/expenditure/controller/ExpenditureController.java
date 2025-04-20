@@ -21,7 +21,7 @@ public class ExpenditureController {
         try {
             return ResponseEntity.ok(expenditureService.saveBulkExpenditure(request));
         }
-        catch(AgencyDetailsException | HeadOfExpenseException exception)
+        catch(DataException exception)
         {
             return RestControllerBase.error(exception);
         } 
