@@ -2,6 +2,7 @@ package com.metaverse.workflow.expenditure.service;
 
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.BulkExpenditure;
+import com.metaverse.workflow.model.BulkExpenditureTransaction;
 import com.metaverse.workflow.model.ProgramExpenditure;
 
 public class ExpenditureResponseMapper {
@@ -29,7 +30,24 @@ public class ExpenditureResponseMapper {
                 .uploadBillUrl(expenditure.getUploadBillUrl())
                 .build();
     }
-    public static ProgramExpenditureResponse mapProgramExpenditure(ProgramExpenditure  expenditure)
+    public static BulkTransactions mapBulkExpenditureTransaction(BulkExpenditureTransaction  expenditure)
+    {
+        return BulkTransactions.builder()
+                .headOfExpense(expenditure.getHeadOfExpense().getExpenseName())
+                .expenditureType("BULK")
+                .allocatedCost(expenditure.getAllocatedCost())
+                .billNo(expenditure.getExpenditure().getBillNo())
+                .billDate(expenditure.getExpenditure().getBillDate())
+                .payeeName(expenditure.getExpenditure().getPayeeName())
+                .bankName(expenditure.getExpenditure().getBankName())
+                .ifscCode(expenditure.getExpenditure().getIfscCode())
+                .modeOfPayment(expenditure.getExpenditure().getModeOfPayment())
+                .remarks(expenditure.getExpenditure().getRemarks())
+                .uploadBillUrl(expenditure.getExpenditure().getUploadBillUrl())
+                .build();
+    }
+
+    public static ProgramExpenditureResponse mapProgramExpenditure(ProgramExpenditure expenditure)
     {
         return ProgramExpenditureResponse.builder()
                 .programExpenditureId(expenditure.getProgramExpenditureId())

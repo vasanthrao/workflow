@@ -57,8 +57,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         );
 
         if (exists) {
-            throw new DataException("BulkExpenditure with given agency " + agency.getAgencyName(), " head of expense " + headOfExpense.getExpenseName() +
-                    " and items " + expenditureRequest.getItemName()  + " already exists." , 400);
+            throw new DataException("Same Item Name and Head of Expense already exists for your agency. Please change Item Name!" , "BULK-EXPENDITURE_ALREADY-EXISTS", 400);
         }
 
 
@@ -90,6 +89,19 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     @Override
     public WorkflowResponse getAllProgramExpenditure(ExpenditureType expenditureType) {
         List<ProgramExpenditure> programExpendituresList = programExpenditureRepository.findByExpenditureType(expenditureType);
+        if(programExpendituresList.isEmpty())
+            return WorkflowResponse.builder().message("Expenditures is Empty").status(400).build();
+        return WorkflowResponse.builder().message("Success").status(200)
+                .data(
+                        programExpendituresList.stream().map(
+                                ExpenditureResponseMapper::mapProgramExpenditure).toList()
+                )
+                .build();
+    }
+
+    @Override
+    public WorkflowResponse getAllProgramExpenditureByProgram(ExpenditureType expenditureType, Long programId) {
+        List<ProgramExpenditure> programExpendituresList = programExpenditureRepository.findByExpenditureTypeAndProgram_ProgramId(expenditureType,programId);
         if(programExpendituresList.isEmpty())
             return WorkflowResponse.builder().message("Expenditures is Empty").status(400).build();
         return WorkflowResponse.builder().message("Success").status(200)

@@ -46,7 +46,12 @@ public class ExpenditureController {
         return ResponseEntity.ok(expenditureService.getAllBulkExpenditure());
     }
 
-
+    @GetMapping("/program/expenditure")
+    public ResponseEntity<?> getAllProgramExpenditure(
+            @RequestParam ExpenditureType expenditureType,
+            @RequestParam Long programId) {
+        return ResponseEntity.ok(expenditureService.getAllProgramExpenditureByProgram(expenditureType, programId));
+    }
 }
 
 

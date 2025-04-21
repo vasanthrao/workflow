@@ -3,10 +3,13 @@ package com.metaverse.workflow.expenditure.service;
 import com.metaverse.workflow.activity.repository.ActivityRepository;
 import com.metaverse.workflow.activity.repository.SubActivityRepository;
 import com.metaverse.workflow.agency.repository.AgencyRepository;
+import com.metaverse.workflow.common.enums.ExpenditureType;
+import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.expenditure.repository.BulkExpenditureRepository;
 import com.metaverse.workflow.expenditure.repository.BulkExpenditureTransactionRepository;
 import com.metaverse.workflow.expenditure.repository.HeadOfExpenseRepository;
+import com.metaverse.workflow.expenditure.repository.ProgramExpenditureRepository;
 import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.program.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class BulkExpenditureTransactionService implements BulkExpenditureService
 
     @Autowired
     private BulkExpenditureTransactionRepository transactionRepo;
+
+    @Autowired
+    private ProgramExpenditureRepository programExpenditureRepository;
 
     @Autowired
     private ActivityRepository activityRepo;
@@ -106,4 +112,18 @@ public class BulkExpenditureTransactionService implements BulkExpenditureService
     public List<String> getItemsByHeadOfExpense(Integer expenseId) {
         return expenditureRepo.findDistinctItemNamesByHeadOfExpense(expenseId);
     }
+
+    @Override
+    public WorkflowResponse getAllBulkExpenditureTransactionByProgram(Long programId) {
+        List<BulkExpenditureTransaction> transactions = transactionRepo
+                .findByProgram_ProgramId(programId);
+
+        return WorkflowResponse.builder().message("Success").status(200)
+                .data(
+                        transactions.stream().map(
+                                ExpenditureResponseMapper::mapBulkExpenditureTransaction).toList()
+                )
+                .build();
+    }
+
 }

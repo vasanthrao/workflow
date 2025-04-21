@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ProgramExpenditureRepository extends JpaRepository<ProgramExpenditure,Long> {
     List<ProgramExpenditure> findByExpenditureType(ExpenditureType expenditureType);
+
+    List<ProgramExpenditure> findByExpenditureTypeAndProgram_ProgramId(ExpenditureType expenditureType, Long programId);
 }

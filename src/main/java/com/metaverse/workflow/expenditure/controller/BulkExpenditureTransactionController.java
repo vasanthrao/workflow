@@ -1,5 +1,7 @@
 package com.metaverse.workflow.expenditure.controller;
 
+import com.metaverse.workflow.common.enums.ExpenditureType;
+import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.*;
 import com.metaverse.workflow.expenditure.service.*;
@@ -44,5 +46,11 @@ public class BulkExpenditureTransactionController {
     public ResponseEntity<List<String>> getItemsByExpense(@RequestParam Integer expenseId) {
         List<String> items = service.getItemsByHeadOfExpense(expenseId);
         return ResponseEntity.ok(items);
+    }
+
+    @GetMapping
+    public ResponseEntity<WorkflowResponse> getAllBulkExpenditureTransactionByProgram(
+            @RequestParam Long programId) {
+        return ResponseEntity.ok(service.getAllBulkExpenditureTransactionByProgram(programId));
     }
 }
