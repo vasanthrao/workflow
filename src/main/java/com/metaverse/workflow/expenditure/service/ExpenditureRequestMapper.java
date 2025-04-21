@@ -71,4 +71,18 @@ public class ExpenditureRequestMapper {
                 .build();
 
     }
+
+
+    public static BulkExpenditureTransaction mapBulkExpenditureTransaction(BulkExpenditureTransactionRequest request, Activity activity, SubActivity subActivity, Program program, Agency agency, BulkExpenditure bulkExpenditure, HeadOfExpense headOfExpense) {
+        return BulkExpenditureTransaction.builder()
+                .activity(activity)
+                .expenditure(bulkExpenditure)
+                .subActivity(subActivity)
+                .program(program)
+                .agency(agency)
+                .headOfExpense(headOfExpense)
+                .consumedQuantity(request.getConsumedQuantity())
+                .allocatedCost(request.getAllocatedCost())
+                .build();
+    }
 }

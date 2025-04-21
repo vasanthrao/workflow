@@ -9,6 +9,5 @@ public class BulkExpenditureTransactionResponse {
     private Long id;
     private Integer consumedQuantity;
     private Double allocatedCost;
-    private Date createdOn;
-    private Date updatedOn;
+
 }

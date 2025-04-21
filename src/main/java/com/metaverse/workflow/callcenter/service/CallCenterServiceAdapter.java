@@ -7,8 +7,7 @@ import com.metaverse.workflow.callcenter.repository.QuestionRepository;
 import com.metaverse.workflow.callcenter.repository.SubActivityQuestionsRepository;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.DateUtil;
-import com.metaverse.workflow.exceptions.CallCenterVerificationStatusException;
-import com.metaverse.workflow.exceptions.UserNotFoundException;
+import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.login.repository.LoginRepository;
 import com.metaverse.workflow.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Service
 public class CallCenterServiceAdapter implements CallCenterService {
@@ -124,15 +123,15 @@ public class CallCenterServiceAdapter implements CallCenterService {
         return WorkflowResponse.builder().message("Participant Verification data is saved successfully").status(200).data(callCenterVerification).build();
     }*/
     @Override
-    public WorkflowResponse saveCallCenterVerification(CallCenterVerificationRequest request) throws CallCenterVerificationStatusException, UserNotFoundException {
+    public WorkflowResponse saveCallCenterVerification(CallCenterVerificationRequest request) throws DataException {
         CallCenterVerification callCenterVerification;
         List<QuestionAnswers> questionAnswersList = new ArrayList<>();
 
         CallCenterVerificationStatus verificationStatus = ccVerificationStatusRepository.findById(request.getVerificationStatusId())
-                .orElseThrow(() -> new CallCenterVerificationStatusException("Invalid verification status", "VERIFICATION_STATUS_NOT_FOUND", 400));
+                .orElseThrow(() -> new DataException("Invalid verification status", "VERIFICATION_STATUS_NOT_FOUND", 400));
 
         User user = loginRepository.findById(request.getVerifiedBy())
-                .orElseThrow(() -> new UserNotFoundException("User details found", "USER_NOT_FOUND", 400));
+                .orElseThrow(() -> new DataException("User details found", "USER_NOT_FOUND", 400));
 
         if (request.getQuestionAnswerList() != null && !request.getQuestionAnswerList().isEmpty()) {
             List<Integer> questionIds = request.getQuestionAnswerList().

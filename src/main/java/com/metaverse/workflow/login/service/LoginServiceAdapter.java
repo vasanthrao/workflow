@@ -2,18 +2,13 @@ package com.metaverse.workflow.login.service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.common.response.WorkflowResponse;
-import com.metaverse.workflow.exceptions.SubActivityDetailsException;
-import com.metaverse.workflow.exceptions.UserDetailsException;
 import com.metaverse.workflow.login.repository.LoginRepository;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,7 +61,7 @@ public class LoginServiceAdapter implements LoginService {
     }
 
     @Override
-    public WorkflowResponse changePassword(ChangePasswordRequest request) throws UserDetailsException {
+    public WorkflowResponse changePassword(ChangePasswordRequest request)  {
         Optional<User> user = loginRepository.findById(request.getUserId());
         if (user.isPresent()) {
             User user1 = user.get();

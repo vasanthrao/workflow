@@ -4,12 +4,13 @@ import com.metaverse.workflow.common.enums.ExpenditureType;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.*;
-import com.metaverse.workflow.expenditure.service.BulkExpenditureRequest;
-import com.metaverse.workflow.expenditure.service.ExpenditureService;
-import com.metaverse.workflow.expenditure.service.ProgramExpenditureRequest;
+import com.metaverse.workflow.expenditure.service.*;
+import com.metaverse.workflow.model.HeadOfExpense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ExpenditureController {
@@ -51,6 +52,47 @@ public class ExpenditureController {
             @RequestParam ExpenditureType expenditureType,
             @RequestParam Long programId) {
         return ResponseEntity.ok(expenditureService.getAllProgramExpenditureByProgram(expenditureType, programId));
+    }
+
+    @PostMapping("/bulk/transactions/save")
+    public ResponseEntity<?> saveTransaction(
+            @RequestBody BulkExpenditureTransactionRequest request) throws DataException {
+        try {
+            BulkExpenditureTransactionResponse response = expenditureService.saveTransaction(request);
+            return ResponseEntity.ok(response);
+        }
+        catch (DataException ex) {
+            return RestControllerBase.error(ex);
+        }
+    }
+
+    @PostMapping("/bulk/transactions/lookup")
+    public ResponseEntity<?> getExpendituresByExpenseAndItem(
+            @RequestBody BulkExpenditureLookupRequest request) throws DataException {
+        try {
+            BulkExpenditureLookupResponse result = expenditureService.getBulkExpendituresByExpenseAndItem(request);
+            return ResponseEntity.ok(result);
+        }
+        catch (DataException ex) {
+            return RestControllerBase.error(ex);
+        }
+    }
+
+    @GetMapping("/bulk/transactions/items")
+    public ResponseEntity<List<String>> getItemsByExpense(@RequestParam Integer expenseId) throws DataException {
+        List<String> items = expenditureService.getItemsByHeadOfExpense(expenseId);
+        return ResponseEntity.ok(items);
+    }
+
+    @GetMapping("/bulk/transactions")
+    public ResponseEntity<WorkflowResponse> getAllBulkExpenditureTransactionByProgram(
+            @RequestParam Long programId) {
+        return ResponseEntity.ok(expenditureService.getAllBulkExpenditureTransactionByProgram(programId));
+    }
+    @GetMapping("/expenses")
+    public List<HeadOfExpense> getAllExpenses()
+    {
+        return expenditureService.getAllHeadOfExpenses();
     }
 }
 

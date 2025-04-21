@@ -17,13 +17,13 @@ public class BulkExpenditureResponse {
     private Long agencyId;
     private String agencyName;
     private String itemName;
-    private Date purchaseDate;
+    private String purchaseDate;
     private String headOfExpense;
     private Integer purchasedQuantity;
     private Double unitCost;
     private Double totalCost;
     private Integer billNo;
-    private Date billDate;
+    private String billDate;
     private String payeeName;
     private String bankName;
     private String ifscCode;

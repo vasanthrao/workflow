@@ -1,13 +1,12 @@
 package com.metaverse.workflow.callcenter.controller;
 
+import com.metaverse.workflow.callcenter.service.CallCenterService;
 import com.metaverse.workflow.callcenter.service.CallCenterVerificationRequest;
 import com.metaverse.workflow.callcenter.service.QuestionRequest;
 import com.metaverse.workflow.callcenter.service.SubActivityQuestionsRequest;
-import com.metaverse.workflow.callcenter.service.CallCenterService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.RestControllerBase;
-import com.metaverse.workflow.exceptions.CallCenterVerificationStatusException;
-import com.metaverse.workflow.exceptions.UserNotFoundException;
+import com.metaverse.workflow.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +56,7 @@ public class CallCenterController {
             WorkflowResponse response = callCenterService.saveCallCenterVerification(request);
             return ResponseEntity.ok(response);
         }
-        catch (CallCenterVerificationStatusException | UserNotFoundException ex) {
+        catch (DataException ex) {
             return RestControllerBase.error(ex);
         }
     }

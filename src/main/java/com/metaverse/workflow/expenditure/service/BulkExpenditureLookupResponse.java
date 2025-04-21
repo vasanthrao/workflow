@@ -12,7 +12,7 @@ public class BulkExpenditureLookupResponse {
     private Integer purchasedQuantity;
     private Double unitCost;
     private Long bulkExpenditureId;
-    private Date purchaseDate;
+    private String purchaseDate;
     private Integer consumedQuantity;
     private Integer availableQuantity;
 }

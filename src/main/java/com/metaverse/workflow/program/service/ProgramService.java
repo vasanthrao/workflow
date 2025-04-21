@@ -1,6 +1,7 @@
 package com.metaverse.workflow.program.service;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.exceptions.DataException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
@@ -21,5 +22,5 @@ public interface ProgramService {
     WorkflowResponse saveSessionImages(ProgramSessionRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4, MultipartFile image5);
     WorkflowResponse saveMediaCoverage(MediaCoverageRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3);
     Path getProgramFile(Long fileId);
-
+    WorkflowResponse getProgramSummaryByProgramId(Long programId) throws DataException;
 }

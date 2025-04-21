@@ -1,7 +1,7 @@
 package com.metaverse.workflow.login.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
-import com.metaverse.workflow.exceptions.UserDetailsException;
+import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.login.service.ChangePasswordRequest;
 import com.metaverse.workflow.login.service.LoginService;
 import com.metaverse.workflow.login.service.LoginUserRequest;
@@ -84,7 +84,7 @@ public class LoginController {
                     content = @Content(schema = @Schema(implementation = Exception.class)))
     })
     @PutMapping(value = "/login/change-password", produces = {"application/json"})
-    public ResponseEntity<WorkflowResponse> changePassword(@RequestBody ChangePasswordRequest request) throws UserDetailsException {
+    public ResponseEntity<WorkflowResponse> changePassword(@RequestBody ChangePasswordRequest request) throws DataException {
         log.info("Change password controller, userId: {}", request.getUserId());
 
         return ResponseEntity.ok(loginService.changePassword(request));

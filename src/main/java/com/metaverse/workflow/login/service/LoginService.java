@@ -1,7 +1,6 @@
 package com.metaverse.workflow.login.service;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
-import com.metaverse.workflow.exceptions.UserDetailsException;
 
 import java.util.List;
 
@@ -14,5 +13,5 @@ public interface LoginService {
     List<LoginUserResponse> getUserByMobileNo(Long mobileNo);
 
     WorkflowResponse getUsers();
-    WorkflowResponse changePassword(ChangePasswordRequest request) throws UserDetailsException;
+    WorkflowResponse changePassword(ChangePasswordRequest request) ;
 }

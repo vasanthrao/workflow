@@ -1,10 +1,12 @@
 package com.metaverse.workflow.program.service;
 
+import ch.qos.logback.core.CoreConstants;
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
 import com.metaverse.workflow.common.fileservice.StorageService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.DateUtil;
+import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.location.repository.LocationRepository;
 import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
@@ -288,6 +290,15 @@ public class ProgramServiceAdapter implements ProgramService {
             return path;
         } else
             return null;
+    }
+
+    @Override
+    public WorkflowResponse getProgramSummaryByProgramId(Long programId) throws DataException {
+
+        Program program = programRepository.findById(programId)
+                .orElseThrow(() -> new DataException("Program data not found", "PROGRAM-DATA-NOT-FOUND", 400));
+
+        return WorkflowResponse.builder().status(200).message("Success").data(ProgramSummeryMapper.map(program)).build();
     }
 }
 

@@ -1,6 +1,8 @@
 package com.metaverse.workflow.program.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.common.util.RestControllerBase;
+import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.program.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,9 +49,9 @@ public class ProgramController {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = WorkflowResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
     })
-    @PostMapping(value = "/program/session/create",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+    @PostMapping(value = "/program/session/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkflowResponse> createSession(@RequestPart("data") String data, @RequestPart(value="files", required = false) List<MultipartFile> files) throws ParseException {
+    public ResponseEntity<WorkflowResponse> createSession(@RequestPart("data") String data, @RequestPart(value = "files", required = false) List<MultipartFile> files) throws ParseException {
         log.info("Program controller, title : {}", data);
         JSONParser parser = new JSONParser();
         ProgramSessionRequest request = parser.parse(data, ProgramSessionRequest.class);
@@ -58,24 +60,20 @@ public class ProgramController {
     }
 
 
-
     @GetMapping("/program/participants/{programId}")
-    public ResponseEntity<WorkflowResponse> getParticipantsByProgramId(@PathVariable("programId") Long programId)
-    {
+    public ResponseEntity<WorkflowResponse> getParticipantsByProgramId(@PathVariable("programId") Long programId) {
         WorkflowResponse response = programService.getProgramParticipants(programId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/program/{programId}")
-    public ResponseEntity<WorkflowResponse> getProgramById(@PathVariable("programId") Long programId)
-    {
+    public ResponseEntity<WorkflowResponse> getProgramById(@PathVariable("programId") Long programId) {
         WorkflowResponse response = programService.getProgramById(programId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/programs")
-    public ResponseEntity<WorkflowResponse> getPrograms()
-    {
+    public ResponseEntity<WorkflowResponse> getPrograms() {
         WorkflowResponse response = programService.getPrograms();
         return ResponseEntity.ok(response);
     }
@@ -88,31 +86,28 @@ public class ProgramController {
     }
 
     @PostMapping("/save/program/type")
-    public ResponseEntity<WorkflowResponse> saveProgramTypes(@RequestBody ProgramTypeRequest request)
-    {
+    public ResponseEntity<WorkflowResponse> saveProgramTypes(@RequestBody ProgramTypeRequest request) {
         WorkflowResponse response = programService.saveProgramType(request);
         return ResponseEntity.ok(response);
     }
+
     @GetMapping("/program/types")
-    public ResponseEntity<WorkflowResponse> getAllProgramTypes()
-    {
+    public ResponseEntity<WorkflowResponse> getAllProgramTypes() {
         WorkflowResponse response = programService.getAllProgramTypes();
         return ResponseEntity.ok(response);
     }
+
     @GetMapping("/program/types/agency/id/{agencyId}")
-    public ResponseEntity<WorkflowResponse> getAllProgramTypesByAgencyId(@PathVariable Long agencyId)
-    {
+    public ResponseEntity<WorkflowResponse> getAllProgramTypesByAgencyId(@PathVariable Long agencyId) {
         WorkflowResponse response = programService.getAllProgramTypeByAgencyId(agencyId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/program/participant-verification/{programId}")
-    public ResponseEntity<WorkflowResponse> getParticipantAndVerificationByProgramId(@PathVariable("programId") Long programId)
-    {
+    public ResponseEntity<WorkflowResponse> getParticipantAndVerificationByProgramId(@PathVariable("programId") Long programId) {
         WorkflowResponse response = programService.getProgramParticipantAndVerifications(programId);
         return ResponseEntity.ok(response);
     }
-
 
 
     @PostMapping(value = "/program/session/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
@@ -143,9 +138,9 @@ public class ProgramController {
     @PostMapping(value = "/program/execution/media-coverage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkflowResponse> saveMediaCoverage(@RequestPart("data") String data,
-                                                             @RequestPart(value = "image1") MultipartFile image1,
-                                                             @RequestPart(value = "image2", required = false) MultipartFile image2,
-                                                             @RequestPart(value = "image3", required = false) MultipartFile image3) throws ParseException {
+                                                              @RequestPart(value = "image1") MultipartFile image1,
+                                                              @RequestPart(value = "image2", required = false) MultipartFile image2,
+                                                              @RequestPart(value = "image3", required = false) MultipartFile image3) throws ParseException {
         log.info("Program controller save program media, data : {}", data);
         JSONParser parser = new JSONParser();
         MediaCoverageRequest request = parser.parse(data, MediaCoverageRequest.class);
@@ -156,12 +151,12 @@ public class ProgramController {
     @GetMapping("/program/file/download/{fileId}")
     public ResponseEntity<InputStreamResource> getProgramFile(@PathVariable("fileId") Long fileId) throws FileNotFoundException {
         Path path = programService.getProgramFile(fileId);
-        if(path == null) {
+        if (path == null) {
             return ResponseEntity.noContent().build();
         } else {
             File file = new File(path.toAbsolutePath().toString());
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+path.getFileName().toString());
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + path.getFileName().toString());
             headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
             headers.add("Pragma", "no-cache");
             headers.add("Expires", "0");
@@ -172,6 +167,17 @@ public class ProgramController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(resource);
         }
+    }
+
+    @GetMapping("/program/summary/{programId}")
+    public ResponseEntity<?> getProgramSummeryById(@PathVariable("programId") Long programId) {
+        try {
+
+            return ResponseEntity.ok(programService.getProgramSummaryByProgramId(programId));
+        } catch (DataException exception) {
+            return RestControllerBase.error(exception);
+        }
+
     }
 
 

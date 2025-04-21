@@ -7,6 +7,7 @@ import com.metaverse.workflow.common.enums.ExpenditureType;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.exceptions.*;
 import com.metaverse.workflow.expenditure.repository.BulkExpenditureRepository;
+import com.metaverse.workflow.expenditure.repository.BulkExpenditureTransactionRepository;
 import com.metaverse.workflow.expenditure.repository.HeadOfExpenseRepository;
 import com.metaverse.workflow.expenditure.repository.ProgramExpenditureRepository;
 import com.metaverse.workflow.model.*;
@@ -23,6 +24,8 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     ProgramExpenditureRepository programExpenditureRepository;
     @Autowired
     BulkExpenditureRepository bulkExpenditureRepository;
+    @Autowired
+    private BulkExpenditureTransactionRepository transactionRepo;
     @Autowired
     AgencyRepository agencyRepository;
     @Autowired
@@ -57,7 +60,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         );
 
         if (exists) {
-            throw new DataException("Same Item Name and Head of Expense already exists for your agency. Please change Item Name!" , "BULK-EXPENDITURE_ALREADY-EXISTS", 400);
+            throw new DataException("Same Item Name and Head of Expense already exists for your agency. Please change Item Name!", "BULK-EXPENDITURE_ALREADY-EXISTS", 400);
         }
 
 
@@ -76,7 +79,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     @Override
     public WorkflowResponse getAllBulkExpenditure() {
         List<BulkExpenditure> bulkExpenditureList = bulkExpenditureRepository.findAll();
-        if(bulkExpenditureList.isEmpty())
+        if (bulkExpenditureList.isEmpty())
             return WorkflowResponse.builder().message("BulkExpenditure is Empty").status(400).build();
         return WorkflowResponse.builder().message("Success").status(200)
                 .data(
@@ -89,7 +92,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     @Override
     public WorkflowResponse getAllProgramExpenditure(ExpenditureType expenditureType) {
         List<ProgramExpenditure> programExpendituresList = programExpenditureRepository.findByExpenditureType(expenditureType);
-        if(programExpendituresList.isEmpty())
+        if (programExpendituresList.isEmpty())
             return WorkflowResponse.builder().message("Expenditures is Empty").status(400).build();
         return WorkflowResponse.builder().message("Success").status(200)
                 .data(
@@ -101,8 +104,8 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
 
     @Override
     public WorkflowResponse getAllProgramExpenditureByProgram(ExpenditureType expenditureType, Long programId) {
-        List<ProgramExpenditure> programExpendituresList = programExpenditureRepository.findByExpenditureTypeAndProgram_ProgramId(expenditureType,programId);
-        if(programExpendituresList.isEmpty())
+        List<ProgramExpenditure> programExpendituresList = programExpenditureRepository.findByExpenditureTypeAndProgram_ProgramId(expenditureType, programId);
+        if (programExpendituresList.isEmpty())
             return WorkflowResponse.builder().message("Expenditures is Empty").status(400).build();
         return WorkflowResponse.builder().message("Success").status(200)
                 .data(
@@ -112,7 +115,72 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                 .build();
     }
 
+    @Override
+    public BulkExpenditureTransactionResponse saveTransaction(BulkExpenditureTransactionRequest request) throws DataException {
 
+        BulkExpenditure bulkExpenditure = bulkExpenditureRepository.findById(request.getBulkExpenditureId())
+                .orElseThrow(() -> new DataException("Bulk expenditure data not found", "BULK-EXPENDITURE-DATA-NOT-FOUND", 400));
+        Activity activity = activityRepository.findById(request.getActivityId())
+                .orElseThrow(() -> new DataException("Activity data not found", "ACTIVITY-DATA-NOT-FOUND", 400));
+        SubActivity subActivity = subActivityRepository.findById(request.getSubActivityId())
+                .orElseThrow(() -> new DataException("Sub Activity data not found", "SUB-ACTIVITY-DATA-NOT-FOUND", 400));
+        Program program = programRepository.findById(request.getProgramId())
+                .orElseThrow(() -> new DataException("Program data not found", "PROGRAM-DATA-NOT-FOUND", 400));
+        Agency agency = agencyRepository.findById(request.getAgencyId())
+                .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+        HeadOfExpense headOfExpense = headOfExpenseRepository.findById(request.getHeadOfExpenseId())
+                .orElseThrow(() -> new DataException("Head of expense data not found", "HEAD-OF-EXPENSE-DATA-NOT-FOUND", 400));
+        
+        BulkExpenditureTransaction saved = transactionRepo.save(ExpenditureRequestMapper.mapBulkExpenditureTransaction(request, activity, subActivity, program, agency, bulkExpenditure, headOfExpense));
+
+        if (bulkExpenditure != null && request.getConsumedQuantity() != null) {
+            int updatedAvailableQty = 0;
+            if (bulkExpenditure.getAvailableQuantity() > request.getConsumedQuantity()) {
+                updatedAvailableQty = bulkExpenditure.getAvailableQuantity() - request.getConsumedQuantity();
+            }
+            bulkExpenditure.setAvailableQuantity(updatedAvailableQty);
+            bulkExpenditure.setConsumedQuantity(bulkExpenditure.getConsumedQuantity() + request.getConsumedQuantity());
+            bulkExpenditureRepository.save(bulkExpenditure);
+        }
+
+        BulkExpenditureTransactionResponse response = new BulkExpenditureTransactionResponse();
+        response.setId(saved.getBulkExpenditureTransactionId());
+        response.setConsumedQuantity(saved.getConsumedQuantity());
+        response.setAllocatedCost(saved.getAllocatedCost());
+
+        return response;
+    }
+
+    @Override
+    public BulkExpenditureLookupResponse getBulkExpendituresByExpenseAndItem(BulkExpenditureLookupRequest request) throws DataException {
+        HeadOfExpense headOfExpense = headOfExpenseRepository.findById(request.getExpenseId())
+                .orElseThrow(() -> new DataException("Head of Expense not found", "HEAD-OF-EXPENSE-NOT-FOUND", 400));
+        BulkExpenditure bulkExpenditure = bulkExpenditureRepository.findByHeadOfExpenseAndItemNameIgnoreCase(headOfExpense, request.getItemName());
+        return ExpenditureResponseMapper.mapBulkExpenditureDetails(bulkExpenditure);
+    }
+
+    @Override
+    public List<String> getItemsByHeadOfExpense(Integer expenseId) {
+        return bulkExpenditureRepository.findDistinctItemNamesByHeadOfExpense(expenseId);
+    }
+
+    @Override
+    public WorkflowResponse getAllBulkExpenditureTransactionByProgram(Long programId) {
+        List<BulkExpenditureTransaction> transactions = transactionRepo
+                .findByProgram_ProgramId(programId);
+
+        return WorkflowResponse.builder().message("Success").status(200)
+                .data(
+                        transactions.stream().map(
+                                ExpenditureResponseMapper::mapBulkExpenditureTransaction).toList()
+                )
+                .build();
+    }
+
+    @Override
+    public List<HeadOfExpense> getAllHeadOfExpenses() {
+        return headOfExpenseRepository.findAll();
+    }
 
 
     @Override
@@ -129,13 +197,13 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                         "AGENCY-DETAILS-NOT-FOUND",
                         400
                 ));
-        Activity activity=activityRepository.findById(expenditureRequest.getActivityId())
+        Activity activity = activityRepository.findById(expenditureRequest.getActivityId())
                 .orElseThrow(() -> new DataException(
                         "Activity details for the activity id " + expenditureRequest.getAgencyId() + " do not exist.",
                         "ACTIVITY-DETAILS-NOT-FOUND",
                         400
                 ));
-        SubActivity subActivity=subActivityRepository.findById(expenditureRequest.getActivityId())
+        SubActivity subActivity = subActivityRepository.findById(expenditureRequest.getActivityId())
                 .orElseThrow(() -> new DataException(
                         "SubActivity details for the subActivity id " + expenditureRequest.getAgencyId() + " do not exist.",
                         "SUB-ACTIVITY-DETAILS-NOT-FOUND",
@@ -148,18 +216,11 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                         400
                 ));
 
-//        ProgramExpenditure programExpenditure =programExpenditureRepository.findById(expenditureRequest.getProgramExpenditureId())
-//                .orElseThrow(() -> new DataException(
-//                        "programExpenditure details for the programExpenditure id " + expenditureRequest.getAgencyId() + " do not exist.",
-//                        "PROGRAM-EXPENDITURE-DETAILS-NOT-FOUND",
-//                        400
-//                ));
-
         return WorkflowResponse.builder()
                 .message("Program Expenditure saved successfully")
                 .data(ExpenditureResponseMapper.mapProgramExpenditure(
                         programExpenditureRepository.save(
-                                ExpenditureRequestMapper.mapProgramExpenditure(expenditureRequest,activity,subActivity,program,agency,headOfExpense)
+                                ExpenditureRequestMapper.mapProgramExpenditure(expenditureRequest, activity, subActivity, program, agency, headOfExpense)
                         )
                 ))
                 .status(200).build();
