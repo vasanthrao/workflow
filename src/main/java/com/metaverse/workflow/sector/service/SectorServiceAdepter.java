@@ -41,7 +41,7 @@ public class SectorServiceAdepter implements SectorService {
 
         List<Sector> sectorList=sectorRepository.findAll();
         if(sectorList.isEmpty())return WorkflowResponse.builder().status(400).message("sectors not found").build();
-        List<SectorResponse> responses=sectorList.stream().map(sector -> SectorResponseMapper.map(sector)).collect(Collectors.toList());
+        List<SectorResponse> responses=sectorList.stream().map(SectorResponseMapper::map).collect(Collectors.toList());
         return WorkflowResponse.builder().message("Success").status(200).data(responses).build();
     }
 }
