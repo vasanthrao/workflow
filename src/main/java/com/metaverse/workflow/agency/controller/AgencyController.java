@@ -67,8 +67,8 @@ public class AgencyController {
 
 	@GetMapping("/agency/programs/{id}")
 	public ResponseEntity<WorkflowResponse> getProgramsByAgencyId(@PathVariable("id") Long id,
-																  @RequestParam(defaultValue = "0") int page,
-																  @RequestParam(defaultValue = "10") int size)
+																  @RequestParam(defaultValue = "0", required = false) int page,
+																  @RequestParam(defaultValue = "10", required = false) int size)
 	{
 		Pageable pageable = PageRequest.of(page, size);
 
@@ -83,6 +83,8 @@ public class AgencyController {
 						.status(200)
 						.message("Success")
 						.data(response)
+						.totalElements(programPage.getTotalElements())
+						.totalPages(programPage.getTotalPages())
 						.build()
 		);
 	}
