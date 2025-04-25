@@ -174,7 +174,6 @@ public class ProgramController {
     @GetMapping("/program/summary/{programId}")
     public ResponseEntity<?> getProgramSummeryById(@PathVariable("programId") Long programId) {
         try {
-
             return ResponseEntity.ok(programService.getProgramSummaryByProgramId(programId));
         } catch (DataException exception) {
             return RestControllerBase.error(exception);

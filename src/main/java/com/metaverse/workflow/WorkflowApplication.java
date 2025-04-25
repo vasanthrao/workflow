@@ -22,7 +22,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 				description = "API documentation for Workflow Service"
 		)
 )
-
 @SpringBootApplication(scanBasePackages = "com.metaverse")
 @EnableConfigurationProperties(StorageProperties.class)
 public class WorkflowApplication extends SpringBootServletInitializer {
@@ -46,13 +45,6 @@ public class WorkflowApplication extends SpringBootServletInitializer {
 		};
 	}
 
-	@Bean
-	CommandLineRunner init(StorageService storageService, CommonUtil commonUtil) {
-		return (args) -> {
-			//storageService.deleteAll();
-			storageService.init();
-			commonUtil.init();
-		};
-	}
+
 
 }

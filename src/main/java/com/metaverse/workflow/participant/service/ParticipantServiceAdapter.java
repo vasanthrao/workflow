@@ -114,6 +114,7 @@ public class ParticipantServiceAdapter implements ParticipantService {
 
         Participant participant = participantRepository.findByMobileNo(mobileNo);
         if(participant == null)return WorkflowResponse.builder().message("Participant Not found").status(400).build();
+       // if(participant.getOrganization() == null)return WorkflowResponse.builder().message("Participant ia na aspirant not tieUp with any organization").status(400).build();
         ParticipantResponseForESDPTraining response= ParticipantResponseMapper.mapForESDPTraining(participant);
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
     }
