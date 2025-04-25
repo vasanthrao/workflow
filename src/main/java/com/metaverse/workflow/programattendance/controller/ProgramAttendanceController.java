@@ -19,9 +19,11 @@ public class ProgramAttendanceController {
     ProgramAttendanceService programAttendanceService;
 
     @GetMapping(value = "/program/attendence/{programId}")
-    public ResponseEntity<WorkflowResponse> attendenceByProgramId(@PathVariable("programId") Long programId) {
+    public ResponseEntity<WorkflowResponse> attendenceByProgramId(@PathVariable("programId") Long programId,
+                                                                  @RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "10") int size) {
         log.info("Program attendance controller, programId : {}", programId);
-        WorkflowResponse response = programAttendanceService.attendanceByProgramId(programId);
+        WorkflowResponse response = programAttendanceService.attendanceByProgramId(programId, page, size);
         return ResponseEntity.ok(response);
     }
 

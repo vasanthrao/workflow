@@ -64,5 +64,4 @@ public class AgencyResponseMapper {
         return locationList != null ? locationList.stream().map(location ->
                 LocationResponseMapper.map(location)).collect(Collectors.toList()) : null;
     }
-
 }

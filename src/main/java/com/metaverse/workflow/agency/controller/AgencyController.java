@@ -6,22 +6,33 @@ import com.metaverse.workflow.agency.service.AgencyService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.location.service.LocationResponse;
 import com.metaverse.workflow.model.Agency;
+import com.metaverse.workflow.model.Program;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
+import com.metaverse.workflow.program.repository.ProgramRepository;
 import com.metaverse.workflow.program.service.ProgramResponse;
+import com.metaverse.workflow.program.service.ProgramResponseMapper;
 import com.metaverse.workflow.resouce.service.ResourceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class AgencyController {
 
 	@Autowired
 	private AgencyService service;
+
+	@Autowired
+	private ProgramRepository programRepository;
 
 	@GetMapping("/agency/get/{id}")
 	public ResponseEntity<WorkflowResponse> getAgencyById(@PathVariable("id") Long id)
@@ -55,11 +66,25 @@ public class AgencyController {
 	}
 
 	@GetMapping("/agency/programs/{id}")
-	public ResponseEntity<WorkflowResponse> getProgramsByAgencyId(@PathVariable("id") Long id)
+	public ResponseEntity<WorkflowResponse> getProgramsByAgencyId(@PathVariable("id") Long id,
+																  @RequestParam(defaultValue = "0") int page,
+																  @RequestParam(defaultValue = "10") int size)
 	{
-		Agency agency = service.getAgencyById(id);
-		List<ProgramResponse> response = AgencyResponseMapper.mapPrograms(agency.getProgramList());
-		return ResponseEntity.ok(WorkflowResponse.builder().message("Success").status(200).data(response).build());
+		Pageable pageable = PageRequest.of(page, size);
+
+		Page<Program> programPage = programRepository.findByAgencyAgencyId(id, pageable);
+
+		List<ProgramResponse> response = programPage.getContent().stream()
+				.map(ProgramResponseMapper::mapProgram)
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(
+				WorkflowResponse.builder()
+						.status(200)
+						.message("Success")
+						.data(response)
+						.build()
+		);
 	}
 
 	@GetMapping("/agency/participants/{id}")

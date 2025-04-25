@@ -13,4 +13,6 @@ public class WorkflowResponse {
     protected Integer status;
     protected String message;
     protected Object data;
+    private int totalPages;
+    private long totalElements;
 }

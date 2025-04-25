@@ -5,10 +5,14 @@ import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.model.ProgramAttendance;
 import com.metaverse.workflow.model.Program;
+import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.program.repository.ProgramRepository;
 import com.metaverse.workflow.programattendance.repository.ProgramAttendanceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,23 +26,41 @@ public class ProgramAttendanceServiceAdapter implements ProgramAttendanceService
     ProgramRepository programRepository;
 
     @Autowired
+    ParticipantRepository participantRepository;
+
+    @Autowired
     ProgramAttendanceRepository programAttendanceRepository;
 
     @Override
-    public WorkflowResponse attendanceByProgramId(Long programId) {
+    public WorkflowResponse attendanceByProgramId(Long programId, int page, int size) {
         Optional<Program> program = programRepository.findById(programId);
-        if (!program.isPresent())
+        if (program.isEmpty())
             return WorkflowResponse.builder().status(400).message("Invalid Program").build();
+
         if (program.get().getProgramSessionList() == null)
             return WorkflowResponse.builder().status(400).message("No sessions created to program").build();
-        Set<String> dateSet = program.get().getProgramSessionList().stream().map(session -> DateUtil.dateToString(session.getSessionDate(), "dd-mm-yyyy")).collect(Collectors.toSet());
-        ProgramAttendanceResponse response = populateParticipantAttendace(programId, program.get().getParticipants(), dateSet.size());
-        List<ProgramAttendance> list = programAttendanceRepository.findByProgramAttendances(programId);
-        if (list == null || list.size() == 0) {
-            return WorkflowResponse.builder().status(200).message("Success").data(response).build();
+
+        Set<String> dateSet = program.get().getProgramSessionList().stream()
+                .map(session -> DateUtil.dateToString(session.getSessionDate(), "dd-MM-yyyy"))
+                .collect(Collectors.toSet());
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Participant> pagedParticipants = participantRepository.findByPrograms_ProgramId(programId, pageable);
+
+        ProgramAttendanceResponse response = populateParticipantAttendace(
+                programId,
+                pagedParticipants.getContent(),
+                dateSet.size()
+        );
+
+        List<ProgramAttendance> attendanceList = programAttendanceRepository.findByProgramAttendances(programId);
+        if (attendanceList == null || attendanceList.isEmpty()) {
+            return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
+                    .totalPages(pagedParticipants.getTotalPages()).build();
         } else {
-            response = updateParticipantAttendances(list, response);
-            return WorkflowResponse.builder().status(200).message("Success").data(response).build();
+            response = updateParticipantAttendances(attendanceList, response);
+            return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
+                    .totalPages(pagedParticipants.getTotalPages()).build();
         }
     }
 

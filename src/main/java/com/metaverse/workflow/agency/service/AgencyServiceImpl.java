@@ -5,7 +5,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.model.Program;
+import com.metaverse.workflow.program.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
@@ -16,6 +21,9 @@ public class AgencyServiceImpl implements AgencyService{
 
 	@Autowired
 	private AgencyRepository agencyRepository;
+
+	@Autowired
+	private ProgramRepository programRepository;
 	
 	@Override
 	public String saveAgency(Agency agency) {
@@ -32,6 +40,12 @@ public class AgencyServiceImpl implements AgencyService{
 		}
 		
 		return null;
+	}
+
+	public Page<Program> getProgramsByAgencyIdPaginated(Long agencyId, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Program> programs = programRepository.findByAgencyAgencyId(agencyId, pageable);
+		return programs;
 	}
 
 	@Override

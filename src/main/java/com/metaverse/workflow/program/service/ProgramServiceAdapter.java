@@ -9,11 +9,15 @@ import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.location.repository.LocationRepository;
 import com.metaverse.workflow.model.*;
+import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.*;
 import com.metaverse.workflow.resouce.repository.ResourceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +37,9 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     ProgramSessionRepository programSessionRepository;
+
+    @Autowired
+    ParticipantRepository participantRepository;
 
     @Autowired
     AgencyRepository agencyRepository;
@@ -96,11 +103,11 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
     @Override
-    public WorkflowResponse getProgramParticipants(Long id) {
-        Optional<Program> program = programRepository.findById(id);
-        if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
-        List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(program.get().getParticipants());
-        return WorkflowResponse.builder().status(200).message("Success").data(response).build();
+    public WorkflowResponse getProgramParticipants(Long id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Participant> participantPage = participantRepository.findByProgramId(id, pageable);
+        List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(participantPage.getContent());
+        return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(participantPage.getTotalElements()).totalPages(participantPage.getTotalPages()).build();
     }
 
     private List<String> storageProgramFiles(List<MultipartFile> files, Long programId, String folderName) {
