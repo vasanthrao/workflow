@@ -125,9 +125,9 @@ public class ProgramController {
     @PostMapping(value = "/program/execution/images", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkflowResponse> saveSessionImages(@RequestPart("data") String data,
-                                                              @RequestPart(value = "image1") MultipartFile image1,
-                                                              @RequestPart(value = "image2") MultipartFile image2,
-                                                              @RequestPart(value = "image3") MultipartFile image3,
+                                                              @RequestPart(value = "image1", required = false) MultipartFile image1,
+                                                              @RequestPart(value = "image2", required = false) MultipartFile image2,
+                                                              @RequestPart(value = "image3", required = false) MultipartFile image3,
                                                               @RequestPart(value = "image4", required = false) MultipartFile image4,
                                                               @RequestPart(value = "image5", required = false) MultipartFile image5) throws ParseException {
         log.info("Program controller save session images, data : {}", data);
@@ -140,7 +140,7 @@ public class ProgramController {
     @PostMapping(value = "/program/execution/media-coverage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkflowResponse> saveMediaCoverage(@RequestPart("data") String data,
-                                                              @RequestPart(value = "image1") MultipartFile image1,
+                                                              @RequestPart(value = "image1", required = false) MultipartFile image1,
                                                               @RequestPart(value = "image2", required = false) MultipartFile image2,
                                                               @RequestPart(value = "image3", required = false) MultipartFile image3) throws ParseException {
         log.info("Program controller save program media, data : {}", data);
