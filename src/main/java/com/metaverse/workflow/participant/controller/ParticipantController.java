@@ -19,7 +19,7 @@ public class ParticipantController {
 		WorkflowResponse response = participantService.saveParticipant(participantRequest);
 		return ResponseEntity.ok(response);
 	}
-	@PutMapping("/updateParticipant")
+	@PostMapping("/updateParticipant")
 	public ResponseEntity<WorkflowResponse> updateParticipant(@RequestBody ParticipantRequest participantRequest)
 	{
 		WorkflowResponse response = participantService.updateParticipant(participantRequest);
