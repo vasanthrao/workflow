@@ -2,6 +2,7 @@ package com.metaverse.workflow.program.service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
+import com.metaverse.workflow.common.fileservice.FileSystemStorageService;
 import com.metaverse.workflow.common.fileservice.StorageService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.DateUtil;
@@ -63,6 +64,9 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     MediaCoverageRepository mediaCoverageRepository;
+
+    @Autowired
+    FileSystemStorageService fileSystemStorageService;
 
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
@@ -305,6 +309,24 @@ public class ProgramServiceAdapter implements ProgramService {
                 .orElseThrow(() -> new DataException("Program data not found", "PROGRAM-DATA-NOT-FOUND", 400));
 
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramSummeryMapper.map(program)).build();
+    }
+
+    @Override
+    public String deleteProgramSession(Long sessionId) {
+        Optional<ProgramSession> programSession = programSessionRepository.findById(sessionId);
+        programSessionRepository.delete(programSession.get());
+        List<ProgramSessionFile> sessionFiles = programSessionFileRepository.findByProgramSessionId(sessionId);
+        programSessionFileRepository.deleteAll(sessionFiles);
+        fileSystemStorageService.deleteAll(sessionFiles.stream().map(ProgramSessionFile :: getFilePath).toList());
+        return "Deleted Session Successfully";
+    }
+
+    @Override
+    public WorkflowResponse getProgramParticipantsDropDown(Long id) {
+        Optional<Program> program = programRepository.findById(id);
+        if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
+        List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(program.get().getParticipants());
+        return WorkflowResponse.builder().status(200).message("Success").data(response).build();
     }
 }
 

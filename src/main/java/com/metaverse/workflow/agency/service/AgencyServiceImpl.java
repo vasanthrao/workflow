@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.model.Program;
 import com.metaverse.workflow.program.repository.ProgramRepository;
+import com.metaverse.workflow.program.service.ProgramResponse;
+import com.metaverse.workflow.program.service.ProgramResponseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,6 +60,13 @@ public class AgencyServiceImpl implements AgencyService{
 	@Override
 	public List<Agency> getAllAgencies() {
 		return agencyRepository.findAll();
+	}
+
+	@Override
+	public WorkflowResponse getProgramByAgencyIdDropDown(Long agencyId) {
+		List<Program> programList = programRepository.findByAgencyAgencyId(agencyId);
+		List<ProgramResponse> responses =programList!= null ? programList.stream().map(ProgramResponseMapper::map).collect(Collectors.toList()) : null ;
+		return WorkflowResponse.builder().message("Success").status(200).data(responses).build();
 	}
 
 }

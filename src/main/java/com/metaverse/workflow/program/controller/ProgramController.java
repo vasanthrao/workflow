@@ -59,6 +59,12 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/program/session/delete")
+    public ResponseEntity<String> deleteSession(@RequestParam("sessionId") Long sessionId) throws ParseException {
+        String response = programService.deleteProgramSession(sessionId);
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping("/program/participants/{programId}")
     public ResponseEntity<WorkflowResponse> getParticipantsByProgramId(@PathVariable("programId") Long programId,
@@ -179,6 +185,12 @@ public class ProgramController {
             return RestControllerBase.error(exception);
         }
 
+    }
+
+    @GetMapping("/program/participants/dropdown/{programId}")
+    public ResponseEntity<WorkflowResponse> getParticipantsByProgramIdDropDown(@PathVariable("programId") Long programId) {
+        WorkflowResponse response = programService.getProgramParticipantsDropDown(programId);
+        return ResponseEntity.ok(response);
     }
 
 

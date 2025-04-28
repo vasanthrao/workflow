@@ -18,4 +18,6 @@ public interface AgencyService {
 	Page<Program> getProgramsByAgencyIdPaginated(Long id, int page, int size);
 
 	Agency getAgencyById(Long id);
+
+	WorkflowResponse getProgramByAgencyIdDropDown(Long agencyId);
 }

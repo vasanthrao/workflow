@@ -23,4 +23,6 @@ public interface ProgramService {
     WorkflowResponse saveMediaCoverage(MediaCoverageRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3);
     Path getProgramFile(Long fileId);
     WorkflowResponse getProgramSummaryByProgramId(Long programId) throws DataException;
+    String deleteProgramSession(Long sessionId);
+    WorkflowResponse getProgramParticipantsDropDown(Long id);
 }
