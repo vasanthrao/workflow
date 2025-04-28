@@ -59,7 +59,7 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/program/session/delete")
+    @PostMapping("/program/session/delete")
     public ResponseEntity<String> deleteSession(@RequestParam("sessionId") Long sessionId) throws ParseException {
         String response = programService.deleteProgramSession(sessionId);
         return ResponseEntity.ok(response);
