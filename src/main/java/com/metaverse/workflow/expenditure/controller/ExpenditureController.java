@@ -25,7 +25,7 @@ public class ExpenditureController {
     ExpenditureService expenditureService;
 
     @PostMapping("/bulk/expenditure/save")
-    public ResponseEntity<?> saveBulkExpenditure(@RequestPart String request, @RequestPart List<MultipartFile> files) throws JsonProcessingException {
+    public ResponseEntity<?> saveBulkExpenditure(@RequestPart String request, @RequestPart(required = false) List<MultipartFile> files) throws JsonProcessingException {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             BulkExpenditureRequest bulkExpenditureRequest = objectMapper.readValue(request, BulkExpenditureRequest.class);
