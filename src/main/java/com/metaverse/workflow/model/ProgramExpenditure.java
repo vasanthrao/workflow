@@ -1,7 +1,6 @@
 package com.metaverse.workflow.model;
 
 import com.metaverse.workflow.common.enums.ExpenditureType;
-import com.metaverse.workflow.common.enums.PaymentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -44,6 +44,9 @@ public class ProgramExpenditure {
 
         @Column(name = "expenditure_type")
         private ExpenditureType expenditureType;
+
+        @OneToMany(mappedBy = "programExpenditure", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<ProgramSessionFile> programExpenditureFileList;
 
         @ManyToOne
         @JoinColumn(name="expense_id")

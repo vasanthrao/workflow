@@ -22,4 +22,10 @@ public class ProgramSessionFile {
     @ManyToOne
     @JoinColumn(name = "program_session_id")
     private ProgramSession programSession;
+    @ManyToOne
+    @JoinColumn(name = "program_expenditure_id")
+    private ProgramExpenditure programExpenditure;
+    @ManyToOne
+    @JoinColumn(name = "bulk_expenditure_id")
+    private BulkExpenditure bulkExpenditure;
 }

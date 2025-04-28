@@ -3,10 +3,7 @@ package com.metaverse.workflow.expenditure.service;
 import com.metaverse.workflow.common.enums.ExpenditureType;
 import com.metaverse.workflow.common.enums.PaymentType;
 import com.metaverse.workflow.model.HeadOfExpense;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -14,6 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 public class ProgramExpenditureRequest {
 
     private Long activityId;

@@ -1,14 +1,21 @@
 package com.metaverse.workflow.expenditure.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metaverse.workflow.common.enums.ExpenditureType;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.*;
 import com.metaverse.workflow.expenditure.service.*;
 import com.metaverse.workflow.model.HeadOfExpense;
+import com.metaverse.workflow.program.service.ProgramSessionRequest;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,19 +25,30 @@ public class ExpenditureController {
     ExpenditureService expenditureService;
 
     @PostMapping("/bulk/expenditure/save")
-    public ResponseEntity<?> saveBulkExpenditure(@RequestBody BulkExpenditureRequest request) {
+    public ResponseEntity<?> saveBulkExpenditure(@RequestPart String request, @RequestPart List<MultipartFile> files) throws JsonProcessingException {
         try {
-            return ResponseEntity.ok(expenditureService.saveBulkExpenditure(request));
+            ObjectMapper objectMapper = new ObjectMapper();
+            BulkExpenditureRequest bulkExpenditureRequest = objectMapper.readValue(request, BulkExpenditureRequest.class);
+            return ResponseEntity.ok(expenditureService.saveBulkExpenditure(bulkExpenditureRequest, files));
         }
         catch(DataException exception)
         {
             return RestControllerBase.error(exception);
         } 
     }
-    @PostMapping("/program/expenditure/save")
-    public ResponseEntity<?> saveProgramExpenditure(@RequestBody ProgramExpenditureRequest request) {
+    @PostMapping(
+            value = "/program/expenditure/save",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> saveProgramExpenditure(
+            @RequestPart("request") String request,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws ParseException {
         try {
-            return ResponseEntity.ok(expenditureService.saveProgramExpenditure(request));
+            JSONParser parser = new JSONParser();
+            ProgramExpenditureRequest programExpenditureRequest = parser.parse(request, ProgramExpenditureRequest.class);
+            var response = expenditureService.saveProgramExpenditure(programExpenditureRequest, files);
+            return ResponseEntity.ok(response);
         }
         catch (DataException exception) {
             return RestControllerBase.error(exception);

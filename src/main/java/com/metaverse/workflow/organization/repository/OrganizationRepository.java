@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface OrganizationRepository extends JpaRepository<Organization, Long>{
   List<Organization> findByContactNo(Long mobileNo);
+
+  List<Organization> findAllByOrganizationNameIgnoreCase(String organizationName);
 }

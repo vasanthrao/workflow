@@ -62,6 +62,35 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    public String bulkExpenditureStore(MultipartFile file, Long agencyId, String folderName) {
+        String path;
+        try {
+            if (file.isEmpty()) {
+                throw new StorageException("Failed to store empty file.");
+            }
+            Files.createDirectories(Paths.get(properties.getLocation() + agencyId + "/"+ folderName + "/"));
+            this.rootLocation = Paths.get(properties.getLocation() + agencyId + "/"+ folderName + "/");
+            Path destinationFile = this.rootLocation.resolve(
+                            Paths.get(file.getOriginalFilename()))
+                    .normalize().toAbsolutePath();
+            if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+                // This is a security check
+                throw new StorageException(
+                        "Cannot store file outside current directory.");
+            }
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile,
+                        StandardCopyOption.REPLACE_EXISTING);
+                path = destinationFile.toAbsolutePath().toString();
+            }
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to store file.", e);
+        }
+        return path;
+    }
+
+    @Override
     public Stream<Path> loadAll() {
         try {
             return Files.walk(this.rootLocation, 1)

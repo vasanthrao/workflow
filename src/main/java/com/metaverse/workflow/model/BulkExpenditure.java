@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -23,6 +24,9 @@ public class BulkExpenditure {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="bulk_expenditure_id")
     private Long bulkExpenditureId;
+
+    @OneToMany(mappedBy = "bulkExpenditure", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProgramSessionFile> bulkExpenditureFileList;
 
     @ManyToOne
     @JoinColumn(name = "agency_id")

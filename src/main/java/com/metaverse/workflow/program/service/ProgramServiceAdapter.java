@@ -1,6 +1,5 @@
 package com.metaverse.workflow.program.service;
 
-import ch.qos.logback.core.CoreConstants;
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
 import com.metaverse.workflow.common.fileservice.StorageService;
@@ -110,10 +109,10 @@ public class ProgramServiceAdapter implements ProgramService {
         return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(participantPage.getTotalElements()).totalPages(participantPage.getTotalPages()).build();
     }
 
-    private List<String> storageProgramFiles(List<MultipartFile> files, Long programId, String folderName) {
+    public List<String> storageProgramFiles(List<MultipartFile> files, Long programId, String folderName) {
         List<String> uploadFilePaths = new ArrayList<>();
-        files.stream().forEach(file -> {
-            String filePath = storageService.store(file, programId, folderName);
+        files.forEach(file -> {
+            String filePath = storageService.bulkExpenditureStore(file, programId, folderName);
             uploadFilePaths.add(filePath);
         });
         return uploadFilePaths;

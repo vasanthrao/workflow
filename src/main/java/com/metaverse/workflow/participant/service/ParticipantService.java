@@ -27,4 +27,5 @@ public interface ParticipantService {
 
     Boolean isMobileNumberExists(Long mobileNo);
 
+    void saveAll(List<Participant> participants);
 }

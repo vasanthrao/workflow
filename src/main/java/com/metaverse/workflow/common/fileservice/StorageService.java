@@ -11,6 +11,8 @@ public interface StorageService {
 
     String store(MultipartFile file, Long programId, String folderName);
 
+    String bulkExpenditureStore(MultipartFile file, Long programId, String folderName);
+
     Stream<Path> loadAll();
 
     Path load(String filename);

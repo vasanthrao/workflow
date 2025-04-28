@@ -13,8 +13,11 @@ import com.metaverse.workflow.expenditure.repository.ProgramExpenditureRepositor
 import com.metaverse.workflow.model.*;
 
 import com.metaverse.workflow.program.repository.ProgramRepository;
+import com.metaverse.workflow.program.repository.ProgramSessionFileRepository;
+import com.metaverse.workflow.program.service.ProgramServiceAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,9 +39,14 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     SubActivityRepository subActivityRepository;
     @Autowired
     HeadOfExpenseRepository headOfExpenseRepository;
+    @Autowired
+    ProgramSessionFileRepository programSessionFileRepository;
+
+    @Autowired
+    ProgramServiceAdapter programServiceAdapter;
 
     @Override
-    public WorkflowResponse saveBulkExpenditure(BulkExpenditureRequest expenditureRequest) throws DataException {
+    public WorkflowResponse saveBulkExpenditure(BulkExpenditureRequest expenditureRequest, List<MultipartFile> files) throws DataException {
         Agency agency = agencyRepository.findById(expenditureRequest.getAgencyId())
                 .orElseThrow(() -> new DataException(
                         "Agency details for the agency id " + expenditureRequest.getAgencyId() + " do not exist.",
@@ -62,16 +70,28 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         if (exists) {
             throw new DataException("Same Item Name and Head of Expense already exists for your agency. Please change Item Name!", "BULK-EXPENDITURE_ALREADY-EXISTS", 400);
         }
+        BulkExpenditure bulkExpenditure = bulkExpenditureRepository.save(
+                ExpenditureRequestMapper
+                        .mapBulkExpenditure(expenditureRequest, agency, headOfExpense)
 
+        );
+
+        if(files != null && !files.isEmpty()) {
+            List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getAgencyId(), "BulkExpenditure");
+            List<ProgramSessionFile> sessionFiles = filePaths.stream()
+                    .map(filePath -> ProgramSessionFile.builder()
+                            .fileType("FILE")
+                            .filePath(filePath)
+                            .bulkExpenditure(bulkExpenditure)
+                            .build())
+                    .toList();
+            programSessionFileRepository.saveAll(sessionFiles);
+        }
 
         return WorkflowResponse.builder()
                 .message("BulkExpenditure saved successfully")
                 .data(ExpenditureResponseMapper.mapBulkExpenditure(
-                        bulkExpenditureRepository.save(
-                                ExpenditureRequestMapper
-                                        .mapBulkExpenditure(expenditureRequest, agency, headOfExpense)
-
-                        )
+                    bulkExpenditure
                 ))
                 .status(200).build();
     }
@@ -184,7 +204,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
 
 
     @Override
-    public WorkflowResponse saveProgramExpenditure(ProgramExpenditureRequest expenditureRequest) throws DataException {
+    public WorkflowResponse saveProgramExpenditure(ProgramExpenditureRequest expenditureRequest, List<MultipartFile> files) throws DataException {
         Program program = programRepository.findById(expenditureRequest.getProgramId())
                 .orElseThrow(() -> new DataException(
                         "Program details for the program id " + expenditureRequest.getAgencyId() + " do not exist.",
@@ -216,12 +236,24 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                         400
                 ));
 
+        ProgramExpenditure programExpenditure = programExpenditureRepository.save(
+                ExpenditureRequestMapper.mapProgramExpenditure(expenditureRequest, activity, subActivity, program, agency, headOfExpense));
+
+        if(files != null && !files.isEmpty()) {
+            List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getProgramId(), "ProgramExpenditure");
+            List<ProgramSessionFile> sessionFiles = filePaths.stream()
+                    .map(filePath -> ProgramSessionFile.builder()
+                            .fileType("FILE")
+                            .filePath(filePath)
+                            .programExpenditure(programExpenditure)
+                            .build())
+                    .toList();
+            programSessionFileRepository.saveAll(sessionFiles);
+        }
+
         return WorkflowResponse.builder()
                 .message("Program Expenditure saved successfully")
-                .data(ExpenditureResponseMapper.mapProgramExpenditure(
-                        programExpenditureRepository.save(
-                                ExpenditureRequestMapper.mapProgramExpenditure(expenditureRequest, activity, subActivity, program, agency, headOfExpense)
-                        )
+                .data(ExpenditureResponseMapper.mapProgramExpenditure(programExpenditure
                 ))
                 .status(200).build();
     }

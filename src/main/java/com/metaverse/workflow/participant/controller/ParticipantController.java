@@ -1,17 +1,33 @@
 package com.metaverse.workflow.participant.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.common.util.ExcelHelper;
+import com.metaverse.workflow.model.Organization;
+import com.metaverse.workflow.model.Participant;
+import com.metaverse.workflow.model.Program;
+import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.service.ParticipantRequest;
 import com.metaverse.workflow.participant.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ParticipantController {
 	
 	@Autowired
 	private ParticipantService participantService;
+
+	@Autowired
+	private OrganizationRepository organizationRepository;
+
+	@Autowired
+	private ExcelHelper excelHelper;
 	
 	@PostMapping("/participant/save")
 	public ResponseEntity<WorkflowResponse> saveParticipant(@RequestBody ParticipantRequest participantRequest)
@@ -64,5 +80,30 @@ public class ParticipantController {
 		Boolean mobileNumberExists = participantService.isMobileNumberExists(mobileNo);
 		return ResponseEntity.ok(mobileNumberExists);
 	}
+
+	@PostMapping("/upload")
+	public ResponseEntity<?> uploadExcel(@RequestParam("file") MultipartFile file,
+										 @RequestParam("organizationId") Long orgId,
+										 @RequestParam("programIds")List<Program> programs) {
+		try {
+			if (!file.getOriginalFilename().endsWith(".xlsx")) {
+				return ResponseEntity.badRequest().body("Invalid file format. Use .xlsx");
+			}
+
+			Optional<Organization> orgOpt = organizationRepository.findById(orgId);
+			if (orgOpt.isEmpty()) {
+				return ResponseEntity.badRequest().body("Invalid organization ID");
+			}
+
+			List<Participant> participants = excelHelper.excelToParticipants(file.getInputStream(), orgOpt.get());
+			participantService.saveAll(participants);
+
+			return ResponseEntity.ok("Upload successful! " + participants.size() + " participants saved.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error uploading file: " + e.getMessage());
+		}
+	}
+
 
 }

@@ -175,4 +175,8 @@ public class ParticipantServiceAdapter implements ParticipantService {
         return true;
     }
 
+    public void saveAll(List<Participant> participants) {
+        participantRepository.saveAll(participants);
+    }
+
 }
