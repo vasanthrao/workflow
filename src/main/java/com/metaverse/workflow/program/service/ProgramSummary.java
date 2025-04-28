@@ -1,10 +1,11 @@
 package com.metaverse.workflow.program.service;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 @Builder
-@Getter
+@Data
 public class ProgramSummary {
 
     private String programName;
@@ -14,6 +15,7 @@ public class ProgramSummary {
     private String endDate;
     private  Long sc;
     private  Long st;
+    private  Long bc;
     private  Long obc;
     private  Long oc;
     private  Long minorities;

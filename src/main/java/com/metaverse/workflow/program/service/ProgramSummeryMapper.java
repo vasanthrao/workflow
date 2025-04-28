@@ -23,6 +23,10 @@ public class ProgramSummeryMapper {
                         .filter(participant -> "oc".equalsIgnoreCase(participant.getCategory()))
                         .count())
 
+                .bc(program.getParticipants().stream()
+                        .filter(participant -> "bc".equalsIgnoreCase(participant.getCategory()))
+                        .count())
+
                 .obc(program.getParticipants().stream()
                         .filter(participant -> "obc".equalsIgnoreCase(participant.getCategory()))
                         .count())
@@ -45,10 +49,12 @@ public class ProgramSummeryMapper {
                 .physicallyChallenge(program.getParticipants().stream()
                         .filter(participant -> participant.getDisability() != null && participant.getDisability() == 'Y')
                         .count())
+
                 .noOfSHGs(program.getParticipants().stream()
                         .filter(participant -> participant.getOrganization() != null)
                         .filter(participant -> "SHG".equalsIgnoreCase(participant.getOrganization().getOrganizationType()))
                         .count())
+
                 .noOfMSMEs(
                         program.getParticipants().stream()
                                 .filter(participant -> participant.getOrganization() != null)
@@ -59,6 +65,7 @@ public class ProgramSummeryMapper {
                         .filter(participant -> participant.getOrganization() != null)
                         .filter(participant -> "Start Up".equalsIgnoreCase(participant.getOrganization().getOrganizationType()))
                         .count())
+
                 .noOfAspirants(
                         program.getParticipants().stream()
                                 .filter(participant -> participant.getOrganization() == null)
