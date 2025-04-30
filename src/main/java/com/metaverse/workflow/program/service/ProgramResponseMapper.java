@@ -46,6 +46,7 @@ public class ProgramResponseMapper {
         return ProgramSessionResponse.builder()
                 .sessionId(session.getProgramSessionId())
                 .sessionDate(DateUtil.dateToString(session.getSessionDate(), "dd-mm-yyyy"))
+                .sessionDetails(session.getSessionDetails())
                 .startTime(session.getStartTime())
                 .endTime(session.getEndTime())
                 .sessionTypeName(session.getSessionTypeName())
@@ -88,7 +89,8 @@ public class ProgramResponseMapper {
                 .kpi(program.getKpi())
                 .createdOn(program.getCreatedOn())
                 .updatedOn(program.getUpdatedOn())
-                .programSessionList(program.getProgramSessionList().stream().map(session -> mapSession(session, session.getProgramSessionFileList())).collect(Collectors.toList()) )
+                .programSessionList(program.getProgramSessionList().stream().map(session -> mapSession(session, session.getProgramSessionFileList())).collect(Collectors.toList()))
+                .mediaCoverageList(program.getMediaCoverageList().stream().map(ProgramResponseMapper::mapMediaCoverage).collect(Collectors.toList()))
                 .build();
     }
 

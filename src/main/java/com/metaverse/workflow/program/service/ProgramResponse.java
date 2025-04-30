@@ -38,7 +38,7 @@ public class ProgramResponse {
     private Date createdOn;
     private Date updatedOn;
     private List<ProgramSessionResponse> programSessionList;
-    private List<MediaCoverage> mediaCoverageList;
+    private List<MediaCoverageResponse> mediaCoverageList;
 
     @Builder
     @NoArgsConstructor

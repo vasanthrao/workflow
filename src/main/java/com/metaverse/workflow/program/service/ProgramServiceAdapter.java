@@ -189,18 +189,18 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse editProgramSession(ProgramSessionRequest request, List<MultipartFile> files) {
         Optional<ProgramSession> session = programSessionRepository.findById(request.getProgramSessionId());
-        if (!session.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Session").build();
+        if (session.isEmpty()) return WorkflowResponse.builder().status(400).message("Invalid Program Session").build();
         if(session.get().getResource().getResourceId() != request.getResourceId()) {
             Optional<Resource> resource = resourceRepository.findById(request.getResourceId());
-            if (!resource.isPresent())
+            if (resource.isEmpty())
                 return WorkflowResponse.builder().status(400).message("Invalid Resource").build();
             else
                 session.get().setResource(resource.get());
         }
-        if(files != null && files.size() > 0) {
+        if(files != null && !files.isEmpty()) {
             List<String> filePaths = storageProgramFiles(files, session.get().getProgram().getProgramId(), "files");
             List<ProgramSessionFile> sessionFiles = ProgramRequestMapper.mapProgramFiles(filePaths);
-            sessionFiles.stream().forEach(file -> file.setProgramSession(session.get()));
+            sessionFiles.forEach(file -> file.setProgramSession(session.get()));
             sessionFiles = programSessionFileRepository.saveAll(sessionFiles);
             session.get().getProgramSessionFileList().addAll(sessionFiles);
 

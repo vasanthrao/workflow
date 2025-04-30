@@ -32,8 +32,8 @@ public class ProgramSession {
     private String sessionTypeMethodology;
     @Column(name="session_details")
     private String sessionDetails;
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "resource_id", nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "resource_id")
     private Resource resource;
     @OneToMany(mappedBy = "programSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProgramSessionFile> programSessionFileList;
