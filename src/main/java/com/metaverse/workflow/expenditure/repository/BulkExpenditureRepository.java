@@ -16,4 +16,6 @@ public interface BulkExpenditureRepository extends JpaRepository<BulkExpenditure
     List<String> findDistinctItemNamesByHeadOfExpense(@Param("expenseId") Integer expenseId);
 
     boolean existsByAgencyAndHeadOfExpenseAndItemName(Agency agency, HeadOfExpense headOfExpense, String itemName);
+
+    boolean existsByAgencyAndHeadOfExpenseAndItemNameAndBulkExpenditureIdNot(Agency agency, HeadOfExpense headOfExpense, String itemName, Long id);
 }

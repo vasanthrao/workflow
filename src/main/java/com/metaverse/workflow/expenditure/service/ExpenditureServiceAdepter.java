@@ -17,6 +17,7 @@ import com.metaverse.workflow.program.repository.ProgramSessionFileRepository;
 import com.metaverse.workflow.program.service.ProgramServiceAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -75,7 +76,6 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                         .mapBulkExpenditure(expenditureRequest, agency, headOfExpense)
 
         );
-
         if(files != null && !files.isEmpty()) {
             List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getAgencyId(), "BulkExpenditure");
             List<ProgramSessionFile> sessionFiles = filePaths.stream()
@@ -257,4 +257,167 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                 ))
                 .status(200).build();
     }
+
+  @Override
+    public WorkflowResponse updateProgramExpenditure(Long expenditureId, ProgramExpenditureRequest expenditureRequest, List<MultipartFile> files) throws DataException {
+        ProgramExpenditure existingExpenditure = programExpenditureRepository.findById(expenditureId)
+                .orElseThrow(() -> new DataException(
+                        "Program Expenditure with ID " + expenditureId + " not found.",
+                        "PROGRAM-EXPENDITURE-NOT-FOUND",
+                        404
+                ));
+
+        Program program = programRepository.findById(expenditureRequest.getProgramId())
+                .orElseThrow(() -> new DataException(
+                        "Program details for ID " + expenditureRequest.getProgramId() + " do not exist.",
+                        "PROGRAM-DETAILS-NOT-FOUND",
+                        400
+                ));
+
+        Agency agency = agencyRepository.findById(expenditureRequest.getAgencyId())
+                .orElseThrow(() -> new DataException(
+                        "Agency details for ID " + expenditureRequest.getAgencyId() + " do not exist.",
+                        "AGENCY-DETAILS-NOT-FOUND",
+                        400
+                ));
+
+        Activity activity = activityRepository.findById(expenditureRequest.getActivityId())
+                .orElseThrow(() -> new DataException(
+                        "Activity details for ID " + expenditureRequest.getActivityId() + " do not exist.",
+                        "ACTIVITY-DETAILS-NOT-FOUND",
+                        400
+                ));
+
+        SubActivity subActivity = subActivityRepository.findById(expenditureRequest.getSubActivityId())
+                .orElseThrow(() -> new DataException(
+                        "SubActivity details for ID " + expenditureRequest.getSubActivityId() + " do not exist.",
+                        "SUB-ACTIVITY-DETAILS-NOT-FOUND",
+                        400
+                ));
+
+        HeadOfExpense headOfExpense = headOfExpenseRepository.findById(expenditureRequest.getHeadOfExpenseId())
+                .orElseThrow(() -> new DataException(
+                        "HeadOfExpense details for ID " + expenditureRequest.getHeadOfExpenseId() + " do not exist.",
+                        "HEAD-OF-EXPENSE-DETAILS-NOT-FOUND",
+                        400
+                ));
+
+        // Update fields
+        ExpenditureRequestMapper.updateProgramExpenditure(existingExpenditure, expenditureRequest, activity, subActivity, program, agency, headOfExpense);
+        ProgramExpenditure updatedExpenditure = programExpenditureRepository.save(existingExpenditure);
+
+        // Handle files (optional: decide whether to replace or append)
+        if (files != null && !files.isEmpty()) {
+            List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getProgramId(), "ProgramExpenditure");
+            List<ProgramSessionFile> sessionFiles = filePaths.stream()
+                    .map(filePath -> ProgramSessionFile.builder()
+                            .fileType("FILE")
+                            .filePath(filePath)
+                            .programExpenditure(updatedExpenditure)
+                            .build())
+                    .toList();
+            programSessionFileRepository.saveAll(sessionFiles);
+        }
+
+        return WorkflowResponse.builder()
+                .message("Program Expenditure updated successfully")
+                .data(ExpenditureResponseMapper.mapProgramExpenditure(updatedExpenditure))
+                .status(200)
+                .build();
+    }
+
+    @Override
+    public WorkflowResponse deleteProgramExpenditure(Long expenditureId) throws DataException {
+        if (!programExpenditureRepository.existsById(expenditureId)) {
+            throw new DataException(
+                    "Program Expenditure with ID " + expenditureId + " not found.",
+                    "PROGRAM-EXPENDITURE-NOT-FOUND",
+                    404
+            );
+        }
+        programExpenditureRepository.deleteById(expenditureId);
+
+        return WorkflowResponse.builder()
+                .status(200)
+                .message("Program Expenditure deleted successfully")
+                .data(null)
+                .build();
+    }
+
+    @Override
+    public WorkflowResponse updateBulkExpenditure(Long expenditureId, BulkExpenditureRequest expenditureRequest, List<MultipartFile> files) throws DataException {
+        BulkExpenditure existingExpenditure = bulkExpenditureRepository.findById(expenditureId)
+                .orElseThrow(() -> new DataException(
+                        "BulkExpenditure with ID " + expenditureId + " does not exist.",
+                        "BULK-EXPENDITURE-NOT-FOUND",
+                        404
+                ));
+
+        Agency agency = agencyRepository.findById(expenditureRequest.getAgencyId())
+                .orElseThrow(() -> new DataException(
+                        "Agency details for the agency id " + expenditureRequest.getAgencyId() + " do not exist.",
+                        "AGENCY-DETAILS-NOT-FOUND",
+                        400
+                ));
+
+        HeadOfExpense headOfExpense = headOfExpenseRepository.findById(expenditureRequest.getHeadOfExpenseId())
+                .orElseThrow(() -> new DataException(
+                        "HeadOfExpense details for the HeadOfExpense id " + expenditureRequest.getHeadOfExpenseId() + " do not exist.",
+                        "HEAD-OF-EXPENSE-DETAILS-NOT-FOUND",
+                        400
+                ));
+        boolean exists = bulkExpenditureRepository.existsByAgencyAndHeadOfExpenseAndItemNameAndBulkExpenditureIdNot(agency, headOfExpense, expenditureRequest.getItemName(), expenditureId);
+        if (exists) {
+            throw new DataException(
+                    "Same Item Name and Head of Expense already exists for your agency. Please change Item Name!",
+                    "BULK-EXPENDITURE_ALREADY-EXISTS",
+                    400
+            );
+        }
+        ExpenditureRequestMapper.updateBulkExpenditure(existingExpenditure, expenditureRequest, agency, headOfExpense);
+
+        bulkExpenditureRepository.save(existingExpenditure);
+
+        if (files != null && !files.isEmpty()) {
+            List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getAgencyId(), "BulkExpenditure");
+            List<ProgramSessionFile> sessionFiles = filePaths.stream()
+                    .map(filePath -> ProgramSessionFile.builder()
+                            .fileType("FILE")
+                            .filePath(filePath)
+                            .bulkExpenditure(existingExpenditure)
+                            .build())
+                    .toList();
+            programSessionFileRepository.saveAll(sessionFiles);
+        }
+
+        return WorkflowResponse.builder()
+                .message("BulkExpenditure updated successfully")
+                .data(ExpenditureResponseMapper.mapBulkExpenditure(existingExpenditure))
+                .status(200)
+                .build();
+    }
+
+
+    @Override
+    @Transactional
+    public WorkflowResponse deleteBulkExpenditure(Long expenditureId) throws DataException {
+        if (!bulkExpenditureRepository.existsById(expenditureId)) {
+            throw new DataException(
+                    "Bulk Expenditure with ID " + expenditureId + " not found.",
+                    "BULK-EXPENDITURE-NOT-FOUND",
+                    404
+            );
+        }
+        transactionRepo.deleteByExpenditureBulkExpenditureId(expenditureId);
+        bulkExpenditureRepository.deleteById(expenditureId);
+
+
+        return WorkflowResponse.builder()
+                .status(200)
+                .message("Bulk Expenditure deleted successfully")
+                .data(null)
+                .build();
+    }
+
+
 }

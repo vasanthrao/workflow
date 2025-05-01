@@ -36,6 +36,28 @@ public class ExpenditureController {
             return RestControllerBase.error(exception);
         } 
     }
+    @PostMapping("/bulk/expenditure/update/{id}")
+    public ResponseEntity<?> updateBulkExpenditure(@PathVariable("id") Long expenditureId, @RequestPart String request, @RequestPart(required = false) List<MultipartFile> files
+    ) throws JsonProcessingException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            BulkExpenditureRequest bulkExpenditureRequest = objectMapper.readValue(request, BulkExpenditureRequest.class);
+            return ResponseEntity.ok(expenditureService.updateBulkExpenditure(expenditureId, bulkExpenditureRequest, files));
+        } catch (DataException exception) {
+            return RestControllerBase.error(exception);
+        }
+    }
+    @PostMapping("/bulk/expenditure/delete/{expenditureId}")
+    public ResponseEntity<?> deleteBulkExpenditure(@PathVariable Long expenditureId) {
+        try {
+            WorkflowResponse response = expenditureService.deleteBulkExpenditure(expenditureId);
+            return ResponseEntity.ok(response);
+        } catch (DataException e) {
+            return RestControllerBase.error(e);
+        }
+    }
+
+
     @PostMapping(
             value = "/program/expenditure/save",
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
@@ -54,6 +76,26 @@ public class ExpenditureController {
             return RestControllerBase.error(exception);
         }
     }
+    @PostMapping(
+            value = "/program/expenditure/update/{expenditureId}",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> updateProgramExpenditure(
+            @PathVariable("expenditureId") Long expenditureId,
+            @RequestPart("request") String request,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws ParseException {
+        try {
+            JSONParser parser = new JSONParser();
+            ProgramExpenditureRequest programExpenditureRequest = parser.parse(request, ProgramExpenditureRequest.class);
+            var response = expenditureService.updateProgramExpenditure(expenditureId, programExpenditureRequest, files);
+            return ResponseEntity.ok(response);
+        }
+        catch (DataException exception) {
+            return RestControllerBase.error(exception);
+        }
+    }
+
 
     @GetMapping("/program/expenditure/{expenditureType}")
     public ResponseEntity<?> getAllProgramExpenditure(@PathVariable ExpenditureType expenditureType) {
@@ -112,6 +154,17 @@ public class ExpenditureController {
     {
         return expenditureService.getAllHeadOfExpenses();
     }
+
+    @PostMapping("/program/expenditure/delete/{expenditureId}")
+    public ResponseEntity<?> deleteProgramExpenditure(@PathVariable Long expenditureId) {
+        try {
+            WorkflowResponse response = expenditureService.deleteProgramExpenditure(expenditureId);
+            return ResponseEntity.ok(response);
+        } catch (DataException e) {
+            return RestControllerBase.error(e);
+        }
+    }
+
 }
 
 

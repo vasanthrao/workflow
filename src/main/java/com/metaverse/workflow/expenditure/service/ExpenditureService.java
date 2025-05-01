@@ -21,5 +21,9 @@ public interface ExpenditureService {
     BulkExpenditureLookupResponse getBulkExpendituresByExpenseAndItem(BulkExpenditureLookupRequest request) throws DataException;
     List<String> getItemsByHeadOfExpense(Integer expenseId) throws DataException;
     List<HeadOfExpense> getAllHeadOfExpenses();
+    WorkflowResponse updateProgramExpenditure(Long expenditureId, ProgramExpenditureRequest expenditureRequest, List<MultipartFile> files) throws DataException;
+    WorkflowResponse deleteProgramExpenditure(Long expenditureId) throws DataException;
+    WorkflowResponse updateBulkExpenditure(Long expenditureId, BulkExpenditureRequest bulkExpenditureRequest, List<MultipartFile> files) throws DataException;
+    WorkflowResponse deleteBulkExpenditure(Long expenditureId) throws DataException;
 }
 
