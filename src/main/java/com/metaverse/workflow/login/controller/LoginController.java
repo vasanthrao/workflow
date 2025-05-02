@@ -1,6 +1,7 @@
 package com.metaverse.workflow.login.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.login.service.ChangePasswordRequest;
 import com.metaverse.workflow.login.service.LoginService;
@@ -36,6 +37,20 @@ public class LoginController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Get user by id", responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = LoginUserResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
+    })
+    @PostMapping(value = "/login/user/update/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @RequestBody LoginUserRequest request) {
+        WorkflowResponse response ;
+        try {
+            response = loginService.updateUser(userId,request);
+        } catch (DataException exception) {
+            return RestControllerBase.error(exception);
+        }
+        return ResponseEntity.ok(response);
+    }
     @Operation(summary = "Get user by id", responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = LoginUserResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(implementation = Exception.class)))
