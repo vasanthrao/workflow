@@ -83,22 +83,16 @@ public class ParticipantController {
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadExcel(@RequestParam("file") MultipartFile file,
-										 @RequestParam("organizationId") Long orgId,
-										 @RequestParam("programIds")List<Program> programs) {
+										 @RequestParam("programId")Long programId) {
 		try {
 			if (!file.getOriginalFilename().endsWith(".xlsx")) {
 				return ResponseEntity.badRequest().body("Invalid file format. Use .xlsx");
 			}
 
-			Optional<Organization> orgOpt = organizationRepository.findById(orgId);
-			if (orgOpt.isEmpty()) {
-				return ResponseEntity.badRequest().body("Invalid organization ID");
-			}
-
-			List<Participant> participants = excelHelper.excelToParticipants(file.getInputStream(), orgOpt.get());
+			List<Participant> participants = excelHelper.excelToParticipants(file.getInputStream(),programId);
 			participantService.saveAll(participants);
 
-			return ResponseEntity.ok("Upload successful! " + participants.size() + " participants saved.");
+			return ResponseEntity.ok("Upload successful participants saved.");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Error uploading file: " + e.getMessage());
