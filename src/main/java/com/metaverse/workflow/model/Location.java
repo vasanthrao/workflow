@@ -24,12 +24,14 @@ public class Location {
     private Long locationId;
     @Column(name="location_name")
     private String locationName;
- 
     @Column(name="ownership_type")
     private String ownershipType;
     @Column(name = "venue_type")
     private String typeOfVenue;
-
+    @Column(name = "district")
+    private String district;
+    @Column(name = "mandal")
+    private String mandal;
     @Column(name="latitude")
     private Double latitude;
     @Column(name="longitude")

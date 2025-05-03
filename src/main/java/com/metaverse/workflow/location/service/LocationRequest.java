@@ -17,10 +17,10 @@ public class LocationRequest {
 
 	    private Long locationId;
 	    private String locationName;
-	 
 	    private String ownershipType;
 	    private String typeOfVenue;
-
+		private String district;
+		private String mandal;
 	    private Double latitude;
 	    private Double longitude;
 	    private String googleMapUrl;

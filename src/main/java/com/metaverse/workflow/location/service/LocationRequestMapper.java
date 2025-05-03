@@ -12,6 +12,8 @@ public class LocationRequestMapper {
 		.locationName(request.getLocationName()).ownershipType(request.getOwnershipType())
 		.typeOfVenue(request.getTypeOfVenue()).latitude(request.getLatitude())
 		.longitude(request.getLongitude()).googleMapUrl(request.getGoogleMapUrl())
+				.district(request.getDistrict())
+				.mandal(request.getMandal())
 		.capacity(request.getCapacity()).filePath(request.getFilePath())
 		.build();
 		
