@@ -12,4 +12,5 @@ public interface MandalRepositrory extends JpaRepository<Mandal,Integer> {
     List<Mandal> findByDistrictId(@Param("districtId") Integer districtId);
 
 
+    List<Mandal> findByDistrict_DistrictName(String districtName);
 }

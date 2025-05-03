@@ -118,6 +118,20 @@ public class DistrictServiceAdepter implements DistrictService {
                 .build();
     }
 
+    @Override
+    public WorkflowResponse getAllMandalOfDistrictName(String districtName) {
+        List<Mandal> mandalList = mandalRepositrory.findByDistrict_DistrictName(districtName);
+        List<MandalResponse> mandalResponce = mandalList.stream()
+                .map(mandal -> MandalResponceMapper.map(mandal))
+                .collect(Collectors.toList());
+
+        return WorkflowResponse.builder()
+                .message("Mandals get successfully")
+                .status(200)
+                .data(mandalResponce)
+                .build();
+    }
+
 
     @Override
     public WorkflowResponse getDistrictById(Integer districtId) {

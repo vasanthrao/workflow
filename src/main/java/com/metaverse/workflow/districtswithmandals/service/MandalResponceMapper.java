@@ -15,4 +15,14 @@ public class MandalResponceMapper {
 
         return response;
     }
+
+    public static MandalResponse mapMandals(Mandal mandal)
+    {
+        MandalResponse response =  MandalResponse.builder()
+                .mandalId(mandal.getMandalId())
+                .mandalName(mandal.getMandalName())
+                .build();
+
+        return response;
+    }
 }
