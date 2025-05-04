@@ -14,4 +14,8 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     Page<Program> findByAgencyAgencyId(Long agencyId, Pageable pageable);
 
     List<Program> findByAgencyAgencyId(Long agencyId);
+
+    List<Program> findAllByStatus(String status);
+
+    List<Program> findAllByStatusAndProgramId(String status, Long programId);
 }

@@ -1,5 +1,6 @@
 package com.metaverse.workflow.program.service;
 
+import com.metaverse.workflow.common.constants.ProgramStatusConstants;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.*;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class ProgramRequestMapper {
                 .location(location)
                 .kpi(programRequest.getKpi())
                 .agency(agency)
+                .status(ProgramStatusConstants.PROGRAM_SCHEDULED)
                 .build();
     }
 
