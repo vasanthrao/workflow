@@ -2,9 +2,7 @@ package com.metaverse.workflow.participant.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.ExcelHelper;
-import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
-import com.metaverse.workflow.model.Program;
 import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.service.ParticipantRequest;
 import com.metaverse.workflow.participant.service.ParticipantService;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ParticipantController {
@@ -82,20 +79,19 @@ public class ParticipantController {
 	}
 
 	@PostMapping("/upload")
-	public ResponseEntity<?> uploadExcel(@RequestParam("file") MultipartFile file,
-										 @RequestParam("programId")Long programId) {
+	public WorkflowResponse uploadExcel(@RequestParam("file") MultipartFile file,
+										@RequestParam("programId")Long programId) {
 		try {
 			if (!file.getOriginalFilename().endsWith(".xlsx")) {
-				return ResponseEntity.badRequest().body("Invalid file format. Use .xlsx");
+				return WorkflowResponse.builder().message(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR)).status(200).data("Invalid file format").build();
 			}
 
 			List<Participant> participants = excelHelper.excelToParticipants(file.getInputStream(),programId);
 			participantService.saveAll(participants);
 
-			return ResponseEntity.ok("Upload successful participants saved.");
+			return WorkflowResponse.builder().message("Success").status(200).data(participants).build();
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error uploading file: " + e.getMessage());
+			return WorkflowResponse.builder().message(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR)).status(200).data("Error uploading file: " + e.getMessage()).build();
 		}
 	}
 

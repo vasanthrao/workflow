@@ -51,21 +51,29 @@ public class ExcelHelper {
 
                 Participant participant = new Participant();
                 ParticipantTemp participantTemp = new ParticipantTemp();
-
-
+                List<Program> programList = new ArrayList<>();
                 String organizationName = getCellValue(currentRow, 1);
 
                 List<Organization> organizationList = organizationRepository.findAllByOrganizationNameIgnoreCase(organizationName);
 
-                Optional<Program> programRes = programRepository.findById(programId);
+                Program programRes = programRepository.findById(programId).get();
+                if(null != programRes) {
+                    programList.add(programRes);
+                }
 
                 if (organizationList.size() == 1) {
                     participant.setParticipantName(getCellValue(currentRow, 0));
                     participant.setGender(getCellValue(currentRow, 1).charAt(2));
                     participant.setCategory(getCellValue(currentRow, 3));
                     participant.setDisability(getCellValue(currentRow, 4).charAt(0));
-                    participant.setAadharNo(Long.parseLong(getCellValue(currentRow, 5)));
-                    participant.setMobileNo(Long.parseLong(getCellValue(currentRow, 6)));
+                    String aadharVal = getCellValue(currentRow, 5);
+                    double parsedDouble = Double.parseDouble(aadharVal);
+                    long aadharNumber = (long) parsedDouble;
+                    participantTemp.setAadharNo(aadharNumber);
+                    String mobileNo = getCellValue(currentRow, 6);
+                    double mobileNumber = Double.parseDouble(mobileNo);
+                    long mobile = (long) mobileNumber;
+                    participantTemp.setMobileNo(mobile);
                     participant.setEmail(getCellValue(currentRow, 7));
                     participant.setDesignation(getCellValue(currentRow, 8));
                     participant.setIsParticipatedBefore(getCellValue(currentRow, 9).charAt(0));
@@ -75,12 +83,14 @@ public class ExcelHelper {
                     participant.setIsCertificateIssued(getCellValue(currentRow, 13).charAt(0));
                     String dateStr = getCellValue(currentRow, 14);
                     if (!dateStr.isEmpty()) {
-                        Date date = new SimpleDateFormat("dd-MM-yyyy").parse(dateStr);
-                        participant.setCertificateIssueDate(date);
+                        Date date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH).parse(dateStr);
+                        participantTemp.setCertificateIssueDate(date);
                     }
+
                     participant.setNeedAssessmentMethodology(getCellValue(currentRow, 15));
                     participant.setOrganization(organizationList.get(0));
-                    participant.setPrograms(programRes.stream().toList());
+                    participant.setOrganization(organizationList.get(0)!=null ? organizationList.get(0) : null);
+                    participant.setPrograms(programList);
                     participants.add(participant);
                 }
                 else {
@@ -110,17 +120,16 @@ public class ExcelHelper {
                     }
                     participantTemp.setNeedAssessmentMethodology(getCellValue(currentRow, 15));
                     participantTemp.setOrganization(organizationList.get(0));
-                    participantTemp.setPrograms(programRes.stream().toList());
                     tempParticipants.add(participantTemp);
                 }
             }
 
             workbook.close();
-            if(!tempParticipants.isEmpty()) {
+            if(tempParticipants.size() > 1) {
                 participantTempRepository.saveAll(tempParticipants);
             }
             else {
-                participantRepository.saveAll(participants);
+                participantRepository.save(participants.get(0));
             }
             return participants;
         } catch (Exception e) {

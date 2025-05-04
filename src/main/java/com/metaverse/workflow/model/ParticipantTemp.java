@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "participantTemp")
 public class ParticipantTemp {
     @Id
-    @Column(name = "participant_id")
+    @Column(name = "participantTemp_id")
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long participantId;
     @Column(name = "participant_name")
@@ -52,8 +52,8 @@ public class ParticipantTemp {
     private Organization organization;
     @ManyToMany
     @JoinTable(
-            name = "program_participant",
-            joinColumns = @JoinColumn(name = "participant_id"),
+            name = "program_participant_temp",
+            joinColumns = @JoinColumn(name = "participantTemp_id"),
             inverseJoinColumns = @JoinColumn(name = "program_id")
     )
     private List<Program> programs = new ArrayList<>();
