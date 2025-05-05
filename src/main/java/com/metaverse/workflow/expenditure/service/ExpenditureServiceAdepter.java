@@ -259,7 +259,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     }
 
   @Override
-    public WorkflowResponse updateProgramExpenditure(Long expenditureId, ProgramExpenditureRequest expenditureRequest, List<MultipartFile> files) throws DataException {
+  public WorkflowResponse updateProgramExpenditure(Long expenditureId, ProgramExpenditureRequest expenditureRequest, List<MultipartFile> files) throws DataException {
         ProgramExpenditure existingExpenditure = programExpenditureRepository.findById(expenditureId)
                 .orElseThrow(() -> new DataException(
                         "Program Expenditure with ID " + expenditureId + " not found.",
@@ -306,6 +306,10 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         ExpenditureRequestMapper.updateProgramExpenditure(existingExpenditure, expenditureRequest, activity, subActivity, program, agency, headOfExpense);
         ProgramExpenditure updatedExpenditure = programExpenditureRepository.save(existingExpenditure);
 
+      List<ProgramSessionFile> oldFiles = programSessionFileRepository.findByProgramExpenditureId(expenditureId);
+      if (!oldFiles.isEmpty()) {
+          programSessionFileRepository.deleteAll(oldFiles);
+      }
         // Handle files (optional: decide whether to replace or append)
         if (files != null && !files.isEmpty()) {
             List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getProgramId(), "ProgramExpenditure");
@@ -334,6 +338,10 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                     "PROGRAM-EXPENDITURE-NOT-FOUND",
                     404
             );
+        }
+        List<ProgramSessionFile> files = programSessionFileRepository.findByProgramExpenditureId(expenditureId);
+        if (!files.isEmpty()) {
+            programSessionFileRepository.deleteAll(files);
         }
         programExpenditureRepository.deleteById(expenditureId);
 
@@ -378,6 +386,11 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
 
         bulkExpenditureRepository.save(existingExpenditure);
 
+        List<ProgramSessionFile> oldFiles = programSessionFileRepository.findByBulkExpenditureId(expenditureId);
+        if (!oldFiles.isEmpty()) {
+            programSessionFileRepository.deleteAll(oldFiles);
+
+        }
         if (files != null && !files.isEmpty()) {
             List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getAgencyId(), "BulkExpenditure");
             List<ProgramSessionFile> sessionFiles = filePaths.stream()
@@ -410,7 +423,11 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         }
         transactionRepo.deleteByExpenditureBulkExpenditureId(expenditureId);
         bulkExpenditureRepository.deleteById(expenditureId);
+        List<ProgramSessionFile> file = programSessionFileRepository.findByBulkExpenditureId(expenditureId);
+        if (!file.isEmpty()) {
+            programSessionFileRepository.deleteAll(file);
 
+        }
 
         return WorkflowResponse.builder()
                 .status(200)
