@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProgramResponse {
+public class  ProgramResponse {
 
     private Long programId;
     private String locationName;

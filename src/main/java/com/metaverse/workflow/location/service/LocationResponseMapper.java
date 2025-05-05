@@ -11,6 +11,8 @@ public class LocationResponseMapper {
     public static LocationResponse map(Location location) {
         return LocationResponse.builder()
                 .locationId(location.getLocationId())
+                .district(location.getDistrict())
+                .mandal(location.getMandal())
                 .locationName(location.getLocationName())
                 .ownershipType(location.getOwnershipType())
                 .typeOfVenue(location.getTypeOfVenue())
