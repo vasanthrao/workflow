@@ -359,6 +359,27 @@ public class ProgramServiceAdapter implements ProgramService {
         return WorkflowResponse.builder().status(200).message("Success")
                 .data(monitoringFeedBackList.stream().map(ProgramMonitoringFeedBackMapper::mapResponse)).build();
     }
+    @Override
+    public WorkflowResponse getProgramDetailsFroFeedBack(Long programId) throws DataException {
+
+        Program program = programRepository.findById(programId).orElseThrow(() -> new DataException("Program data not found", "PROGRAM-DATA-NOT-FOUND", 400));
+        ProgramDetailsFroFeedBack programDetailsFroFeedBack = ProgramDetailsFroFeedBack.builder()
+               // .state()
+                .district(program.getLocation().getDistrict())
+                .dateOfMonitoring(DateUtil.dateToString(program.getStartDate(), "dd-MM-yyyy"))
+                .programName(program.getProgramTitle())
+                .programType(program.getProgramType())
+                .agencyName(program.getAgency() != null ? program.getAgency().getAgencyName() : null)
+                .hostingAgencyName(program.getAgency() != null ? program.getAgency().getAgencyName() : null)
+                .inTime(program.getStartTime())
+                .outTime(program.getEndTime())
+                .spocName(program.getSpocName())
+                .spocContact(program.getSpocContactNo())
+                .venueName(program.getLocation().getLocationName()).build();
+        return WorkflowResponse.builder().message("Success").status(200)
+                .data(programDetailsFroFeedBack)
+                .build();
+    }
 
 
 }

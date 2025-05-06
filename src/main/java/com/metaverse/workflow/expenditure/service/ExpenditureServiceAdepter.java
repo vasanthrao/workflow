@@ -102,24 +102,41 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         List<BulkExpenditure> bulkExpenditureList = bulkExpenditureRepository.findAll();
         if (bulkExpenditureList.isEmpty())
             return WorkflowResponse.builder().message("BulkExpenditure is Empty").status(400).build();
+        List<BulkExpenditureResponse> responses = bulkExpenditureList.stream()
+                .map(bulkExpenditure -> {
+                    List<Long> fileIds = programSessionFileRepository
+                            .findByBulkExpenditureId(bulkExpenditure.getBulkExpenditureId())
+                            .stream()
+                            .map(ProgramSessionFile::getProgramSessionFileId)
+                            .toList();
+                    return ExpenditureResponseMapper.mapBulkExpenditure(bulkExpenditure, fileIds);
+                })
+                .toList();
+
         return WorkflowResponse.builder().message("Success").status(200)
-                .data(
-                        bulkExpenditureList.stream().map(
-                                ExpenditureResponseMapper::mapBulkExpenditure).toList()
-                )
+                .data(responses)
                 .build();
     }
+
 
     @Override
     public WorkflowResponse getAllProgramExpenditure(ExpenditureType expenditureType) {
         List<ProgramExpenditure> programExpendituresList = programExpenditureRepository.findByExpenditureType(expenditureType);
         if (programExpendituresList.isEmpty())
             return WorkflowResponse.builder().message("Expenditures is Empty").status(400).build();
+
+        List<ProgramExpenditureResponse> responses = programExpendituresList.stream()
+                .map(programExpenditure -> {
+                    List<Long> fileIds = programSessionFileRepository
+                            .findByBulkExpenditureId(programExpenditure.getProgramExpenditureId())
+                            .stream()
+                            .map(ProgramSessionFile::getProgramSessionFileId)
+                            .toList();
+                    return ExpenditureResponseMapper.mapProgramExpenditure(programExpenditure,fileIds);
+                })
+                .toList();
         return WorkflowResponse.builder().message("Success").status(200)
-                .data(
-                        programExpendituresList.stream().map(
-                                ExpenditureResponseMapper::mapProgramExpenditure).toList()
-                )
+                .data(responses)
                 .build();
     }
     @Override
@@ -129,25 +146,40 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         if (programExpendituresList.isEmpty())
             return WorkflowResponse.builder().message("No BulkExpenditure found for the given agency ID").status(400).build();
 
+        List<ProgramExpenditureResponse> responses = programExpendituresList.stream()
+                .map(programExpenditure -> {
+                    List<Long> fileIds = programSessionFileRepository
+                            .findByBulkExpenditureId(programExpenditure.getProgramExpenditureId())
+                            .stream()
+                            .map(ProgramSessionFile::getProgramSessionFileId)
+                            .toList();
+                    return ExpenditureResponseMapper.mapProgramExpenditure(programExpenditure,fileIds);
+                })
+                .toList();
         return WorkflowResponse.builder().message("Success").status(200)
-                .data(
-                        programExpendituresList.stream()
-                                .map(ExpenditureResponseMapper::mapProgramExpenditure)
-                                .toList()
-                )
+                .data(responses)
                 .build();
     }
+
+
 
     @Override
     public WorkflowResponse getAllProgramExpenditureByProgram(ExpenditureType expenditureType, Long programId) {
         List<ProgramExpenditure> programExpendituresList = programExpenditureRepository.findByExpenditureTypeAndProgram_ProgramId(expenditureType, programId);
         if (programExpendituresList.isEmpty())
             return WorkflowResponse.builder().message("Expenditures is Empty").status(400).build();
+        List<ProgramExpenditureResponse> responses = programExpendituresList.stream()
+                .map(programExpenditure -> {
+                    List<Long> fileIds = programSessionFileRepository
+                            .findByBulkExpenditureId(programExpenditure.getProgramExpenditureId())
+                            .stream()
+                            .map(ProgramSessionFile::getProgramSessionFileId)
+                            .toList();
+                    return ExpenditureResponseMapper.mapProgramExpenditure(programExpenditure,fileIds);
+                })
+                .toList();
         return WorkflowResponse.builder().message("Success").status(200)
-                .data(
-                        programExpendituresList.stream().map(
-                                ExpenditureResponseMapper::mapProgramExpenditure).toList()
-                )
+                .data(responses)
                 .build();
     }
 
@@ -204,8 +236,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
 
     @Override
     public WorkflowResponse getAllBulkExpenditureTransactionByProgram(Long programId) {
-        List<BulkExpenditureTransaction> transactions = transactionRepo
-                .findByProgram_ProgramId(programId);
+        List<BulkExpenditureTransaction> transactions = transactionRepo.findByProgram_ProgramId(programId);
 
         return WorkflowResponse.builder().message("Success").status(200)
                 .data(
@@ -511,12 +542,19 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         List<BulkExpenditure> bulkExpenditureList = bulkExpenditureRepository.findByAgency_AgencyId(agencyId);
         if (bulkExpenditureList.isEmpty())
             return WorkflowResponse.builder().message("No BulkExpenditure found for the given agency ID").status(404).build();
+
+        List<BulkExpenditureResponse> responses = bulkExpenditureList.stream()
+                .map(bulkExpenditure -> {
+                    List<Long> fileIds = programSessionFileRepository
+                            .findByBulkExpenditureId(bulkExpenditure.getBulkExpenditureId())
+                            .stream()
+                            .map(ProgramSessionFile::getProgramSessionFileId)
+                            .toList();
+                    return ExpenditureResponseMapper.mapBulkExpenditure(bulkExpenditure, fileIds);
+                })
+                .toList();
         return WorkflowResponse.builder().message("Success").status(200)
-                .data(
-                        bulkExpenditureList.stream()
-                                .map(ExpenditureResponseMapper::mapBulkExpenditure)
-                                .toList()
-                )
+                .data(responses)
                 .build();
     }
 

@@ -220,4 +220,15 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/program/details/for/feedback/{programId}")
+    public ResponseEntity<?> getProgramDetailsFroFeedBack(@PathVariable Long programId) {
+        WorkflowResponse response ;
+        try {
+            response = programService.getProgramDetailsFroFeedBack(programId);
+        } catch (DataException exception) {
+            return RestControllerBase.error(exception);
+        }
+        return ResponseEntity.ok(response);
+    }
+
 }

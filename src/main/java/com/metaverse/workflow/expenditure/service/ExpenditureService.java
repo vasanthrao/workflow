@@ -28,5 +28,6 @@ public interface ExpenditureService {
     WorkflowResponse updateTransaction(Long transactionId, BulkExpenditureTransactionRequest request) throws DataException;
     WorkflowResponse getAllBulkExpenditureByAgencyId(Long agencyId);
     WorkflowResponse getAllProgramExpenditureByAgencyId(ExpenditureType expenditureType, Long agencyId);
+
 }
 
