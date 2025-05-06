@@ -1,11 +1,10 @@
 package com.metaverse.workflow.participant.service;
 
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.metaverse.workflow.model.Organization;
 
+import com.metaverse.workflow.model.Sector;
 import lombok.*;
 
 @NoArgsConstructor
@@ -34,5 +33,9 @@ public class ParticipantResponse {
 	private Long organizationId;
 	private List<Long> programIds;
 	private String organizationName;
+	private String district;
+	private String mandal;
+	private String nameOfVO;
+	private List<Sector> sectorList;
 
 }

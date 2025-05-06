@@ -22,4 +22,8 @@ public class LogisticsEvaluation {
     @Column(name="remarks")
     private String remarks;
 
+    @ManyToOne
+    @JoinColumn(name = "monitoring_id")
+    private ProgramMonitoringFeedBack programMonitoringFeedBack;
+
 }

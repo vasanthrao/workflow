@@ -193,5 +193,31 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/program/feedback/save")
+    public ResponseEntity<WorkflowResponse> saveFeedback(@RequestBody ProgramMonitoringFeedBackRequest request)
+    {
+        return ResponseEntity.ok(programService.saveFeedback(request));
+    }
+    @PostMapping("/program/feedback/update/{monitorId}")
+    public ResponseEntity<?> updateFeedback(@PathVariable Long monitorId, @RequestBody ProgramMonitoringFeedBackRequest request
+    ) {
+        WorkflowResponse response ;
+        try {
+            response = programService.updateFeedback(monitorId, request);
+        } catch (DataException exception) {
+            return RestControllerBase.error(exception);
+        }
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/program/feedback/{programId}")
+    public ResponseEntity<?> getFeedbackByProgramId(@PathVariable Long programId) {
+        WorkflowResponse response ;
+        try {
+            response = programService.getFeedBackByProgramId(programId);
+        } catch (DataException exception) {
+            return RestControllerBase.error(exception);
+        }
+        return ResponseEntity.ok(response);
+    }
 
 }

@@ -22,4 +22,7 @@ public class PreEventChecklist {
     @Column(name="remarks")
     private String remarks;
 
+    @ManyToOne
+    @JoinColumn(name = "monitoring_id", nullable = false)
+    private ProgramMonitoringFeedBack programMonitoringFeedBack;
 }

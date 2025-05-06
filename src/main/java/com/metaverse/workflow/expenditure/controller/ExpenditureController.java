@@ -106,6 +106,10 @@ public class ExpenditureController {
     public ResponseEntity<WorkflowResponse> getAllBulkExpenditure( ) {
         return ResponseEntity.ok(expenditureService.getAllBulkExpenditure());
     }
+    @GetMapping("/bulk/expenditure/agency/{agencyId}")
+    public ResponseEntity<WorkflowResponse> getAllBulkExpenditureByAgency(@PathVariable Long agencyId) {
+        return ResponseEntity.ok(expenditureService.getAllBulkExpenditureByAgencyId(agencyId));
+    }
 
     @GetMapping("/program/expenditure")
     public ResponseEntity<?> getAllProgramExpenditure(
@@ -113,12 +117,30 @@ public class ExpenditureController {
             @RequestParam Long programId) {
         return ResponseEntity.ok(expenditureService.getAllProgramExpenditureByProgram(expenditureType, programId));
     }
+    @GetMapping("/program/expenditure/agency")
+    public ResponseEntity<?> getAllProgramExpenditureByAgencyId(
+            @RequestParam ExpenditureType expenditureType,
+            @RequestParam Long agencyId) {
+        return ResponseEntity.ok(expenditureService.getAllProgramExpenditureByAgencyId(expenditureType,agencyId));
+    }
+
 
     @PostMapping("/bulk/transactions/save")
     public ResponseEntity<?> saveTransaction(
             @RequestBody BulkExpenditureTransactionRequest request) throws DataException {
         try {
             BulkExpenditureTransactionResponse response = expenditureService.saveTransaction(request);
+            return ResponseEntity.ok(response);
+        }
+        catch (DataException ex) {
+            return RestControllerBase.error(ex);
+        }
+    }
+    @PostMapping("/bulk/transactions/update/{transactionId}")
+    public ResponseEntity<?> updateTransaction(@PathVariable Long transactionId,
+            @RequestBody BulkExpenditureTransactionRequest request) throws DataException {
+        try {
+            WorkflowResponse response = expenditureService.updateTransaction(transactionId,request);
             return ResponseEntity.ok(response);
         }
         catch (DataException ex) {

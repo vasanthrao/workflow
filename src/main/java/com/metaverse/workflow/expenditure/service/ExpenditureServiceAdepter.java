@@ -85,7 +85,8 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                             .bulkExpenditure(bulkExpenditure)
                             .build())
                     .toList();
-            programSessionFileRepository.saveAll(sessionFiles);
+             programSessionFileRepository.saveAll(sessionFiles);
+
         }
 
         return WorkflowResponse.builder()
@@ -118,6 +119,21 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                 .data(
                         programExpendituresList.stream().map(
                                 ExpenditureResponseMapper::mapProgramExpenditure).toList()
+                )
+                .build();
+    }
+    @Override
+    public WorkflowResponse getAllProgramExpenditureByAgencyId(ExpenditureType expenditureType, Long agencyId) {
+        List<ProgramExpenditure> programExpendituresList =
+                programExpenditureRepository.findByExpenditureTypeAndAgency_AgencyId(expenditureType, agencyId);
+        if (programExpendituresList.isEmpty())
+            return WorkflowResponse.builder().message("No BulkExpenditure found for the given agency ID").status(400).build();
+
+        return WorkflowResponse.builder().message("Success").status(200)
+                .data(
+                        programExpendituresList.stream()
+                                .map(ExpenditureResponseMapper::mapProgramExpenditure)
+                                .toList()
                 )
                 .build();
     }
@@ -163,10 +179,12 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
             bulkExpenditureRepository.save(bulkExpenditure);
         }
 
-        BulkExpenditureTransactionResponse response = new BulkExpenditureTransactionResponse();
-        response.setId(saved.getBulkExpenditureTransactionId());
-        response.setConsumedQuantity(saved.getConsumedQuantity());
-        response.setAllocatedCost(saved.getAllocatedCost());
+
+        BulkExpenditureTransactionResponse response = BulkExpenditureTransactionResponse.builder()
+                .id(saved.getBulkExpenditureTransactionId())
+                .consumedQuantity(saved.getConsumedQuantity())
+                .allocatedCost(saved.getAllocatedCost())
+                .build();
 
         return response;
     }
@@ -433,6 +451,72 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                 .status(200)
                 .message("Bulk Expenditure deleted successfully")
                 .data(null)
+                .build();
+    }
+
+    @Override
+    public WorkflowResponse updateTransaction(Long transactionId, BulkExpenditureTransactionRequest request) throws DataException {
+
+        BulkExpenditureTransaction existingTransaction = transactionRepo.findById(transactionId)
+                .orElseThrow(() -> new DataException("Transaction not found", "TRANSACTION-NOT-FOUND", 404));
+
+        BulkExpenditure bulkExpenditure = bulkExpenditureRepository.findById(request.getBulkExpenditureId())
+                .orElseThrow(() -> new DataException("Bulk expenditure data not found", "BULK-EXPENDITURE-DATA-NOT-FOUND", 400));
+        Activity activity = activityRepository.findById(request.getActivityId())
+                .orElseThrow(() -> new DataException("Activity data not found", "ACTIVITY-DATA-NOT-FOUND", 400));
+        SubActivity subActivity = subActivityRepository.findById(request.getSubActivityId())
+                .orElseThrow(() -> new DataException("Sub Activity data not found", "SUB-ACTIVITY-DATA-NOT-FOUND", 400));
+        Program program = programRepository.findById(request.getProgramId())
+                .orElseThrow(() -> new DataException("Program data not found", "PROGRAM-DATA-NOT-FOUND", 400));
+        Agency agency = agencyRepository.findById(request.getAgencyId())
+                .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+        HeadOfExpense headOfExpense = headOfExpenseRepository.findById(request.getHeadOfExpenseId())
+                .orElseThrow(() -> new DataException("Head of expense data not found", "HEAD-OF-EXPENSE-DATA-NOT-FOUND", 400));
+
+
+        Integer oldConsumedQty = existingTransaction.getConsumedQuantity();
+        Integer newConsumedQty = request.getConsumedQuantity();
+
+        int adjustedAvailableQty = bulkExpenditure.getAvailableQuantity() + oldConsumedQty - newConsumedQty;
+        if (adjustedAvailableQty < 0) {
+            throw new DataException("Not enough available quantity for update", "INSUFFICIENT-QUANTITY", 400);
+        }
+
+        bulkExpenditure.setAvailableQuantity(adjustedAvailableQty);
+        bulkExpenditure.setConsumedQuantity(bulkExpenditure.getConsumedQuantity() - oldConsumedQty + newConsumedQty);
+        bulkExpenditureRepository.save(bulkExpenditure);
+
+
+        existingTransaction = ExpenditureRequestMapper.mapBulkExpenditureTransaction(
+                request, activity, subActivity, program, agency, bulkExpenditure, headOfExpense);
+       // existingTransaction.setBulkExpenditureTransactionId(transactionId);
+
+        BulkExpenditureTransaction updated = transactionRepo.save(existingTransaction);
+
+        BulkExpenditureTransactionResponse response = BulkExpenditureTransactionResponse.builder()
+                .id(updated.getBulkExpenditureTransactionId())
+                .consumedQuantity(updated.getConsumedQuantity())
+                .allocatedCost(updated.getAllocatedCost())
+                .build();
+
+        return WorkflowResponse.builder()
+                .status(200)
+                .message("Transaction updated successfully")
+                .data(response)
+                .build();
+    }
+
+    @Override
+    public WorkflowResponse getAllBulkExpenditureByAgencyId(Long agencyId) {
+        List<BulkExpenditure> bulkExpenditureList = bulkExpenditureRepository.findByAgency_AgencyId(agencyId);
+        if (bulkExpenditureList.isEmpty())
+            return WorkflowResponse.builder().message("No BulkExpenditure found for the given agency ID").status(404).build();
+        return WorkflowResponse.builder().message("Success").status(200)
+                .data(
+                        bulkExpenditureList.stream()
+                                .map(ExpenditureResponseMapper::mapBulkExpenditure)
+                                .toList()
+                )
                 .build();
     }
 

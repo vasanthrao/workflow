@@ -81,6 +81,7 @@ public class BulkExpenditure {
     @Column(name = "bill_url")
     private String uploadBillUrl;
 
+
     @Column(name="created_on", insertable = true, updatable = false)
     @CreationTimestamp
     private Date createdOn;

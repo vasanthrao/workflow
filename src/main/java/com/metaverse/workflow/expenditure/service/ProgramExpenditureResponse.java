@@ -6,6 +6,8 @@ import com.metaverse.workflow.model.HeadOfExpense;
 import com.metaverse.workflow.model.ProgramExpenditure;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,4 +35,5 @@ public class ProgramExpenditureResponse {
     private String modeOfPayment;
     private String purpose;
     private String uploadBillUrl;
+    private List<Long> fileIds;
 }

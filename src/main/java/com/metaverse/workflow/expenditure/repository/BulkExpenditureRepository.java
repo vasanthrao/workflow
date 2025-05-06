@@ -18,4 +18,6 @@ public interface BulkExpenditureRepository extends JpaRepository<BulkExpenditure
     boolean existsByAgencyAndHeadOfExpenseAndItemName(Agency agency, HeadOfExpense headOfExpense, String itemName);
 
     boolean existsByAgencyAndHeadOfExpenseAndItemNameAndBulkExpenditureIdNot(Agency agency, HeadOfExpense headOfExpense, String itemName, Long id);
+
+    List<BulkExpenditure> findByAgency_AgencyId(Long agencyId);
 }

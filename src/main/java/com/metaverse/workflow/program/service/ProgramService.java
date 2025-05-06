@@ -25,4 +25,7 @@ public interface ProgramService {
     WorkflowResponse getProgramSummaryByProgramId(Long programId) throws DataException;
     String deleteProgramSession(Long sessionId);
     WorkflowResponse getProgramParticipantsDropDown(Long id);
+     WorkflowResponse saveFeedback(ProgramMonitoringFeedBackRequest request);
+    WorkflowResponse updateFeedback(Long monitorId, ProgramMonitoringFeedBackRequest request) throws DataException;
+    WorkflowResponse getFeedBackByProgramId(Long programId) throws DataException;
 }

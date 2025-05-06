@@ -4,11 +4,14 @@ import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.BulkExpenditure;
 import com.metaverse.workflow.model.BulkExpenditureTransaction;
 import com.metaverse.workflow.model.ProgramExpenditure;
+import com.metaverse.workflow.model.ProgramSessionFile;
+
+import java.util.List;
 
 public class ExpenditureResponseMapper {
 
 
-    public static BulkExpenditureResponse mapBulkExpenditure(BulkExpenditure expenditure)
+    public static BulkExpenditureResponse mapBulkExpenditure(BulkExpenditure expenditure /*, List<Long> fileIds*/)
     {
         return BulkExpenditureResponse.builder()
                 .bulkExpenditureId(expenditure.getBulkExpenditureId())
@@ -28,6 +31,30 @@ public class ExpenditureResponseMapper {
                 .modeOfPayment(expenditure.getModeOfPayment())
                 .remarks(expenditure.getRemarks())
                 .uploadBillUrl(expenditure.getUploadBillUrl())
+                //.fileIds(fileIds)
+                .build();
+    }
+    public static BulkExpenditureResponse mapBulkExpenditure(BulkExpenditure expenditure , List<Long> fileIds)
+    {
+        return BulkExpenditureResponse.builder()
+                .bulkExpenditureId(expenditure.getBulkExpenditureId())
+                .agencyId(expenditure.getAgency().getAgencyId())
+                .agencyName(expenditure.getAgency().getAgencyName())
+                .itemName(expenditure.getItemName())
+                .purchaseDate(DateUtil.dateToString(expenditure.getPurchaseDate(),"dd-MM-yyyy"))
+                .headOfExpense(expenditure.getHeadOfExpense().getExpenseName())
+                .purchasedQuantity(expenditure.getPurchasedQuantity())
+                .unitCost(expenditure.getUnitCost())
+                .totalCost(expenditure.getTotalCost())
+                .billNo(expenditure.getBillNo())
+                .billDate(DateUtil.dateToString(expenditure.getBillDate(),"dd-MM-yyyy"))
+                .payeeName(expenditure.getPayeeName())
+                .bankName(expenditure.getBankName())
+                .ifscCode(expenditure.getIfscCode())
+                .modeOfPayment(expenditure.getModeOfPayment())
+                .remarks(expenditure.getRemarks())
+                .uploadBillUrl(expenditure.getUploadBillUrl())
+                .fileIds(fileIds)
                 .build();
     }
     public static BulkTransactions mapBulkExpenditureTransaction(BulkExpenditureTransaction  expenditure)
@@ -70,6 +97,34 @@ public class ExpenditureResponseMapper {
                 .modeOfPayment(expenditure.getModeOfPayment())
                 .purpose(expenditure.getPurpose())
                 .uploadBillUrl(expenditure.getUploadBillUrl())
+
+                .build();
+
+    }
+    public static ProgramExpenditureResponse mapProgramExpenditure(ProgramExpenditure expenditure,List<Long> fileIds)
+    {
+        return ProgramExpenditureResponse.builder()
+                .programExpenditureId(expenditure.getProgramExpenditureId())
+                .activityId(expenditure.getActivity().getActivityId())
+                .activityName(expenditure.getActivity().getActivityName())
+                .subActivityId(expenditure.getSubActivity().getSubActivityId())
+                .subActivityName(expenditure.getSubActivity().getSubActivityName())
+                .programId(expenditure.getProgram().getProgramId())
+                .programName(expenditure.getProgram().getProgramTitle())
+                .agencyId(expenditure.getAgency().getAgencyId())
+                .agencyName(expenditure.getAgency().getAgencyName())
+                .expenditureType(expenditure.getExpenditureType().toString())
+                .headOfExpense(expenditure.getHeadOfExpense().getExpenseName())
+                .cost(expenditure.getCost())
+                .billNo(expenditure.getBillNo())
+                .billDate(DateUtil.dateToString(expenditure.getBillDate(),"dd-MM-yyyy"))
+                .payeeName(expenditure.getPayeeName())
+                .bankName(expenditure.getBankName())
+                .ifscCode(expenditure.getIfscCode())
+                .modeOfPayment(expenditure.getModeOfPayment())
+                .purpose(expenditure.getPurpose())
+                .uploadBillUrl(expenditure.getUploadBillUrl())
+                .fileIds(fileIds)
                 .build();
 
     }

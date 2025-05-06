@@ -13,6 +13,7 @@ import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.*;
 import com.metaverse.workflow.resouce.repository.ResourceRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,7 +68,8 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     FileSystemStorageService fileSystemStorageService;
-
+    @Autowired
+    ProgramMonitoringFeedBackRepository monitoringFeedBackRepository;
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
         Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
@@ -328,6 +330,37 @@ public class ProgramServiceAdapter implements ProgramService {
         List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(program.get().getParticipants());
         return WorkflowResponse.builder().status(200).message("Success").data(response).build();
     }
+
+
+    public WorkflowResponse saveFeedback(ProgramMonitoringFeedBackRequest request) {
+        ProgramMonitoringFeedBack monitoringFeedBack = ProgramMonitoringFeedBackMapper.mapRequest(request);
+        ProgramMonitoringFeedBack savedFeedBack = monitoringFeedBackRepository.save(monitoringFeedBack);
+        return WorkflowResponse.builder().status(200).message("Success")
+                .data(ProgramMonitoringFeedBackMapper.mapResponse(monitoringFeedBack)).build();
+    }
+
+    @Override
+    public WorkflowResponse updateFeedback(Long monitorId, ProgramMonitoringFeedBackRequest request) throws DataException {
+        ProgramMonitoringFeedBack entity = monitoringFeedBackRepository.findById(monitorId)
+                .orElseThrow(() -> new DataException("Feedback not found with id: " + monitorId,"FEEDBACK_NOT_FOUND",400));
+
+        ProgramMonitoringFeedBackMapper.updateEntityFromRequest(entity,request);
+        ProgramMonitoringFeedBack updated = monitoringFeedBackRepository.save(entity);
+        return WorkflowResponse.builder().status(200).message("FeedBack Update successfully.. ")
+                .data(ProgramMonitoringFeedBackMapper.mapResponse(updated)).build();
+    }
+
+    @Override
+    public WorkflowResponse getFeedBackByProgramId(Long programId) throws DataException {
+        Program program = programRepository.findById(programId)
+                .orElseThrow(() -> new DataException("Program data not found", "PROGRAM-DATA-NOT-FOUND", 400));
+        List<ProgramMonitoringFeedBack> monitoringFeedBackList = monitoringFeedBackRepository.findByProgramId(programId);
+
+        return WorkflowResponse.builder().status(200).message("Success")
+                .data(monitoringFeedBackList.stream().map(ProgramMonitoringFeedBackMapper::mapResponse)).build();
+    }
+
+
 }
 
 

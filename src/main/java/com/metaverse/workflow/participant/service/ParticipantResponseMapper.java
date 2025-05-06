@@ -30,6 +30,10 @@ public class ParticipantResponseMapper {
 				.organizationId(participant.getOrganization() != null ? participant.getOrganization().getOrganizationId() : null)
 				.programIds(participant.getPrograms() != null ? participant.getPrograms().stream().map(program -> program.getProgramId()).collect(Collectors.toList()) : null)
 				.organizationName(participant.getOrganization() != null ? participant.getOrganization().getOrganizationName() : null)
+				.district(participant.getOrganization() != null ? participant.getOrganization().getDistId() : null)
+				.mandal(participant.getOrganization() != null ? participant.getOrganization().getMandal() : null)
+				.nameOfVO(participant.getOrganization() != null ? participant.getOrganization().getNameOfTheVO() : null)
+				.sectorList(participant.getOrganization() != null ? participant.getOrganization().getSectors() : null)
 				.build();
 	}
 

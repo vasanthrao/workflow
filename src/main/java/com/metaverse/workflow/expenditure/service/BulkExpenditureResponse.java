@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @Builder
 @Setter
@@ -30,4 +32,5 @@ public class BulkExpenditureResponse {
     private String modeOfPayment;
     private String remarks;
     private String uploadBillUrl;
+    private List<Long> fileIds;
 }
