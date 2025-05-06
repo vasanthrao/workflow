@@ -120,8 +120,9 @@ public class ExpenditureController {
     @GetMapping("/program/expenditure/agency")
     public ResponseEntity<?> getAllProgramExpenditureByAgencyId(
             @RequestParam ExpenditureType expenditureType,
-            @RequestParam Long agencyId) {
-        return ResponseEntity.ok(expenditureService.getAllProgramExpenditureByAgencyId(expenditureType,agencyId));
+            @RequestParam Long agencyId,
+            @RequestParam Long programId) {
+        return ResponseEntity.ok(expenditureService.getAllProgramExpenditureByProgramIdByAgencyId(expenditureType,agencyId,programId));
     }
 
 

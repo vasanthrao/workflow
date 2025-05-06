@@ -140,9 +140,9 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                 .build();
     }
     @Override
-    public WorkflowResponse getAllProgramExpenditureByAgencyId(ExpenditureType expenditureType, Long agencyId) {
+    public WorkflowResponse getAllProgramExpenditureByProgramIdByAgencyId(ExpenditureType expenditureType, Long agencyId,Long programId) {
         List<ProgramExpenditure> programExpendituresList =
-                programExpenditureRepository.findByExpenditureTypeAndAgency_AgencyId(expenditureType, agencyId);
+                programExpenditureRepository.findByExpenditureTypeAndAgency_AgencyIdAndProgram_ProgramId(expenditureType, agencyId,programId);
         if (programExpendituresList.isEmpty())
             return WorkflowResponse.builder().message("No BulkExpenditure found for the given agency ID").status(400).build();
 
