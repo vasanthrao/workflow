@@ -3,6 +3,10 @@ package com.metaverse.workflow.program.controller;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.DataException;
+
+import java.io.*;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipEntry;
 import com.metaverse.workflow.program.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,9 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -175,6 +176,21 @@ public class ProgramController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(resource);
         }
+    }
+
+    @GetMapping("/program/file/paths/{programId}")
+    public ResponseEntity<List<String>> getAllProgramFilePaths(@PathVariable("programId") Long programId) {
+        List<Path> paths = programService.getAllProgramFile(programId);
+
+        if (paths == null || paths.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<String> filePaths = paths.stream()
+                .map(path -> path.toAbsolutePath().toString())
+                .toList();
+
+        return ResponseEntity.ok(filePaths);
     }
 
     @GetMapping("/program/summary/{programId}")

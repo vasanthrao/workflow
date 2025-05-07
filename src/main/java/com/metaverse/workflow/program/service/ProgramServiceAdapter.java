@@ -13,7 +13,6 @@ import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.*;
 import com.metaverse.workflow.resouce.repository.ResourceRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -302,6 +301,14 @@ public class ProgramServiceAdapter implements ProgramService {
             return path;
         } else
             return null;
+    }
+
+    @Override
+    public List<Path> getAllProgramFile(Long programId) {
+        List<ProgramSessionFile> files = programSessionFileRepository.findByProgramSessionId(programId);
+        return files.stream()
+                .map(file -> storageService.load(file.getFilePath()))
+                .collect(Collectors.toList());
     }
 
     @Override

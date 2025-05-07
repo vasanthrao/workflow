@@ -4,20 +4,15 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
+@Data
 @ToString
 @Table(name="organization")
 public class Organization {

@@ -7,7 +7,7 @@ import com.metaverse.workflow.model.Organization;
 import java.util.List;
 
 public interface OrganizationRepository extends JpaRepository<Organization, Long>{
-  List<Organization> findByContactNo(Long mobileNo);
+    List<Organization> findByContactNo(Long mobileNo);
 
-  List<Organization> findAllByOrganizationNameIgnoreCase(String organizationName);
+    List<Organization> findAllByOrganizationNameIgnoreCaseAndOrganizationType(String organizationName, String organizationType);
 }
