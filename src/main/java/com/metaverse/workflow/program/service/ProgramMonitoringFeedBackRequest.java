@@ -9,11 +9,13 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProgramMonitoringFeedBackRequest {
+public class
+ProgramMonitoringFeedBackRequest {
     private Long programId;
+    private Integer stepNumber;
     private String state;
     private String district;
-    private String dateOfMonitoring;
+    private String startDate;
     private String agencyName;
     private String programType;
     private String programName;
@@ -43,6 +45,7 @@ public class ProgramMonitoringFeedBackRequest {
     private String timingPunctuality;
     private String sessionContinuity;
     private String participantInterestLevel;
+    private String participantQueries;
     private String overallEnergyEngagement;
     private String unforeseenIssues;
 
@@ -69,7 +72,7 @@ public class ProgramMonitoringFeedBackRequest {
 
     private String additionalRemarks;
     private List<PreEventChecklist> preEventChecklists;
-    private List<ProgramDelivery> programDeliveryDetails;
+    private List<ProgramDeliveryDetails> programDeliveryDetails;
     private List<LogisticsEvaluation> logisticsEvaluations;
 
 
@@ -87,7 +90,7 @@ public class ProgramMonitoringFeedBackRequest {
     @AllArgsConstructor
     @Getter
     @Setter
-    public static class ProgramDelivery {
+    public static class ProgramDeliveryDetails {
         private Long programDeliveryDetailsId;
         private String speakerName;
         private String topicDelivered;

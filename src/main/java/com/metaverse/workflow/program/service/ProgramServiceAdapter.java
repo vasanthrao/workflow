@@ -351,7 +351,7 @@ public class ProgramServiceAdapter implements ProgramService {
         ProgramMonitoringFeedBack entity = monitoringFeedBackRepository.findById(monitorId)
                 .orElseThrow(() -> new DataException("Feedback not found with id: " + monitorId,"FEEDBACK_NOT_FOUND",400));
 
-        ProgramMonitoringFeedBackMapper.updateEntityFromRequest(entity,request);
+        ProgramMonitoringFeedBackMapper.updateProgramMonitoringFeedBack(entity,request);
         ProgramMonitoringFeedBack updated = monitoringFeedBackRepository.save(entity);
         return WorkflowResponse.builder().status(200).message("FeedBack Update successfully.. ")
                 .data(ProgramMonitoringFeedBackMapper.mapResponse(updated)).build();

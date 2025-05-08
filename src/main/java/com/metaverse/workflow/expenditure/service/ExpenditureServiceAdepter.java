@@ -42,7 +42,6 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     HeadOfExpenseRepository headOfExpenseRepository;
     @Autowired
     ProgramSessionFileRepository programSessionFileRepository;
-
     @Autowired
     ProgramServiceAdapter programServiceAdapter;
 
@@ -360,7 +359,7 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         if (!oldFiles.isEmpty()) {
             programSessionFileRepository.deleteAll(oldFiles);
         }
-        // Handle files (optional: decide whether to replace or append)
+        // Handle files
         if (files != null && !files.isEmpty()) {
             List<String> filePaths = programServiceAdapter.storageProgramFiles(files, expenditureRequest.getProgramId(), "ProgramExpenditure");
             List<ProgramSessionFile> sessionFiles = filePaths.stream()
@@ -476,7 +475,6 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         List<ProgramSessionFile> file = programSessionFileRepository.findByBulkExpenditureId(expenditureId);
         if (!file.isEmpty()) {
             programSessionFileRepository.deleteAll(file);
-
         }
 
         return WorkflowResponse.builder()
@@ -491,21 +489,10 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
 
         BulkExpenditureTransaction existingTransaction = transactionRepo.findById(transactionId)
                 .orElseThrow(() -> new DataException("Transaction not found", "TRANSACTION-NOT-FOUND", 404));
-
-        BulkExpenditure bulkExpenditure = bulkExpenditureRepository.findById(request.getBulkExpenditureId())
-                .orElseThrow(() -> new DataException("Bulk expenditure data not found", "BULK-EXPENDITURE-DATA-NOT-FOUND", 400));
-        Activity activity = activityRepository.findById(request.getActivityId())
-                .orElseThrow(() -> new DataException("Activity data not found", "ACTIVITY-DATA-NOT-FOUND", 400));
-        SubActivity subActivity = subActivityRepository.findById(request.getSubActivityId())
-                .orElseThrow(() -> new DataException("Sub Activity data not found", "SUB-ACTIVITY-DATA-NOT-FOUND", 400));
-        Program program = programRepository.findById(request.getProgramId())
-                .orElseThrow(() -> new DataException("Program data not found", "PROGRAM-DATA-NOT-FOUND", 400));
-        Agency agency = agencyRepository.findById(request.getAgencyId())
-                .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
-        HeadOfExpense headOfExpense = headOfExpenseRepository.findById(request.getHeadOfExpenseId())
-                .orElseThrow(() -> new DataException("Head of expense data not found", "HEAD-OF-EXPENSE-DATA-NOT-FOUND", 400));
-
-
+        BulkExpenditure bulkExpenditure = existingTransaction.getExpenditure();
+        if (bulkExpenditure == null) {
+            throw new DataException("Bulk expenditure data not linked", "BULK-EXPENDITURE-NOT-FOUND", 400);
+        }
         Integer oldConsumedQty = existingTransaction.getConsumedQuantity();
         Integer newConsumedQty = request.getConsumedQuantity();
 
@@ -518,10 +505,8 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
         bulkExpenditure.setConsumedQuantity(bulkExpenditure.getConsumedQuantity() - oldConsumedQty + newConsumedQty);
         bulkExpenditureRepository.save(bulkExpenditure);
 
-
-        existingTransaction = ExpenditureRequestMapper.mapBulkExpenditureTransaction(
-                request, activity, subActivity, program, agency, bulkExpenditure, headOfExpense);
-        // existingTransaction.setBulkExpenditureTransactionId(transactionId);
+        existingTransaction.setConsumedQuantity(newConsumedQty);
+        existingTransaction.setAllocatedCost(request.getAllocatedCost());
 
         BulkExpenditureTransaction updated = transactionRepo.save(existingTransaction);
 
@@ -575,7 +560,6 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
             bulkExpenditure.setConsumedQuantity(bulkExpenditure.getConsumedQuantity() - consumedQty);
             bulkExpenditureRepository.save(bulkExpenditure);
         }
-
         transactionRepo.delete(transaction);
         return WorkflowResponse.builder().message("Transaction Deleted Successfully..").status(200).build();
     }

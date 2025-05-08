@@ -21,13 +21,15 @@ public class ProgramMonitoringFeedBack {
     private Long monitoringFeedBackId;
     @Column(name = "program_id")
     private Long programId;
+    @Column(name = "step_number")
+    private Integer stepNumber;
     //Basic information
     @Column(name = "state")
     private String state;
     @Column(name = "district")
     private String district;
-    @Column(name = "dateOfMonitoring")
-    private Date dateOfMonitoring;
+    @Column(name = "start_date")
+    private Date startDate;
     @Column(name = "agency_name")
     private String agencyName;
     @Column(name = "program_type")
@@ -89,7 +91,7 @@ public class ProgramMonitoringFeedBack {
     private List<ProgramDeliveryDetails> programDeliveryDetails;
 
     //programExecution
-    @Column(name = "timing_punctuality ",length = 1000)
+    @Column(name = "timing_punctuality",length = 1000)
     private String timingPunctuality ;
     @Column(name = "session_continuity")
     private String sessionContinuity;
@@ -97,6 +99,8 @@ public class ProgramMonitoringFeedBack {
     private String participantInterestLevel;
     @Column(name = "overall_energy_engagement")
     private String overallEnergyEngagement;
+    @Column(name = "participant_queries")
+    private String participantQueries;
     @Column(name = "unforeseen_issues", length = 1000)
     private String unforeseenIssues;
 
@@ -139,7 +143,7 @@ public class ProgramMonitoringFeedBack {
     //overall program rating
     @Column(name = "overall_program_organization")
     private Integer overallProgramOrganization;
-    @Column(name = "quality_ofs_sessions")
+    @Column(name = "quality_of_sessions")
     private Integer qualityOfSessions;
     @Column(name = "participants_satisfaction")
     private Integer participantsSatisfaction;
