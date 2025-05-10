@@ -5,10 +5,10 @@ import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.DataException;
 
 import java.io.*;
-import java.util.zip.ZipOutputStream;
-import java.util.zip.ZipEntry;
 
 import com.metaverse.workflow.model.FileType;
+import com.metaverse.workflow.model.ProgramFilePathInfo;
+import com.metaverse.workflow.model.ProgramFileResponse;
 import com.metaverse.workflow.program.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -213,34 +213,34 @@ public class ProgramController {
     }
 
     @GetMapping("/program/file/paths/status/{programId}")
-    public ResponseEntity<List<String>> getAllProgramFilePaths(
+    public ResponseEntity<List<ProgramFileResponse>> getAllProgramFilePaths(
             @PathVariable("programId") Long programId,
             @RequestParam(value = "fileType", required = false) FileType fileType) {
 
-        List<Path> paths = null;
-        if (fileType != null) {
-            paths = programService.getAllProgramFileByType(programId, fileType);
+        if (fileType == null) {
+            return ResponseEntity.badRequest().build();
         }
 
-        if (paths == null || paths.isEmpty()) {
+        List<ProgramFilePathInfo> paths = programService.getAllProgramFileByType(programId, fileType);
+
+        if (paths.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
         String basePrefix = "/home/metaverseedu/public_html/";
         String urlPrefix = "https://metaverseedu.in/";
 
-        List<String> fileUrls = paths.stream()
-                .map(path -> {
-                    String fullPath = path.toAbsolutePath().toString();
-                    if (fullPath.startsWith(basePrefix)) {
-                        return urlPrefix + fullPath.substring(basePrefix.length());
-                    } else {
-                        return fullPath;
-                    }
+        List<ProgramFileResponse> fileResponses = paths.stream()
+                .map(info -> {
+                    String fullPath = info.getFilePath().toAbsolutePath().toString();
+                    String url = fullPath.startsWith(basePrefix)
+                            ? urlPrefix + fullPath.substring(basePrefix.length())
+                            : fullPath;
+                    return new ProgramFileResponse(info.getProgramId(), url);
                 })
                 .toList();
 
-        return ResponseEntity.ok(fileUrls);
+        return ResponseEntity.ok(fileResponses);
     }
 
 

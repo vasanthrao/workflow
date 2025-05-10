@@ -358,10 +358,16 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
     @Override
-    public List<Path> getAllProgramFileByType(Long programId, FileType fileType) {
-        List<ProgramSessionFile> files = programSessionFileRepository.findByProgramSession_ProgramSessionIdAndFileType(programId, fileType.toString());
+    public List<ProgramFilePathInfo> getAllProgramFileByType(Long programId, FileType fileType) {
+        List<ProgramSessionFile> files = programSessionFileRepository
+                .findByFileType(fileType.toString());
+
         return files.stream()
-                .map(file -> storageService.load(file.getFilePath()))
+                .filter(file -> file.getProgramSession() != null && file.getProgramSession().getProgram() != null)
+                .map(file -> new ProgramFilePathInfo(
+                        file.getProgramSession().getProgram().getProgramId(),
+                        storageService.load(file.getFilePath())
+                ))
                 .collect(Collectors.toList());
     }
 

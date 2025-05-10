@@ -20,4 +20,6 @@ public interface ProgramSessionFileRepository extends JpaRepository<ProgramSessi
     List<ProgramSessionFile> findByProgramExpenditureProgramExpenditureId(Long programExpenditureId);
 
     List<ProgramSessionFile> findByProgramSession_ProgramSessionIdAndFileType(Long programId, String fileType);
+
+    List<ProgramSessionFile> findByFileType(String string);
 }
