@@ -17,5 +17,5 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     List<Program> findAllByStatus(String status);
 
-    List<Program> findAllByStatusAndProgramId(String status, Long programId);
+    List<Program> findByAgencyAgencyIdAndStatus(Long agencyId, String status);
 }

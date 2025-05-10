@@ -1,5 +1,7 @@
 package com.metaverse.workflow.program.service;
 
+import com.metaverse.workflow.activity.repository.ActivityRepository;
+import com.metaverse.workflow.activity.repository.SubActivityRepository;
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
 import com.metaverse.workflow.common.fileservice.FileSystemStorageService;
@@ -14,6 +16,7 @@ import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.*;
 import com.metaverse.workflow.resouce.repository.ResourceRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,8 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,16 +72,25 @@ public class ProgramServiceAdapter implements ProgramService {
     MediaCoverageRepository mediaCoverageRepository;
 
     @Autowired
+    ActivityRepository activityRepository;
+
+    @Autowired
+    SubActivityRepository subActivityRepository;
+
+    @Autowired
     FileSystemStorageService fileSystemStorageService;
     @Autowired
     ProgramMonitoringFeedBackRepository monitoringFeedBackRepository;
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
+        Optional<Location> location = null;
+        Program program = null;
         Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
         if (!agency.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
-        Optional<Location> location = locationRepository.findById(request.getLocationId());
-        if (!location.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Location").build();
-        Program program = programRepository.save(ProgramRequestMapper.map(request, agency.get(), location.get()));
+        if(request.getLocationId()!=null) {
+            location = locationRepository.findById(request.getLocationId());
+            program = programRepository.save(ProgramRequestMapper.map(request, agency.get(), location.get()));
+        }
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.map(program)).build();
     }
 
@@ -312,6 +327,40 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
     @Override
+    public WorkflowResponse saveCollageImages(Long programId, MultipartFile image) {
+        if (image != null) {
+            String filePath = storageService.store(image, programId, "Collage");
+            Optional<ProgramSession> program = programSessionRepository.findById(programId);
+            ProgramSessionFile file = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("COLLAGE").filePath(filePath).programSession(program.get()).build());
+
+            CollageImageResponse response = CollageImageResponse.builder()
+                    .programId(programId)
+                    .fileId(file.getProgramSessionFileId())
+                    .filePath(file.getFilePath())
+                    .build();
+
+            return WorkflowResponse.builder()
+                    .status(200)
+                    .message("Success")
+                    .data(response)
+                    .build();
+        }
+
+        return WorkflowResponse.builder()
+                .status(400)
+                .message("Image is required")
+                .build();
+    }
+
+    @Override
+    public List<Path> getAllProgramFileByType(Long programId, FileType fileType) {
+        List<ProgramSessionFile> files = programSessionFileRepository.findByProgramSession_ProgramSessionIdAndFileType(programId, fileType.toString());
+        return files.stream()
+                .map(file -> storageService.load(file.getFilePath()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public WorkflowResponse getProgramSummaryByProgramId(Long programId) throws DataException {
 
         Program program = programRepository.findById(programId)
@@ -388,6 +437,99 @@ public class ProgramServiceAdapter implements ProgramService {
                 .build();
     }
 
+    public WorkflowResponse importProgramsFromExcel(MultipartFile file) {
+        List<String> errors = new ArrayList<>();
+        int successCount = 0;
+        try (InputStream is = file.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(is);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            // Skip header row (row 0)
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row == null) continue;
+
+                try {
+                    String title = getCellValue(row, 0);
+                    String type = getCellValue(row, 1);
+                    String agencyName = getCellValue(row, 2);
+                    String activityName = getCellValue(row, 3);
+                    String subActivityName = getCellValue(row, 4);
+                    String startDate = getCellValue(row, 5);
+                    String endDate = getCellValue(row, 6);
+                    String inTime = getCellValue(row, 7);
+                    String outTime = getCellValue(row, 8);
+                    String kpi = getCellValue(row, 9);
+                    String spocName = getCellValue(row, 10);
+                    String spocContactNo = getCellValue(row, 11);
+                    String locationName = getCellValue(row, 12);
+                    Location location = locationRepository.findByLocationName(locationName);
+
+                    Optional<Activity> activityOpt = activityRepository.findByActivityName(activityName);
+                    Optional<SubActivity> subActivityOpt = subActivityRepository.findBySubActivityName(subActivityName);
+                    if (activityOpt.isEmpty() || subActivityOpt.isEmpty()) {
+                        errors.add("Row " + (i+1) + ": Invalid Activity or Sub Activity");
+                        continue;
+                    }
+
+                    Optional<Agency> agencyOpt = agencyRepository.findByAgencyName(agencyName);
+
+                    if(agencyOpt.isEmpty()) {
+                        errors.add("Row " + (i+1) + ": Invalid Location or Agency");
+                        continue;
+                    }
+
+                    ProgramRequest req = ProgramRequest.builder()
+                            .programTitle(title)
+                            .programType(type)
+                            .activityId(activityOpt.get().getActivityId())
+                            .subActivityId(subActivityOpt.get().getSubActivityId())
+                            .startDate(startDate)
+                            .endDate(endDate)
+                            .startTime(inTime)
+                            .endTime(outTime)
+                            .kpi(kpi)
+                            .spocName(spocName)
+                            .spocContactNo(Long.parseLong(spocContactNo))
+                            .agencyId(agencyOpt.get().getAgencyId())
+                            .locationId(location.getLocationId())
+                            .build();
+
+                    WorkflowResponse singleResp = createProgram(req);
+                    if (singleResp.getStatus() == 200) {
+                        successCount++;
+                    } else {
+                        errors.add("Row " + (i+1) + ": " + singleResp.getMessage());
+                    }
+
+                } catch (Exception e) {
+                    errors.add("Row " + (i+1) + ": " + e.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            return WorkflowResponse.builder().status(500).message("Failed to process file: " + e.getMessage()).build();
+        }
+
+        return WorkflowResponse.builder()
+                .status(errors.isEmpty() ? 200 : 207)
+                .message("Imported: " + successCount + " programs. Errors: " + errors.size())
+                .data(errors)
+                .build();
+    }
+
+    private String getCellValue(Row row, int col) {
+        Cell cell = row.getCell(col);
+        if (cell == null) return "";
+
+        if (cell.getCellType() == CellType.NUMERIC && org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
+            // Format the date as a string (e.g., "dd-MM-yyyy")
+            Date date = cell.getDateCellValue();
+            return new SimpleDateFormat("dd-MM-yyyy").format(date);
+        } else {
+            cell.setCellType(CellType.STRING);
+            return cell.getStringCellValue().trim();
+        }
+    }
 
 }
 

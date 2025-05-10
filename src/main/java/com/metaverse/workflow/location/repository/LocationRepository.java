@@ -9,4 +9,6 @@ import com.metaverse.workflow.model.Location;
 public interface LocationRepository extends JpaRepository<Location, Long>{
 	
 	public List<Location> findByAgencyAgencyId(Long agencyId);
+
+    Location findByLocationName(String locationName);
 }

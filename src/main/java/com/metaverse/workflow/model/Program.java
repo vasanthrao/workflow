@@ -42,7 +42,7 @@ public class Program {
     private String startTime;
     @Column(name="end_time")
     private String endTime;
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "location_id")
     private Location location;
     @Column(name="spoc_name")

@@ -7,6 +7,8 @@ import com.metaverse.workflow.exceptions.DataException;
 import java.io.*;
 import java.util.zip.ZipOutputStream;
 import java.util.zip.ZipEntry;
+
+import com.metaverse.workflow.model.FileType;
 import com.metaverse.workflow.program.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -144,6 +146,13 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping(value = "/program/collage/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<WorkflowResponse> saveCollageImages(@RequestParam("programId") Long programId,
+                                                              @RequestPart(value = "image", required = false) MultipartFile image) {
+        WorkflowResponse response = programService.saveCollageImages(programId, image);
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping(value = "/program/execution/media-coverage", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkflowResponse> saveMediaCoverage(@RequestPart("data") String data,
@@ -186,12 +195,56 @@ public class ProgramController {
             return ResponseEntity.noContent().build();
         }
 
-        List<String> filePaths = paths.stream()
-                .map(path -> path.toAbsolutePath().toString())
+        String basePrefix = "/home/metaverseedu/public_html/";
+        String urlPrefix = "https://metaverseedu.in/";
+
+        List<String> fileUrls = paths.stream()
+                .map(path -> {
+                    String fullPath = path.toAbsolutePath().toString();
+                    if (fullPath.startsWith(basePrefix)) {
+                        return urlPrefix + fullPath.substring(basePrefix.length());
+                    } else {
+                        return fullPath;
+                    }
+                })
                 .toList();
 
-        return ResponseEntity.ok(filePaths);
+        return ResponseEntity.ok(fileUrls);
     }
+
+    @GetMapping("/program/file/paths/status/{programId}")
+    public ResponseEntity<List<String>> getAllProgramFilePaths(
+            @PathVariable("programId") Long programId,
+            @RequestParam(value = "fileType", required = false) FileType fileType) {
+
+        List<Path> paths = null;
+        if (fileType != null) {
+            paths = programService.getAllProgramFileByType(programId, fileType);
+        }
+
+        if (paths == null || paths.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        String basePrefix = "/home/metaverseedu/public_html/";
+        String urlPrefix = "https://metaverseedu.in/";
+
+        List<String> fileUrls = paths.stream()
+                .map(path -> {
+                    String fullPath = path.toAbsolutePath().toString();
+                    if (fullPath.startsWith(basePrefix)) {
+                        return urlPrefix + fullPath.substring(basePrefix.length());
+                    } else {
+                        return fullPath;
+                    }
+                })
+                .toList();
+
+        return ResponseEntity.ok(fileUrls);
+    }
+
+
+
 
     @GetMapping("/program/summary/{programId}")
     public ResponseEntity<?> getProgramSummeryById(@PathVariable("programId") Long programId) {
@@ -244,6 +297,12 @@ public class ProgramController {
         } catch (DataException exception) {
             return RestControllerBase.error(exception);
         }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/program/import", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<WorkflowResponse> importPrograms(@RequestPart("file") MultipartFile file) {
+        WorkflowResponse response = programService.importProgramsFromExcel(file);
         return ResponseEntity.ok(response);
     }
 

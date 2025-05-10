@@ -22,7 +22,7 @@ public class ProgramStatusController {
     @Autowired
     private ProgramRepository programRepository;
 
-    @PostMapping("/{programId}/status")
+    @PostMapping("/{programId}")
     public WorkflowResponse updateProgramStatus(
             @PathVariable Long programId,
             @RequestParam String status) {
@@ -50,13 +50,13 @@ public class ProgramStatusController {
                 !status.equals(ProgramStatusConstants.PROGRAM_EXPENDITURE_UPDATED);
     }
 
-    @GetMapping("/{programId}/status")
-    public WorkflowResponse getProgramsByStatus(@PathVariable Long programId,
+    @GetMapping("/{agencyId}")
+    public WorkflowResponse getProgramsByStatus(@PathVariable Long agencyId,
                                                 @RequestParam String status) {
         if (isValidStatus(status)) {
             return WorkflowResponse.builder().message("Invalid status value." + status).status(HttpStatus.INTERNAL_SERVER_ERROR.value()).data(status).build();
         }
-        List<Program> programs = programRepository.findAllByStatusAndProgramId(status, programId);
+        List<Program> programs = programRepository.findByAgencyAgencyIdAndStatus(agencyId, status);
         List<ProgramResponse> response = programs != null ? programs.stream().map(ProgramResponseMapper::map).collect(Collectors.toList()) : null;
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
     }
