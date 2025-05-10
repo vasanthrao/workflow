@@ -288,6 +288,11 @@ public class ProgramController {
         }
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/program/feedback/id/{feedBackId}")
+    public ResponseEntity<?> getFeedbackById(@PathVariable Long feedBackId) {
+
+        return ResponseEntity.ok(programService.getFeedBackById(feedBackId));
+    }
 
     @GetMapping("/program/details/for/feedback/{programId}")
     public ResponseEntity<?> getProgramDetailsFroFeedBack(@PathVariable Long programId) {

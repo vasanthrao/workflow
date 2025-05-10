@@ -83,6 +83,15 @@ insert into activity(activity_id,activity_name,agency_id) values(21,'Awareness P
 insert into sub_activity(sub_activity_id,sub_activity_name) values(99,'Awareness to SHGs / Startups'),(100,'MSME Counsellors'),(101,'SHG Members'),(102,'Startups');
 insert into activity_sub_activity(activity_id,sub_activity_id)values(21,99),(22,100),(22,101),(22,102);
 
+-- Insert Activity SubActivity for TGTPC-4 agency
+insert into activity(activity_id,activity_name,agency_id) values(23,'Awareness Program',10),(24,'Training',10),(25,'Event',10);
+insert into sub_activity(sub_activity_id,sub_activity_name) values(103,'Import Substitution');
+insert into activity_sub_activity(activity_id,sub_activity_id)values(23,103),(24,103),(25,103);
+
+-- Insert Activity SubActivity for TGTPC-10 agency
+insert into activity(activity_id,activity_name,agency_id) values(26,'Awareness Program',11),(27,'Training',11),(28,'Event',11),(29,'RBSM',11);
+insert into sub_activity(sub_activity_id,sub_activity_name) values(104,'Export Champions');
+insert into activity_sub_activity(activity_id,sub_activity_id)values(26,104),(27,104),(28,104),(29,104);
 
 
 

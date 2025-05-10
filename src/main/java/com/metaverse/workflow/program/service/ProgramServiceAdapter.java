@@ -81,6 +81,7 @@ public class ProgramServiceAdapter implements ProgramService {
     FileSystemStorageService fileSystemStorageService;
     @Autowired
     ProgramMonitoringFeedBackRepository monitoringFeedBackRepository;
+
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
         Optional<Location> location = null;
@@ -102,13 +103,13 @@ public class ProgramServiceAdapter implements ProgramService {
         if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program").build();
         ProgramSession session = ProgramRequestMapper.mapSession(request, resource.get(), program.get());
         ProgramSession programSession = programSessionRepository.save(session);
-        if(files != null && files.size() > 0) {
+        if (files != null && files.size() > 0) {
             List<String> filePaths = storageProgramFiles(files, program.get().getProgramId(), "files");
             List<ProgramSessionFile> sessionFiles = ProgramRequestMapper.mapProgramFiles(filePaths);
             sessionFiles.stream().forEach(file -> file.setProgramSession(session));
             sessionFiles = programSessionFileRepository.saveAll(sessionFiles);
             return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.mapSession(programSession, sessionFiles)).build();
-        }else {
+        } else {
             return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.mapSession(programSession, null)).build();
         }
     }
@@ -196,7 +197,8 @@ public class ProgramServiceAdapter implements ProgramService {
         if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
         List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(program.get().getParticipants());
         List<Participant> participantList = program.get().getParticipants();
-        if (participantList == null || participantList.size() ==0) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
+        if (participantList == null || participantList.size() == 0)
+            return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
         List<CallCenterVerification> callCenterVerificationList = callCenterVerificationRepository.findByProgramId(id);
         List<ParticipantVerificationResponse> responseList = ProgramResponseMapper.mapProgramParticipantVerification(participantList, callCenterVerificationList);
         return WorkflowResponse.builder().status(200).message("Success").data(responseList).build();
@@ -206,14 +208,14 @@ public class ProgramServiceAdapter implements ProgramService {
     public WorkflowResponse editProgramSession(ProgramSessionRequest request, List<MultipartFile> files) {
         Optional<ProgramSession> session = programSessionRepository.findById(request.getProgramSessionId());
         if (session.isEmpty()) return WorkflowResponse.builder().status(400).message("Invalid Program Session").build();
-        if(session.get().getResource().getResourceId() != request.getResourceId()) {
+        if (session.get().getResource().getResourceId() != request.getResourceId()) {
             Optional<Resource> resource = resourceRepository.findById(request.getResourceId());
             if (resource.isEmpty())
                 return WorkflowResponse.builder().status(400).message("Invalid Resource").build();
             else
                 session.get().setResource(resource.get());
         }
-        if(files != null && !files.isEmpty()) {
+        if (files != null && !files.isEmpty()) {
             List<String> filePaths = storageProgramFiles(files, session.get().getProgram().getProgramId(), "files");
             List<ProgramSessionFile> sessionFiles = ProgramRequestMapper.mapProgramFiles(filePaths);
             sessionFiles.forEach(file -> file.setProgramSession(session.get()));
@@ -228,29 +230,30 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse saveSessionImages(ProgramSessionRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4, MultipartFile image5) {
         Optional<ProgramSession> session = programSessionRepository.findById(request.getProgramSessionId());
-        if (!session.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Session").build();
+        if (!session.isPresent())
+            return WorkflowResponse.builder().status(400).message("Invalid Program Session").build();
         session.get().setSessionStreamingUrl(request.getSessionStreamingUrl());
-        if(image1 != null) {
+        if (image1 != null) {
             String filePath1 = storageService.store(image1, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath1).programSessionFileId(request.getImage1()).build());
             session.get().setImage1(file1.getProgramSessionFileId());
         }
-        if(image2 != null) {
+        if (image2 != null) {
             String filePath2 = storageService.store(image2, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file2 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath2).programSessionFileId(request.getImage2()).build());
             session.get().setImage2(file2.getProgramSessionFileId());
         }
-        if(image3 != null) {
+        if (image3 != null) {
             String filePath3 = storageService.store(image3, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file3 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath3).programSessionFileId(request.getImage3()).build());
             session.get().setImage3(file3.getProgramSessionFileId());
         }
-        if(image4 != null) {
+        if (image4 != null) {
             String filePath4 = storageService.store(image4, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file4 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath4).programSessionFileId(request.getImage4()).build());
             session.get().setImage4(file4.getProgramSessionFileId());
         }
-        if(image5 != null) {
+        if (image5 != null) {
             String filePath5 = storageService.store(image5, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file5 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath5).programSessionFileId(request.getImage5()).build());
             session.get().setImage5(file5.getProgramSessionFileId());
@@ -262,23 +265,24 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse saveMediaCoverage(MediaCoverageRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         MediaCoverage coverage;
-        if(request.getMediaCoverageId() != null) {
+        if (request.getMediaCoverageId() != null) {
             Optional<MediaCoverage> mediaCoverage = mediaCoverageRepository.findById(request.getMediaCoverageId());
-            if (!mediaCoverage.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program MediaCoverage").build();
+            if (!mediaCoverage.isPresent())
+                return WorkflowResponse.builder().status(400).message("Invalid Program MediaCoverage").build();
             mediaCoverage.get().setMediaCoverageUrl(request.getMediaCoverageUrl());
             mediaCoverage.get().setMediaCoverageType(request.getMediaCoverageType());
             mediaCoverage.get().setDate(DateUtil.stringToDate(request.getDate(), "dd-mm-yyyy"));
-            if(image1 != null) {
+            if (image1 != null) {
                 String filePath1 = storageService.store(image1, mediaCoverage.get().getProgram().getProgramId(), "media");
                 ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath1).programSessionFileId(request.getImage1()).build());
                 mediaCoverage.get().setImage1(file1.getProgramSessionFileId());
             }
-            if(image2 != null) {
+            if (image2 != null) {
                 String filePath2 = storageService.store(image2, mediaCoverage.get().getProgram().getProgramId(), "media");
                 ProgramSessionFile file2 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath2).programSessionFileId(request.getImage2()).build());
                 mediaCoverage.get().setImage2(file2.getProgramSessionFileId());
             }
-            if(image3 != null) {
+            if (image3 != null) {
                 String filePath3 = storageService.store(image3, mediaCoverage.get().getProgram().getProgramId(), "media");
                 ProgramSessionFile file3 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath3).programSessionFileId(request.getImage3()).build());
                 mediaCoverage.get().setImage3(file3.getProgramSessionFileId());
@@ -286,19 +290,20 @@ public class ProgramServiceAdapter implements ProgramService {
             coverage = mediaCoverageRepository.save(mediaCoverage.get());
         } else {
             Optional<Program> program = programRepository.findById(request.getProgramId());
-            if (!program.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
+            if (!program.isPresent())
+                return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
             MediaCoverage mediaCoverage = MediaCoverage.builder().mediaCoverageType(request.getMediaCoverageType()).mediaCoverageUrl(request.getMediaCoverageUrl()).date(DateUtil.stringToDate(request.getDate(), "dd-mm-yyyy")).program(program.get()).build();
-            if(image1 != null) {
+            if (image1 != null) {
                 String filePath1 = storageService.store(image1, program.get().getProgramId(), "media");
                 ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath1).build());
                 mediaCoverage.setImage1(file1.getProgramSessionFileId());
             }
-            if(image2 != null) {
+            if (image2 != null) {
                 String filePath2 = storageService.store(image2, program.get().getProgramId(), "media");
                 ProgramSessionFile file2 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath2).build());
                 mediaCoverage.setImage2(file2.getProgramSessionFileId());
             }
-            if(image3 != null) {
+            if (image3 != null) {
                 String filePath3 = storageService.store(image3, program.get().getProgramId(), "media");
                 ProgramSessionFile file3 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath3).build());
                 mediaCoverage.setImage3(file3.getProgramSessionFileId());
@@ -375,7 +380,7 @@ public class ProgramServiceAdapter implements ProgramService {
         programSessionRepository.delete(programSession.get());
         List<ProgramSessionFile> sessionFiles = programSessionFileRepository.findByProgramSessionId(sessionId);
         programSessionFileRepository.deleteAll(sessionFiles);
-        fileSystemStorageService.deleteAll(sessionFiles.stream().map(ProgramSessionFile :: getFilePath).toList());
+        fileSystemStorageService.deleteAll(sessionFiles.stream().map(ProgramSessionFile::getFilePath).toList());
         return "Deleted Session Successfully";
     }
 
@@ -398,9 +403,9 @@ public class ProgramServiceAdapter implements ProgramService {
     @Override
     public WorkflowResponse updateFeedback(Long monitorId, ProgramMonitoringFeedBackRequest request) throws DataException {
         ProgramMonitoringFeedBack entity = monitoringFeedBackRepository.findById(monitorId)
-                .orElseThrow(() -> new DataException("Feedback not found with id: " + monitorId,"FEEDBACK_NOT_FOUND",400));
+                .orElseThrow(() -> new DataException("Feedback not found with id: " + monitorId, "FEEDBACK_NOT_FOUND", 400));
 
-        ProgramMonitoringFeedBackMapper.updateEntityFromRequest(entity,request);
+        ProgramMonitoringFeedBackMapper.updateProgramMonitoringFeedBack(entity, request);
         ProgramMonitoringFeedBack updated = monitoringFeedBackRepository.save(entity);
         return WorkflowResponse.builder().status(200).message("FeedBack Update successfully.. ")
                 .data(ProgramMonitoringFeedBackMapper.mapResponse(updated)).build();
@@ -415,6 +420,23 @@ public class ProgramServiceAdapter implements ProgramService {
         return WorkflowResponse.builder().status(200).message("Success")
                 .data(monitoringFeedBackList.stream().map(ProgramMonitoringFeedBackMapper::mapResponse)).build();
     }
+
+    @Override
+    public WorkflowResponse getFeedBackById(Long feedBackId)  {
+        if (monitoringFeedBackRepository.existsById(feedBackId)) {
+            Optional<ProgramMonitoringFeedBack> feedBack = monitoringFeedBackRepository.findById(feedBackId);
+            return WorkflowResponse.builder().status(200).message("Success")
+                    .data(ProgramMonitoringFeedBackMapper.mapResponse(feedBack.get())).build();
+
+        }
+        return WorkflowResponse.builder()
+                .status(400)
+                .message("MonitorFeedback not found for the given ID: " + feedBackId)
+                .build();
+
+
+    }
+
     @Override
     public WorkflowResponse getProgramDetailsFroFeedBack(Long programId) throws DataException {
 

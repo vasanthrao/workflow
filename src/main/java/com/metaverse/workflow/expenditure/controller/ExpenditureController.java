@@ -137,6 +137,16 @@ public class ExpenditureController {
             return RestControllerBase.error(ex);
         }
     }
+    @PostMapping("/bulk/transactions/delete/{transactionId}")
+    public ResponseEntity<?> deleteTransaction(@PathVariable Long transactionId) throws DataException {
+        try {
+            WorkflowResponse response = expenditureService.deleteTransaction(transactionId);
+            return ResponseEntity.ok(response);
+        }
+        catch (DataException ex) {
+            return RestControllerBase.error(ex);
+        }
+    }
     @PostMapping("/bulk/transactions/update/{transactionId}")
     public ResponseEntity<?> updateTransaction(@PathVariable Long transactionId,
             @RequestBody BulkExpenditureTransactionRequest request) throws DataException {
