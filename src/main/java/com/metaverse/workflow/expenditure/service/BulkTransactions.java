@@ -12,6 +12,7 @@ import java.util.Date;
 @Setter
 @Getter
 public class BulkTransactions {
+    private Long bulkExpenditureTransactionId;
     private String expenditureType;
     private String headOfExpense;
     private Double allocatedCost;

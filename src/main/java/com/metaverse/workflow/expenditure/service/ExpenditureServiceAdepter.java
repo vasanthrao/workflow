@@ -237,11 +237,12 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
     @Override
     public WorkflowResponse getAllBulkExpenditureTransactionByProgram(Long programId) {
         List<BulkExpenditureTransaction> transactions = transactionRepo.findByProgram_ProgramId(programId);
+        transactions.stream().map(
+                ExpenditureResponseMapper::mapBulkExpenditureTransaction).toList();
 
         return WorkflowResponse.builder().message("Success").status(200)
-                .data(
-                        transactions.stream().map(
-                                ExpenditureResponseMapper::mapBulkExpenditureTransaction).toList()
+                .data(transactions.stream().map(
+                        ExpenditureResponseMapper::mapBulkExpenditureTransaction).toList()
                 )
                 .build();
     }

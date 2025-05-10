@@ -394,6 +394,11 @@ public class ProgramServiceAdapter implements ProgramService {
 
 
     public WorkflowResponse saveFeedback(ProgramMonitoringFeedBackRequest request) {
+        if (monitoringFeedBackRepository.existsByProgramId(request.getProgramId())) {
+            return WorkflowResponse.builder().status(400)
+                    .message("Feedback already exists for Program ID: " + request.getProgramId())
+                    .build();
+        }
         ProgramMonitoringFeedBack monitoringFeedBack = ProgramMonitoringFeedBackMapper.mapRequest(request);
         ProgramMonitoringFeedBack savedFeedBack = monitoringFeedBackRepository.save(monitoringFeedBack);
         return WorkflowResponse.builder().status(200).message("Success")

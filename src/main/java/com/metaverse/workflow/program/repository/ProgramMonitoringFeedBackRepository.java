@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProgramMonitoringFeedBackRepository extends JpaRepository<ProgramMonitoringFeedBack, Long> {
     List<ProgramMonitoringFeedBack> findByProgramId(Long programId);
+
+    boolean existsByProgramId(Long programId);
 }

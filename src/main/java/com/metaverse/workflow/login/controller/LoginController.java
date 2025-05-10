@@ -101,9 +101,7 @@ public class LoginController {
     @PutMapping(value = "/login/change-password", produces = {"application/json"})
     public ResponseEntity<WorkflowResponse> changePassword(@RequestBody ChangePasswordRequest request) throws DataException {
         log.info("Change password controller, userId: {}", request.getUserId());
-
         return ResponseEntity.ok(loginService.changePassword(request));
-
     }
 }
 

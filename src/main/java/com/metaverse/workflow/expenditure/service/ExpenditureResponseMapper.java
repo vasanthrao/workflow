@@ -60,6 +60,7 @@ public class ExpenditureResponseMapper {
     public static BulkTransactions mapBulkExpenditureTransaction(BulkExpenditureTransaction  expenditure)
     {
         return BulkTransactions.builder()
+                .bulkExpenditureTransactionId(expenditure.getBulkExpenditureTransactionId())
                 .headOfExpense(expenditure.getHeadOfExpense().getExpenseName())
                 .expenditureType("BULK")
                 .allocatedCost(expenditure.getAllocatedCost())
@@ -132,6 +133,7 @@ public class ExpenditureResponseMapper {
     public static BulkExpenditureLookupResponse mapBulkExpenditureDetails(BulkExpenditure  expenditure)
     {
         return BulkExpenditureLookupResponse.builder()
+                //.bulkExpenditureTransactionId()
                 .purchasedQuantity(expenditure.getPurchasedQuantity())
                 .bulkExpenditureId(expenditure.getBulkExpenditureId())
                 .unitCost(expenditure.getUnitCost())

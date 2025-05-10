@@ -9,6 +9,7 @@ import java.util.Date;
 @Data
 public class BulkExpenditureLookupResponse {
 
+    private Long bulkExpenditureTransactionId;
     private Integer purchasedQuantity;
     private Double unitCost;
     private Long bulkExpenditureId;

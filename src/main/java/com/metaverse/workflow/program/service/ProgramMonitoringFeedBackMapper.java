@@ -263,19 +263,26 @@ public class ProgramMonitoringFeedBackMapper {
             }
             case 3 -> {
                 List<PreEventChecklist> existingList = entity.getPreEventChecklists();
+
                 Map<String, PreEventChecklist> existingMap = existingList.stream()
-                        .collect(Collectors.toMap(PreEventChecklist::getItem, c -> c));
+                        .collect(Collectors.toMap(
+                                PreEventChecklist::getItem,
+                                c -> c,
+                                (existing, duplicate) -> existing // Handle duplicate keys gracefully
+                        ));
 
                 List<PreEventChecklist> updatedList = new ArrayList<>();
 
                 for (ProgramMonitoringFeedBackRequest.PreEventChecklist reqChecklist : request.getPreEventChecklists()) {
                     PreEventChecklist existing = existingMap.get(reqChecklist.getItem());
+
                     if (existing != null) {
+                        // Update existing checklist
                         existing.setStatus(reqChecklist.getStatus());
                         existing.setRemarks(reqChecklist.getRemarks());
                         updatedList.add(existing);
-                        existingMap.remove(reqChecklist.getItem()); // Mark as processed
                     } else {
+                        // Create new checklist
                         PreEventChecklist newChecklist = PreEventChecklist.builder()
                                 .item(reqChecklist.getItem())
                                 .status(reqChecklist.getStatus())
@@ -285,8 +292,10 @@ public class ProgramMonitoringFeedBackMapper {
                         updatedList.add(newChecklist);
                     }
                 }
-                existingList.clear();
-                existingList.addAll(updatedList);
+
+
+                entity.setPreEventChecklists(updatedList);
+
 
 
             }
