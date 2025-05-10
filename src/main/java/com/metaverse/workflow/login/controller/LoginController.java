@@ -98,7 +98,7 @@ public class LoginController {
             @ApiResponse(responseCode = "400", description = "Invalid user or password",
                     content = @Content(schema = @Schema(implementation = Exception.class)))
     })
-    @PostMapping(value = "/login/change-password", produces = {"application/json"})
+    @PutMapping(value = "/login/change-password", produces = {"application/json"})
     public ResponseEntity<WorkflowResponse> changePassword(@RequestBody ChangePasswordRequest request) throws DataException {
         log.info("Change password controller, userId: {}", request.getUserId());
 

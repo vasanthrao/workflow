@@ -41,13 +41,21 @@ public class ProgramStatusController {
         return WorkflowResponse.builder().message("Program status updated successfully to: " + status).status(HttpStatus.OK.value()).data(programId).build();
     }
 
-    private boolean isValidStatus(String status) {
+    /*private boolean isValidStatus(String status) {
         return !status.equals(ProgramStatusConstants.PROGRAM_SCHEDULED) &&
                 !status.equals(ProgramStatusConstants.SESSIONS_CREATED) &&
                 !status.equals(ProgramStatusConstants.PARTICIPANTS_ADDED) &&
                 !status.equals(ProgramStatusConstants.ATTENDANCE_MARKED) &&
                 !status.equals(ProgramStatusConstants.PROGRAM_EXECUTION_UPDATED) &&
                 !status.equals(ProgramStatusConstants.PROGRAM_EXPENDITURE_UPDATED);
+    }*/
+    private boolean isValidStatus(String status) {
+        return status.equals(ProgramStatusConstants.PROGRAM_SCHEDULED) ||
+                status.equals(ProgramStatusConstants.SESSIONS_CREATED) ||
+                status.equals(ProgramStatusConstants.PARTICIPANTS_ADDED) ||
+                status.equals(ProgramStatusConstants.ATTENDANCE_MARKED) ||
+                status.equals(ProgramStatusConstants.PROGRAM_EXECUTION_UPDATED) ||
+                status.equals(ProgramStatusConstants.PROGRAM_EXPENDITURE_UPDATED);
     }
 
     @GetMapping("/{programId}/status")

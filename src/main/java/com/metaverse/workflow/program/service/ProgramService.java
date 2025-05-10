@@ -28,6 +28,7 @@ public interface ProgramService {
      WorkflowResponse saveFeedback(ProgramMonitoringFeedBackRequest request);
     WorkflowResponse updateFeedback(Long monitorId, ProgramMonitoringFeedBackRequest request) throws DataException;
     WorkflowResponse getFeedBackByProgramId(Long programId) throws DataException;
+    WorkflowResponse getFeedBackById(Long feedBackId);
     WorkflowResponse getProgramDetailsFroFeedBack(Long programId) throws DataException;
 
     List<Path> getAllProgramFile(Long programId);

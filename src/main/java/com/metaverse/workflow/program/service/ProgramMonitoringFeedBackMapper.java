@@ -230,6 +230,7 @@ public class ProgramMonitoringFeedBackMapper {
 
         switch (stepNumber) {
             case 1 -> {
+                entity.setProgramId(request.getProgramId());
                 entity.setState(request.getState());
                 entity.setDistrict(request.getDistrict());
                 entity.setStartDate(DateUtil.stringToDate(request.getStartDate(), "dd-MM-yyyy"));
