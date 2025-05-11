@@ -15,7 +15,7 @@ public class BulkExpenditureRequest {
     private Integer headOfExpenseId;
     private Integer purchasedQuantity;
     private Double unitCost;
-    private Integer billNo;
+    private String billNo;
     private String billDate;
     private String payeeName;
     private String bankName;

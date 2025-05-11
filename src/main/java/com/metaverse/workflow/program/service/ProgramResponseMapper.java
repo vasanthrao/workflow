@@ -18,6 +18,7 @@ public class ProgramResponseMapper {
 
     public static ProgramResponse map(Program program) {
         return ProgramResponse.builder()
+                .status(program.getStatus())
                 .programId(program.getProgramId())
                 .activityId(program.getActivityId())
                 .subActivityId(program.getSubActivityId())
@@ -68,6 +69,7 @@ public class ProgramResponseMapper {
 
     public static ProgramResponse mapProgram(Program program) {
         return ProgramResponse.builder()
+                .status(program.getStatus())
                 .programId(program.getProgramId())
                 .activityId(program.getActivityId())
                 .subActivityId(program.getSubActivityId())

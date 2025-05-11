@@ -37,6 +37,7 @@ public class  ProgramResponse {
     private String kpi;
     private Date createdOn;
     private Date updatedOn;
+    private String status;
     private List<ProgramSessionResponse> programSessionList;
     private List<MediaCoverageResponse> mediaCoverageList;
 

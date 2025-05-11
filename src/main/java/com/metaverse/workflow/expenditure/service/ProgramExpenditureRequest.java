@@ -22,7 +22,7 @@ public class ProgramExpenditureRequest {
     private ExpenditureType expenditureType;
     private Integer headOfExpenseId;
     private Double cost;
-    private Integer billNo;
+    private String billNo;
     private String billDate;
     private String payeeName;
     private String bankName;

@@ -27,7 +27,7 @@ public class ProgramExpenditureResponse {
     private String expenditureType;
     private String headOfExpense;
     private Double cost;
-    private Integer billNo;
+    private String billNo;
     private String billDate;
     private String payeeName;
     private String bankName;

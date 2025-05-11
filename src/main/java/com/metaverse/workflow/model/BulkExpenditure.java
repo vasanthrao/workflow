@@ -58,7 +58,7 @@ public class BulkExpenditure {
     private Double totalCost;
 
     @Column(name = "bill_no")
-    private Integer billNo;
+    private String billNo;
 
     @Column(name = "bill_date")
     private Date billDate;

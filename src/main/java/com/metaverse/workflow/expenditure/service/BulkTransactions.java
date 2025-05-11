@@ -24,7 +24,7 @@ public class BulkTransactions {
     private String expenditureType;
     private String headOfExpense;
     private Double allocatedCost;
-    private Integer billNo;
+    private String billNo;
     private Date billDate;
     private String payeeName;
     private String bankName;

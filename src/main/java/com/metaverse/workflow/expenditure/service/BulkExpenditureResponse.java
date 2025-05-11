@@ -24,7 +24,7 @@ public class BulkExpenditureResponse {
     private Integer purchasedQuantity;
     private Double unitCost;
     private Double totalCost;
-    private Integer billNo;
+    private String billNo;
     private String billDate;
     private String payeeName;
     private String bankName;
