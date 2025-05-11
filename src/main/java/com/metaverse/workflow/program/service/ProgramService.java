@@ -7,6 +7,7 @@ import com.metaverse.workflow.model.ProgramFilePathInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.util.List;
 
 public interface ProgramService {
@@ -21,7 +22,7 @@ public interface ProgramService {
     WorkflowResponse getAllProgramTypeByAgencyId(Long agencyId);
     WorkflowResponse getProgramParticipantAndVerifications(Long id);
     WorkflowResponse editProgramSession(ProgramSessionRequest request, List<MultipartFile> files);
-    WorkflowResponse saveSessionImages(ProgramSessionRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4, MultipartFile image5);
+    WorkflowResponse saveSessionImages(ProgramSessionRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4, MultipartFile image5) throws ParseException;
     WorkflowResponse saveMediaCoverage(MediaCoverageRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3);
     Path getProgramFile(Long fileId);
     WorkflowResponse getProgramSummaryByProgramId(Long programId) throws DataException;

@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -228,10 +229,12 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
     @Override
-    public WorkflowResponse saveSessionImages(ProgramSessionRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4, MultipartFile image5) {
+    public WorkflowResponse saveSessionImages(ProgramSessionRequest request, MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4, MultipartFile image5) throws ParseException {
         Optional<ProgramSession> session = programSessionRepository.findById(request.getProgramSessionId());
+        Optional<Resource> resource = resourceRepository.findById(request.getResourceId());
         if (!session.isPresent())
             return WorkflowResponse.builder().status(400).message("Invalid Program Session").build();
+
         session.get().setSessionStreamingUrl(request.getSessionStreamingUrl());
         if (image1 != null) {
             String filePath1 = storageService.store(image1, session.get().getProgram().getProgramId(), "photos");
@@ -258,6 +261,12 @@ public class ProgramServiceAdapter implements ProgramService {
             ProgramSessionFile file5 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath5).programSessionFileId(request.getImage5()).build());
             session.get().setImage5(file5.getProgramSessionFileId());
         }
+        session.get().setSessionDetails(request.getSessionDetails());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        session.get().setSessionDate(sdf.parse(request.getSessionDate()));
+        session.get().setStartTime(request.getStartTime());
+        session.get().setEndTime(request.getEndTime());
+        session.get().setResource(resource.get());
         ProgramSession response = programSessionRepository.save(session.get());
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.mapSession(response, response.getProgramSessionFileList())).build();
     }
