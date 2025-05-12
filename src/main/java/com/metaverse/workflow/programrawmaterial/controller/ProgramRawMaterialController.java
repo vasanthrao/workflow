@@ -19,9 +19,11 @@ public class ProgramRawMaterialController {
     ProgramRawMaterialService programRawMaterialService;
 
     @GetMapping(value = "/program/rawmaterial/{programId}")
-    public ResponseEntity<WorkflowResponse> rawMaterialByProgramId(@PathVariable("programId") Long programId) {
+    public ResponseEntity<WorkflowResponse> rawMaterialByProgramId(@PathVariable("programId") Long programId,
+                                                                   @RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "10") int size) {
         log.info("Program RawMaterial controller, programId : {}", programId);
-        WorkflowResponse response = programRawMaterialService.rawMaterialByProgramId(programId);
+        WorkflowResponse response = programRawMaterialService.rawMaterialByProgramId(programId, page, size);
         return ResponseEntity.ok(response);
     }
 
