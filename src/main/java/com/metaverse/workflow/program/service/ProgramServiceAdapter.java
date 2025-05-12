@@ -581,6 +581,8 @@ public class ProgramServiceAdapter implements ProgramService {
                         .build();
             }
 
+            List<ProgramSessionFile> sessionFiles = programSessionFileRepository.findByProgramSessionId(programId);
+            fileSystemStorageService.deleteAll(sessionFiles.stream().map(ProgramSessionFile::getFilePath).toList());
             programSessionFileRepository.deleteByProgramExpenditureProgramProgramId(programId);
             bulkExpRepo.deleteByProgramProgramId(programId);
             mediaCoverageRepository.deleteByProgramProgramId(programId);
