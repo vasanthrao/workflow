@@ -5,11 +5,15 @@ import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.model.Program;
 import com.metaverse.workflow.model.ProgramRawMaterial;
+import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.program.repository.ProgramRepository;
 import com.metaverse.workflow.program.service.ProgramResponseMapper;
 import com.metaverse.workflow.programattendance.service.ProgramAttendanceResponseMapper;
 import com.metaverse.workflow.programrawmaterial.repository.ProgramRawMaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,23 +30,36 @@ public class ProgramRowMaterialServiceAdepter implements ProgramRawMaterialServi
 
     @Autowired
     ProgramRawMaterialRepository programRawMaterialRepository;
+    @Autowired
+    ParticipantRepository participantRepository;
 
 
     @Override
-    public WorkflowResponse rawMaterialByProgramId(Long programId) {
+    public WorkflowResponse rawMaterialByProgramId(Long programId,int page, int size) {
         Optional<Program> program = programRepository.findById(programId);
         if (!program.isPresent())
             return WorkflowResponse.builder().status(400).message("Invalid Program").build();
         if (program.get().getProgramSessionList() == null)
             return WorkflowResponse.builder().status(400).message("No sessions created to program").build();
-        Set<String> dateSet = program.get().getProgramSessionList().stream().map(session -> DateUtil.dateToString(session.getSessionDate(), "dd-MM-yyyy")).collect(Collectors.toSet());
-        ProgramRawMaterialResponse response = populateParticipantRawMaterial(programId, program.get().getParticipants(), dateSet.size());
+
+        Set<String> dateSet = program.get().getProgramSessionList().stream()
+                .map(session -> DateUtil.dateToString(session.getSessionDate(), "dd-MM-yyyy"))
+                .collect(Collectors.toSet());
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Participant> pagedParticipants = participantRepository.findByPrograms_ProgramId(programId, pageable);
+        ProgramRawMaterialResponse response = populateParticipantRawMaterial(
+                programId,
+                pagedParticipants.getContent(),
+                dateSet.size());
         List<ProgramRawMaterial> list = programRawMaterialRepository.findByProgramRawMaterials(programId);
-        if (list == null || list.size() == 0) {
-            return WorkflowResponse.builder().status(200).message("Success").data(response).build();
+        if (list == null || list.isEmpty()) {
+            return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
+                    .totalPages(pagedParticipants.getTotalPages()).build();
         } else {
             response = updateParticipantRawMaterials(list,response);
-            return  WorkflowResponse.builder().status(200).message("Success").data(response).build();
+            return  WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
+                    .totalPages(pagedParticipants.getTotalPages()).build();
         }
 
     }

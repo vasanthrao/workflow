@@ -9,4 +9,5 @@ public interface BulkExpenditureTransactionRepository extends JpaRepository<Bulk
 
     List<BulkExpenditureTransaction> findByProgram_ProgramId(Long programId);
     void deleteByExpenditureBulkExpenditureId(Long expenditureId);
+    void deleteByProgramProgramId(Long programId);
 }

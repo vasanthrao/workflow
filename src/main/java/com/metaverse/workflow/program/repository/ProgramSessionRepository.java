@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProgramSessionRepository extends JpaRepository<ProgramSession, Long> {
+    void deleteByProgramProgramId(Long programId);
 }

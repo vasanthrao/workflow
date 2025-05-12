@@ -311,4 +311,10 @@ public class ProgramController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("program/delete/{programId}")
+    public ResponseEntity<WorkflowResponse> deleteProgram(@PathVariable Long programId) {
+
+        return ResponseEntity.ok(programService.deleteProgramAndDependencies(programId));
+    }
+
 }
