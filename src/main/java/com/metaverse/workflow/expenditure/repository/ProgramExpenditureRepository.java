@@ -12,4 +12,5 @@ public interface ProgramExpenditureRepository extends JpaRepository<ProgramExpen
     List<ProgramExpenditure> findByExpenditureTypeAndProgram_ProgramId(ExpenditureType expenditureType, Long programId);
 
     List<ProgramExpenditure> findByExpenditureTypeAndAgency_AgencyIdAndProgram_ProgramId(ExpenditureType expenditureType, Long agencyId,Long programId);
+    void deleteByProgramProgramId(Long programId);
 }

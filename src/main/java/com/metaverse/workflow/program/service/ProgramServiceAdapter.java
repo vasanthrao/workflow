@@ -9,12 +9,16 @@ import com.metaverse.workflow.common.fileservice.StorageService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.exceptions.DataException;
+import com.metaverse.workflow.expenditure.repository.BulkExpenditureTransactionRepository;
+import com.metaverse.workflow.expenditure.repository.ProgramExpenditureRepository;
 import com.metaverse.workflow.location.repository.LocationRepository;
 import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.*;
 import com.metaverse.workflow.resouce.repository.ResourceRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +48,8 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     ProgramSessionRepository programSessionRepository;
-
+    @Autowired
+    ProgramExpenditureRepository programExpenditureRepo;
     @Autowired
     ParticipantRepository participantRepository;
 
@@ -77,12 +82,15 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     SubActivityRepository subActivityRepository;
-
+   @Autowired
+    BulkExpenditureTransactionRepository bulkExpRepo;
     @Autowired
     FileSystemStorageService fileSystemStorageService;
     @Autowired
     ProgramMonitoringFeedBackRepository monitoringFeedBackRepository;
 
+    @PersistenceContext
+    private EntityManager em;
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
         Optional<Location> location = null;
@@ -558,6 +566,49 @@ public class ProgramServiceAdapter implements ProgramService {
                 .data(errors)
                 .build();
     }
+
+    @Transactional
+    @Override
+    public WorkflowResponse deleteProgramAndDependencies(Long programId) {
+        try {
+
+            if (!programRepository.existsById(programId)) {
+                return WorkflowResponse.builder()
+                        .status(404)
+                        .message("Program with ID " + programId + " not found.")
+                        .build();
+            }
+
+            programSessionFileRepository.deleteByProgramExpenditureProgramProgramId(programId);
+            bulkExpRepo.deleteByProgramProgramId(programId);
+            mediaCoverageRepository.deleteByProgramProgramId(programId);
+            programSessionRepository.deleteByProgramProgramId(programId);
+            programExpenditureRepo.deleteByProgramProgramId(programId);
+
+            em.createNativeQuery("DELETE FROM program_participant_temp WHERE program_id = :programId")
+                    .setParameter("programId", programId)
+                    .executeUpdate();
+
+            em.createNativeQuery("DELETE FROM program_participant WHERE program_id = :programId")
+                    .setParameter("programId", programId)
+                    .executeUpdate();
+
+            // Finally delete the program itself
+            programRepository.deleteById(programId);
+
+            return WorkflowResponse.builder()
+                    .status(200)
+                    .message("Program and related data deleted successfully.")
+                    .build();
+
+        } catch (Exception e) {
+            return WorkflowResponse.builder()
+                    .status(500)
+                    .message("Failed to delete program: " + e.getMessage())
+                    .build();
+        }
+    }
+
 
     private String getCellValue(Row row, int col) {
         Cell cell = row.getCell(col);
