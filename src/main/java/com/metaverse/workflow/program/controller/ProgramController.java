@@ -138,7 +138,7 @@ public class ProgramController {
                                                               @RequestPart(value = "image2", required = false) MultipartFile image2,
                                                               @RequestPart(value = "image3", required = false) MultipartFile image3,
                                                               @RequestPart(value = "image4", required = false) MultipartFile image4,
-                                                              @RequestPart(value = "image5", required = false) MultipartFile image5) throws ParseException {
+                                                              @RequestPart(value = "image5", required = false) MultipartFile image5) throws ParseException, java.text.ParseException {
         log.info("Program controller save session images, data : {}", data);
         JSONParser parser = new JSONParser();
         ProgramSessionRequest request = parser.parse(data, ProgramSessionRequest.class);

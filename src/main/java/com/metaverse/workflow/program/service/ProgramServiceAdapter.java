@@ -234,40 +234,42 @@ public class ProgramServiceAdapter implements ProgramService {
         Optional<Resource> resource = resourceRepository.findById(request.getResourceId());
         if (!session.isPresent())
             return WorkflowResponse.builder().status(400).message("Invalid Program Session").build();
-
-        session.get().setSessionStreamingUrl(request.getSessionStreamingUrl());
+        ProgramSession sessionObj = session.get();
+        sessionObj.setSessionStreamingUrl(request.getSessionStreamingUrl());
         if (image1 != null) {
             String filePath1 = storageService.store(image1, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath1).programSessionFileId(request.getImage1()).build());
-            session.get().setImage1(file1.getProgramSessionFileId());
+            sessionObj.setImage1(file1.getProgramSessionFileId());
         }
         if (image2 != null) {
             String filePath2 = storageService.store(image2, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file2 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath2).programSessionFileId(request.getImage2()).build());
-            session.get().setImage2(file2.getProgramSessionFileId());
+            sessionObj.setImage2(file2.getProgramSessionFileId());
         }
         if (image3 != null) {
             String filePath3 = storageService.store(image3, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file3 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath3).programSessionFileId(request.getImage3()).build());
-            session.get().setImage3(file3.getProgramSessionFileId());
+            sessionObj.setImage3(file3.getProgramSessionFileId());
         }
         if (image4 != null) {
             String filePath4 = storageService.store(image4, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file4 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath4).programSessionFileId(request.getImage4()).build());
-            session.get().setImage4(file4.getProgramSessionFileId());
+            sessionObj.setImage4(file4.getProgramSessionFileId());
         }
         if (image5 != null) {
             String filePath5 = storageService.store(image5, session.get().getProgram().getProgramId(), "photos");
             ProgramSessionFile file5 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath5).programSessionFileId(request.getImage5()).build());
-            session.get().setImage5(file5.getProgramSessionFileId());
+            sessionObj.setImage5(file5.getProgramSessionFileId());
         }
-        session.get().setSessionDetails(request.getSessionDetails());
+        sessionObj.setSessionDetails(request.getSessionDetails());
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        session.get().setSessionDate(sdf.parse(request.getSessionDate()));
-        session.get().setStartTime(request.getStartTime());
-        session.get().setEndTime(request.getEndTime());
-        session.get().setResource(resource.get());
-        ProgramSession response = programSessionRepository.save(session.get());
+        sessionObj.setSessionDate(sdf.parse(request.getSessionDate()));
+        sessionObj.setStartTime(request.getStartTime());
+        sessionObj.setEndTime(request.getEndTime());
+        if(!resource.isPresent()) {
+            sessionObj.setResource(resource.get());
+        }
+        ProgramSession response = programSessionRepository.save(sessionObj);
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.mapSession(response, response.getProgramSessionFileList())).build();
     }
 
