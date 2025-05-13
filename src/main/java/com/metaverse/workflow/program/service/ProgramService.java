@@ -40,4 +40,6 @@ public interface ProgramService {
 
     WorkflowResponse importProgramsFromExcel(MultipartFile file);
     WorkflowResponse deleteProgramAndDependencies(Long programId);
+    WorkflowResponse getProgramStatusSummery(Long agencyId);
+
 }
