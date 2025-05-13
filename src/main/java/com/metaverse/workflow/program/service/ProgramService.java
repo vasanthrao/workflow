@@ -35,9 +35,7 @@ public interface ProgramService {
     WorkflowResponse getProgramDetailsFroFeedBack(Long programId) throws DataException;
     List<Path> getAllProgramFile(Long programId);
     WorkflowResponse saveCollageImages(Long programId, MultipartFile image);
-
-    List<ProgramFilePathInfo> getAllProgramFileByType(Long programId, FileType fileType);
-
     WorkflowResponse importProgramsFromExcel(MultipartFile file);
     WorkflowResponse deleteProgramAndDependencies(Long programId);
+    List<ProgramFilePathInfo> getProgramFileByType(FileType fileType);
 }

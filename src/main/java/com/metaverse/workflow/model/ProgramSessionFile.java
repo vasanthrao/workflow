@@ -23,6 +23,9 @@ public class ProgramSessionFile {
     @JoinColumn(name = "program_session_id")
     private ProgramSession programSession;
     @ManyToOne
+    @JoinColumn(name = "program_id")
+    private Program program;
+    @ManyToOne
     @JoinColumn(name = "program_expenditure_id")
     private ProgramExpenditure programExpenditure;
     @ManyToOne

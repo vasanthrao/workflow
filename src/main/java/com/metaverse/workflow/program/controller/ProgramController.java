@@ -212,16 +212,15 @@ public class ProgramController {
         return ResponseEntity.ok(fileUrls);
     }
 
-    @GetMapping("/program/file/paths/status/{programId}")
+    @GetMapping("/program/file/paths/status")
     public ResponseEntity<List<ProgramFileResponse>> getAllProgramFilePaths(
-            @PathVariable("programId") Long programId,
             @RequestParam(value = "fileType", required = false) FileType fileType) {
 
         if (fileType == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        List<ProgramFilePathInfo> paths = programService.getAllProgramFileByType(programId, fileType);
+        List<ProgramFilePathInfo> paths = programService.getProgramFileByType(fileType);
 
         if (paths.isEmpty()) {
             return ResponseEntity.noContent().build();

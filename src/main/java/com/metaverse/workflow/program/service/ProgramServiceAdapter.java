@@ -246,27 +246,27 @@ public class ProgramServiceAdapter implements ProgramService {
         sessionObj.setSessionStreamingUrl(request.getSessionStreamingUrl());
         if (image1 != null) {
             String filePath1 = storageService.store(image1, session.get().getProgram().getProgramId(), "photos");
-            ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath1).programSessionFileId(request.getImage1()).build());
+            ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath1).programSessionFileId(request.getImage1()).programSession(sessionObj).build());
             sessionObj.setImage1(file1.getProgramSessionFileId());
         }
         if (image2 != null) {
             String filePath2 = storageService.store(image2, session.get().getProgram().getProgramId(), "photos");
-            ProgramSessionFile file2 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath2).programSessionFileId(request.getImage2()).build());
+            ProgramSessionFile file2 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath2).programSessionFileId(request.getImage2()).programSession(sessionObj).build());
             sessionObj.setImage2(file2.getProgramSessionFileId());
         }
         if (image3 != null) {
             String filePath3 = storageService.store(image3, session.get().getProgram().getProgramId(), "photos");
-            ProgramSessionFile file3 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath3).programSessionFileId(request.getImage3()).build());
+            ProgramSessionFile file3 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath3).programSessionFileId(request.getImage3()).programSession(sessionObj).build());
             sessionObj.setImage3(file3.getProgramSessionFileId());
         }
         if (image4 != null) {
             String filePath4 = storageService.store(image4, session.get().getProgram().getProgramId(), "photos");
-            ProgramSessionFile file4 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath4).programSessionFileId(request.getImage4()).build());
+            ProgramSessionFile file4 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath4).programSessionFileId(request.getImage4()).programSession(sessionObj).build());
             sessionObj.setImage4(file4.getProgramSessionFileId());
         }
         if (image5 != null) {
             String filePath5 = storageService.store(image5, session.get().getProgram().getProgramId(), "photos");
-            ProgramSessionFile file5 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath5).programSessionFileId(request.getImage5()).build());
+            ProgramSessionFile file5 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("PHOTO").filePath(filePath5).programSessionFileId(request.getImage5()).programSession(sessionObj).build());
             sessionObj.setImage5(file5.getProgramSessionFileId());
         }
         sessionObj.setSessionDetails(request.getSessionDetails());
@@ -274,6 +274,7 @@ public class ProgramServiceAdapter implements ProgramService {
         sessionObj.setSessionDate(sdf.parse(request.getSessionDate()));
         sessionObj.setStartTime(request.getStartTime());
         sessionObj.setEndTime(request.getEndTime());
+        sessionObj.setProgramSessionId(request.getProgramSessionId());
         if(!resource.isPresent()) {
             sessionObj.setResource(resource.get());
         }
@@ -344,7 +345,7 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Override
     public List<Path> getAllProgramFile(Long programId) {
-        List<ProgramSessionFile> files = programSessionFileRepository.findByProgramSessionId(programId);
+        List<ProgramSessionFile> files = programSessionFileRepository.findByProgramSession_Program_ProgramId(programId);
         return files.stream()
                 .map(file -> storageService.load(file.getFilePath()))
                 .collect(Collectors.toList());
@@ -354,8 +355,8 @@ public class ProgramServiceAdapter implements ProgramService {
     public WorkflowResponse saveCollageImages(Long programId, MultipartFile image) {
         if (image != null) {
             String filePath = storageService.store(image, programId, "Collage");
-            Optional<ProgramSession> program = programSessionRepository.findById(programId);
-            ProgramSessionFile file = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("COLLAGE").filePath(filePath).programSession(program.get()).build());
+            Optional<Program> program = programRepository.findById(programId);
+            ProgramSessionFile file = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("COLLAGE").filePath(filePath).program(program.get()).build());
 
             CollageImageResponse response = CollageImageResponse.builder()
                     .programId(programId)
@@ -377,7 +378,7 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
     @Override
-    public List<ProgramFilePathInfo> getAllProgramFileByType(Long programId, FileType fileType) {
+    public List<ProgramFilePathInfo> getProgramFileByType(FileType fileType) {
         List<ProgramSessionFile> files = programSessionFileRepository
                 .findByFileType(fileType.toString());
 

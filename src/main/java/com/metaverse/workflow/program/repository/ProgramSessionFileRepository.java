@@ -11,6 +11,7 @@ public interface ProgramSessionFileRepository extends JpaRepository<ProgramSessi
     @Query("SELECT p FROM ProgramSessionFile p WHERE p.programSession.programSessionId = :programSessionId")
     List<ProgramSessionFile> findByProgramSessionId(Long programSessionId);
 
+
     @Query("SELECT p FROM ProgramSessionFile p WHERE p.programExpenditure.programExpenditureId = :expenditureId")
     List<ProgramSessionFile> findByProgramExpenditureId(Long expenditureId);
 
@@ -23,4 +24,6 @@ public interface ProgramSessionFileRepository extends JpaRepository<ProgramSessi
 
     List<ProgramSessionFile> findByFileType(String string);
     void deleteByProgramExpenditureProgramProgramId(Long programId);
+
+    List<ProgramSessionFile> findByProgramSession_Program_ProgramId(Long programId);
 }
