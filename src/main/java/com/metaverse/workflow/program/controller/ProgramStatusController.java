@@ -63,7 +63,7 @@ public class ProgramStatusController {
         List<ProgramResponse> response = programs != null ? programs.stream().map(ProgramResponseMapper::map).collect(Collectors.toList()) : null;
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
     }
-    @GetMapping("/summery/{agencyId}")
+    @GetMapping("/summary/{agencyId}")
     public WorkflowResponse getProgramsStatusSummery(@PathVariable Long agencyId) {
         return programService.getProgramStatusSummery(agencyId);
     }
