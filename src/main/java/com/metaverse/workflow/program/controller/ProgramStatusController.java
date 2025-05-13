@@ -6,6 +6,7 @@ import com.metaverse.workflow.model.Program;
 import com.metaverse.workflow.program.repository.ProgramRepository;
 import com.metaverse.workflow.program.service.ProgramResponse;
 import com.metaverse.workflow.program.service.ProgramResponseMapper;
+import com.metaverse.workflow.program.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,9 @@ public class ProgramStatusController {
 
     @Autowired
     private ProgramRepository programRepository;
+    @Autowired
+    private ProgramService programService;
+
 
     @PostMapping("/{programId}")
     public WorkflowResponse updateProgramStatus(
@@ -58,5 +62,9 @@ public class ProgramStatusController {
         List<Program> programs = programRepository.findByAgencyAgencyIdAndStatus(agencyId, status);
         List<ProgramResponse> response = programs != null ? programs.stream().map(ProgramResponseMapper::map).collect(Collectors.toList()) : null;
         return WorkflowResponse.builder().message("Success").status(200).data(response).build();
+    }
+    @GetMapping("/summery/{agencyId}")
+    public WorkflowResponse getProgramsStatusSummery(@PathVariable Long agencyId) {
+        return programService.getProgramStatusSummery(agencyId);
     }
 }

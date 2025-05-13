@@ -38,4 +38,5 @@ public interface ProgramService {
     WorkflowResponse importProgramsFromExcel(MultipartFile file);
     WorkflowResponse deleteProgramAndDependencies(Long programId);
     List<ProgramFilePathInfo> getProgramFileByType(FileType fileType);
+    WorkflowResponse getProgramStatusSummery(Long agencyId);
 }

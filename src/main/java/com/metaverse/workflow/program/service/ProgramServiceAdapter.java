@@ -629,6 +629,60 @@ public class ProgramServiceAdapter implements ProgramService {
         }
     }
 
+    @Override
+    public WorkflowResponse getProgramStatusSummery(Long agencyId) {
+
+        List<Program> programs;
+
+        if (agencyId == -1) {
+            programs = programRepository.findAll();
+        } else {
+            if (!agencyRepository.existsById(agencyId)) {
+                return WorkflowResponse.builder()
+                        .status(400)
+                        .message("Agency with ID " + agencyId + " does not exist.")
+                        .build();
+            }
+            programs = programRepository.findByAgencyAgencyId(agencyId);
+        }
+
+        int completed = 0, overdue = 0, inProcess = 0, due = 0;
+        Date today = new Date();
+
+        for (Program program : programs) {
+            Date startDate = program.getStartDate();
+            Date endDate = program.getEndDate();
+            String status = program.getStatus();
+
+            if (startDate == null || endDate == null) continue;
+
+
+            if (endDate.before(today)) {
+                if ("Program Expenditure Updated".equalsIgnoreCase(status)) {
+                    completed++;
+                } else {
+                    overdue++;
+                }
+            } else if (!today.before(startDate) && !today.after(endDate)) {
+                inProcess++;
+            } else if (startDate.after(today)) {
+                due++;
+            }
+        }
+
+        return WorkflowResponse.builder()
+                .message("success")
+                .status(200)
+                .data(ProgramStatusSummery.builder()
+                        .programScheduled(programs.size())
+                        .programsCompleted(completed)
+                        .programsOverdue(overdue)
+                        .programInProcess(inProcess)
+                        .programDue(due)
+                        .build())
+                .build();
+    }
+
 }
 
 
