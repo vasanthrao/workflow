@@ -4,14 +4,8 @@ import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
-import com.metaverse.workflow.model.outcomes.CGTMSETransaction;
-import com.metaverse.workflow.model.outcomes.ONDCRegistration;
-import com.metaverse.workflow.model.outcomes.ONDCTransaction;
-import com.metaverse.workflow.model.outcomes.UdyamRegistration;
-import com.metaverse.workflow.programoutcome.dto.CGTMSETransactionRequest;
-import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
-import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
-import com.metaverse.workflow.programoutcome.dto.UdyamRegistrationRequest;
+import com.metaverse.workflow.model.outcomes.*;
+import com.metaverse.workflow.programoutcome.dto.*;
 
 public class OutcomeRequestMapper {
 
@@ -70,7 +64,7 @@ public class OutcomeRequestMapper {
                 .employmentFemale(request.getEmploymentFemale())
                 .proposeOfEnterpriseUpgradation(request.getProposeOfEnterpriseUpgradation())
                 .dateOfGrounding(DateUtil.stringToDate(request.getDateOfGrounding(),"dd-MM-yyyy"))
-                .influenced((request.getInfluenced()=='y')?true :false)
+                .influenced(request.getInfluenced()=='y'?true :false)
                 .agency(agency)
                 .organization(organization)
                 .participant(participant)
@@ -78,4 +72,18 @@ public class OutcomeRequestMapper {
     }
 
 
+    public static GeMTransaction mapGeMTransaction(GeMTransactionRequest request, Agency agency, Participant participant, Organization organization) {
+        return GeMTransaction.builder()
+                .procurementDate(DateUtil.stringToDate(request.getProcurementDate(),"dd-MM-yyyy"))
+                .productName(request.getProductName())
+                .unitOfMeasurement(request.getUnitOfMeasurement())
+                .registeredAs(request.getRegisteredAs())
+                .quantity(request.getQuantity())
+                .productValue(request.getProductValue())
+                .influenced(request.getInfluenced())
+                .agency(agency)
+                .organization(organization)
+                .participant(participant)
+                .build();
+    }
 }

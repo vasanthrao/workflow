@@ -34,7 +34,7 @@ public class ZEDCertificateRegistration {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="zed_certificate_registration_i")
+    @Column(name="zed_certificate_registration_id")
 	private Long zedCertificateRegistrationId;
 	
 
@@ -60,10 +60,12 @@ public class ZEDCertificateRegistration {
     private String zedCertificationType; // Bronze / Silver / Gold
 
     @Column(name = "turnover_lakhs")
-    private Double turnoverInLakhs;
+    private Double turnoverLakhs;
+
 
     @Column(name = "energy_consumption_kwh_per_hr")
     private Double energyConsumptionKwhHr;
+
 
     @Column(name = "production_mt_per_hr")
     private Integer productionMtHr;
