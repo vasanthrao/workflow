@@ -9,9 +9,9 @@ public class CounsellorRegistrationResponseMapper {
     public static CounsellorRegistrationResponse map(CounsellorRegistration counsellorRegistration)
     {
         return CounsellorRegistrationResponse.builder().counsellorRegistrationId(counsellorRegistration.getCounsellorRegistrationId())
-                .dateOfRegistration(DateUtil.dateToString(counsellorRegistration.getDateOfRegistration(), "dd-mm-yyyy"))
+                .dateOfRegistration(DateUtil.dateToString(counsellorRegistration.getDateOfRegistration(), "dd-MM-yyyy"))
                 .nameOfCounsellor(counsellorRegistration.getNameOfCounsellor())
-                .dateOfBirth(DateUtil.dateToString(counsellorRegistration.getDateOfBirth(), "dd-mm-yyyy"))
+                .dateOfBirth(DateUtil.dateToString(counsellorRegistration.getDateOfBirth(), "dd-MM-yyyy"))
                 .gender(counsellorRegistration.getGender())
                 .socialCategory((counsellorRegistration.getSocialCategory()))
                 .educationalQualification(counsellorRegistration.getEducationalQualification())

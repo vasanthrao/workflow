@@ -18,7 +18,7 @@ public class GeMTransactionRequest {
     public String registeredAs; // Buyer or Seller
     public Integer quantity;
     public Double productValue;
-    public Character influenced;
+    public Boolean influenced;
     private Long agencyId;
     private Long participantId;
     private Long organizationId;

@@ -13,9 +13,9 @@ public class ESDPTrainingResponseMapper {
                 .memberId(esdpTraining.getParticipantId().getMemberId())
                 .memberName(esdpTraining.getParticipantId().getParticipantName())
                 .SHGSector(esdpTraining.getOrganizationId().getSectors())
-                .dateOfAwarenessProgram(DateUtil.dateToString(esdpTraining.getDateOfAwarenessProgram(),"dd-mm-yyyy"))
+                .dateOfAwarenessProgram(DateUtil.dateToString(esdpTraining.getDateOfAwarenessProgram(),"dd-MM-yyyy"))
                 .interestedInAttending15Days(esdpTraining.getInterestedInAttending15Days())
-                .dateOfApplicationReceived(DateUtil.dateToString(esdpTraining.getDateOfApplicationReceived(),"dd-mm-yyyy"))
+                .dateOfApplicationReceived(DateUtil.dateToString(esdpTraining.getDateOfApplicationReceived(),"dd-MM-yyyy"))
                 .selectedForTraining(esdpTraining.getSelectedForTraining())
                 .build();
     }

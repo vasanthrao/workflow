@@ -17,13 +17,13 @@ public class ProgramRequestMapper {
                 .programType(programRequest.getProgramType())
                 .programDetails(programRequest.getProgramDetails())
                 .programTitle(programRequest.getProgramTitle())
-                .startDate(DateUtil.stringToDate(programRequest.getStartDate(), "dd-mm-yyyy"))
-                .endDate(DateUtil.stringToDate(programRequest.getEndDate(), "dd-mm-yyyy"))
+                .startDate(DateUtil.stringToDate(programRequest.getStartDate(), "dd-MM-yyyy"))
+                .endDate(DateUtil.stringToDate(programRequest.getEndDate(), "dd-MM-yyyy"))
                 .startTime(programRequest.getStartTime())
                 .endTime(programRequest.getEndTime())
                 .spocName(programRequest.getSpocName())
                 .spocContactNo(programRequest.getSpocContactNo())
-                .location(location!=null?location:null)
+                .location(location)
                 .kpi(programRequest.getKpi())
                 .agency(agency)
                 .status(ProgramStatusConstants.PROGRAM_SCHEDULED)
@@ -33,7 +33,7 @@ public class ProgramRequestMapper {
     public static ProgramSession mapSession(ProgramSessionRequest session, Resource resource, Program program) {
         return ProgramSession.builder()
                 .programSessionId(session.getProgramSessionId())
-                .sessionDate(DateUtil.stringToDate(session.getSessionDate(), "dd-mm-yyyy"))
+                .sessionDate(DateUtil.stringToDate(session.getSessionDate(), "dd-MM-yyyy"))
                 .startTime(session.getStartTime())
                 .endTime(session.getEndTime())
                 .sessionTypeName(session.getSessionTypeName())
@@ -46,7 +46,7 @@ public class ProgramRequestMapper {
     }
 
     public static ProgramSession mapSession(ProgramSessionRequest request, ProgramSession session) {
-        session.setSessionDate(DateUtil.stringToDate(request.getSessionDate(), "dd-mm-yyyy"));
+        session.setSessionDate(DateUtil.stringToDate(request.getSessionDate(), "dd-MM-yyyy"));
         session.setStartTime(request.getStartTime());
         session.setEndTime(request.getEndTime());
         session.setSessionTypeName(request.getSessionTypeName());

@@ -291,7 +291,7 @@ public class ProgramServiceAdapter implements ProgramService {
                 return WorkflowResponse.builder().status(400).message("Invalid Program MediaCoverage").build();
             mediaCoverage.get().setMediaCoverageUrl(request.getMediaCoverageUrl());
             mediaCoverage.get().setMediaCoverageType(request.getMediaCoverageType());
-            mediaCoverage.get().setDate(DateUtil.stringToDate(request.getDate(), "dd-mm-yyyy"));
+            mediaCoverage.get().setDate(DateUtil.stringToDate(request.getDate(), "dd-MM-yyyy"));
             if (image1 != null) {
                 String filePath1 = storageService.store(image1, mediaCoverage.get().getProgram().getProgramId(), "media");
                 ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath1).programSessionFileId(request.getImage1()).build());
@@ -312,7 +312,7 @@ public class ProgramServiceAdapter implements ProgramService {
             Optional<Program> program = programRepository.findById(request.getProgramId());
             if (!program.isPresent())
                 return WorkflowResponse.builder().status(400).message("Invalid Program Id").build();
-            MediaCoverage mediaCoverage = MediaCoverage.builder().mediaCoverageType(request.getMediaCoverageType()).mediaCoverageUrl(request.getMediaCoverageUrl()).date(DateUtil.stringToDate(request.getDate(), "dd-mm-yyyy")).program(program.get()).build();
+            MediaCoverage mediaCoverage = MediaCoverage.builder().mediaCoverageType(request.getMediaCoverageType()).mediaCoverageUrl(request.getMediaCoverageUrl()).date(DateUtil.stringToDate(request.getDate(), "dd-MM-yyyy")).program(program.get()).build();
             if (image1 != null) {
                 String filePath1 = storageService.store(image1, program.get().getProgramId(), "media");
                 ProgramSessionFile file1 = programSessionFileRepository.save(ProgramSessionFile.builder().fileType("MEDIA").filePath(filePath1).build());

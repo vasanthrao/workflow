@@ -25,7 +25,7 @@ public class ParticipantResponseMapper {
 				.preTrainingAssessmentConducted(participant.getPreTrainingAssessmentConducted())
 				.postTrainingAssessmentConducted(participant.getPostTrainingAssessmentConducted())
 				.isCertificateIssued(participant.getIsCertificateIssued())
-				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(), "dd-mm-yyyy"))
+				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(), "dd-MM-yyyy"))
 				.needAssessmentMethodology(participant.getNeedAssessmentMethodology())
 				.organizationId(participant.getOrganization() != null ? participant.getOrganization().getOrganizationId() : null)
 				.programIds(participant.getPrograms() != null ? participant.getPrograms().stream().map(program -> program.getProgramId()).collect(Collectors.toList()) : null)
@@ -48,7 +48,7 @@ public class ParticipantResponseMapper {
 				.startupCertificateNo(participant.getOrganization() != null ? participant.getOrganization().getStartupCertificateNo() : null)
 				.natureOfStartup(participant.getOrganization() != null ? participant.getOrganization().getNatureOfStartup() : null)
 				.areasOfWorking(participant.getOrganization() != null ? participant.getOrganization().getAreasOfWorking() : null)
-				.programDates(participant.getPrograms().stream().map(program -> dateToString(program.getStartDate(), "dd-mm-yyyy"))
+				.programDates(participant.getPrograms().stream().map(program -> dateToString(program.getStartDate(), "dd-MM-yyyy"))
 						.collect(Collectors.toList()))
 				.sectors(participant.getOrganization() != null ? participant.getOrganization().getSectors(): null)
 				.memberId(participant.getMemberId())
@@ -66,7 +66,7 @@ public class ParticipantResponseMapper {
 				.preTrainingAssessmentConducted(participant.getPreTrainingAssessmentConducted())
 				.postTrainingAssessmentConducted(participant.getPostTrainingAssessmentConducted())
 				.isCertificateIssued((participant.getIsCertificateIssued()))
-				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(),"dd-mm-yyyy"))
+				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(),"dd-MM-yyyy"))
 				.needAssessmentMethodology(participant.getNeedAssessmentMethodology())
 				.build();
 	}
@@ -88,7 +88,7 @@ public class ParticipantResponseMapper {
 				.preTrainingAssessmentConducted(participant.getPreTrainingAssessmentConducted())
 				.postTrainingAssessmentConducted(participant.getPostTrainingAssessmentConducted())
 				.isCertificateIssued(participant.getIsCertificateIssued())
-				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(), "dd-mm-yyyy"))
+				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(), "dd-MM-yyyy"))
 				.needAssessmentMethodology(participant.getNeedAssessmentMethodology())
 				.build();
 	}

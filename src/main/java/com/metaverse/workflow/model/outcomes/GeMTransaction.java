@@ -44,7 +44,7 @@ public class GeMTransaction {
 
 
     @Column(name="Influenced")
-    Character influenced;
+    Boolean influenced;
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
