@@ -4,6 +4,7 @@ import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.ExcelHelper;
 import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.organization.repository.OrganizationRepository;
+import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.participant.service.ParticipantRequest;
 import com.metaverse.workflow.participant.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,10 @@ public class ParticipantController {
 
 	@Autowired
 	private ExcelHelper excelHelper;
-	
+
+	@Autowired
+	private ParticipantRepository participantRepository;
+
 	@PostMapping("/participant/save")
 	public ResponseEntity<WorkflowResponse> saveParticipant(@RequestBody ParticipantRequest participantRequest)
 	{
@@ -88,9 +92,7 @@ public class ParticipantController {
 			}
 
 			List<Participant> participants = excelHelper.excelToParticipants(file.getInputStream(),programId);
-			participantService.saveAll(participants);
-
-			return WorkflowResponse.builder().message("Success").status(200).data(participants).build();
+			return WorkflowResponse.builder().message("Success").status(200).data(null).build();
 		} catch (Exception e) {
 			return WorkflowResponse.builder().message(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR)).status(200).data("Error uploading file: " + e.getMessage()).build();
 		}

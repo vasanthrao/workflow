@@ -49,6 +49,7 @@ public class ExcelHelper {
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
                 if (++rowNumber < 4) continue; // Start processing from row 2 (index 2)
+                if (isRowEmpty(currentRow)) break;
 
                 String organizationName = getCellValue(currentRow, 15);
                 String organizationType = getCellValue(currentRow, 14);
@@ -82,6 +83,17 @@ public class ExcelHelper {
         }
         cache.put(key, existingOrganizations.get(0));
         return existingOrganizations;
+    }
+
+    private boolean isRowEmpty(Row row) {
+        if (row == null) return true;
+        for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+            Cell cell = row.getCell(c);
+            if (cell != null && cell.getCellType() != CellType.BLANK && cell.toString().trim().length() > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Organization createOrganizationFromRow(Row row) {
