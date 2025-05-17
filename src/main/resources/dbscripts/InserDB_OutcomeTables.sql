@@ -4,4 +4,5 @@ insert into program_outcome_tables (outcome_table_id, outcome_table_display_name
 (1, 'ONDC Registration', 'ONDCRegistration'),
 (2, 'ONDC Transaction', 'ONDCTransaction'),
 (3, 'Udyam Registration', 'UdyamRegistration'),
-(4, 'CGTMSE Transaction', 'CGTMSETransaction');
+(4, 'CGTMSE Transaction', 'CGTMSETransaction'),
+(5, 'GeM Transaction','GeMTransaction');

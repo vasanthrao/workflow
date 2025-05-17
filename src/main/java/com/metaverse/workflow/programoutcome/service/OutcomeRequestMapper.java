@@ -4,21 +4,15 @@ import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
-import com.metaverse.workflow.model.outcomes.CGTMSETransaction;
-import com.metaverse.workflow.model.outcomes.ONDCRegistration;
-import com.metaverse.workflow.model.outcomes.ONDCTransaction;
-import com.metaverse.workflow.model.outcomes.UdyamRegistration;
-import com.metaverse.workflow.programoutcome.dto.CGTMSETransactionRequest;
-import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
-import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
-import com.metaverse.workflow.programoutcome.dto.UdyamRegistrationRequest;
+import com.metaverse.workflow.model.outcomes.*;
+import com.metaverse.workflow.programoutcome.dto.*;
 
 public class OutcomeRequestMapper {
 
     public static ONDCRegistration mapOndcRegistration(ONDCRegistrationRequest request, Agency agency, Participant participant, Organization organization) {
         return ONDCRegistration.builder()
                 .ondcRegistrationNo(request.getOndcRegistrationNo())
-                .ondcRegistrationDate(DateUtil.stringToDate(request.getOndcRegistrationDate(), "dd-mm-yyyy"))
+                .ondcRegistrationDate(DateUtil.stringToDate(request.getOndcRegistrationDate(), "dd-MM-yyyy"))
                 .agency(agency)
                 .organization(organization)
                 .participant(participant)
@@ -28,7 +22,7 @@ public class OutcomeRequestMapper {
     public static ONDCTransaction mapOndcTransaction(ONDCTransactionRequest request, ONDCRegistration ondcRegistration) {
         return ONDCTransaction.builder()
                 .ondcRegistration(ondcRegistration)
-                .transactionDate(DateUtil.stringToDate(request.getTransactionDate(), "dd-mm-yyyy"))
+                .transactionDate(DateUtil.stringToDate(request.getTransactionDate(), "dd-MM-yyyy"))
                 .transactionType(request.getTransactionType())
                 .transactionValue(request.getTransactionValue())
                 .productName(request.getProductName())
@@ -40,7 +34,7 @@ public class OutcomeRequestMapper {
     public static UdyamRegistration mapUdyamRegistration(UdyamRegistrationRequest request, Agency agency, Participant participant, Organization organization)
     {
         return UdyamRegistration.builder()
-                .udyamRegistationDate(DateUtil.stringToDate(request.getUdyamRegistrationDate(),"dd-mm-yyyy"))
+                .udyamRegistationDate(DateUtil.stringToDate(request.getUdyamRegistrationDate(),"dd-MM-yyyy"))
                 .udyamRegistrationNo(request.getUdyamRegistrationNo())
                 .agency(agency)
                 .organization(organization)
@@ -70,7 +64,7 @@ public class OutcomeRequestMapper {
                 .employmentFemale(request.getEmploymentFemale())
                 .proposeOfEnterpriseUpgradation(request.getProposeOfEnterpriseUpgradation())
                 .dateOfGrounding(DateUtil.stringToDate(request.getDateOfGrounding(),"dd-MM-yyyy"))
-                .influenced((request.getInfluenced()=='y')?true :false)
+                .influenced(request.getInfluenced())
                 .agency(agency)
                 .organization(organization)
                 .participant(participant)
@@ -78,4 +72,18 @@ public class OutcomeRequestMapper {
     }
 
 
+    public static GeMTransaction mapGeMTransaction(GeMTransactionRequest request, Agency agency, Participant participant, Organization organization) {
+        return GeMTransaction.builder()
+                .procurementDate(DateUtil.stringToDate(request.getProcurementDate(),"dd-MM-yyyy"))
+                .productName(request.getProductName())
+                .unitOfMeasurement(request.getUnitOfMeasurement())
+                .registeredAs(request.getRegisteredAs())
+                .quantity(request.getQuantity())
+                .productValue(request.getProductValue())
+                .influenced(request.getInfluenced())
+                .agency(agency)
+                .organization(organization)
+                .participant(participant)
+                .build();
+    }
 }

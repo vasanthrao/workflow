@@ -1,6 +1,7 @@
 package com.metaverse.workflow.expenditure.service;
 
 import com.metaverse.workflow.common.enums.PaymentType;
+import jakarta.persistence.Column;
 import lombok.*;
 
 @NoArgsConstructor
@@ -20,6 +21,7 @@ public class BulkExpenditureRequest {
     private String payeeName;
     private String bankName;
     private String ifscCode;
+    private String transactionId;//for upi
     private PaymentType modeOfPayment;
     private String remarks;
     private String uploadBillUrl;

@@ -30,7 +30,7 @@ public class CGTMSETransactionRequest {
     public Integer employmentFemale;
     public String proposeOfEnterpriseUpgradation;
     public String dateOfGrounding;
-    public Character influenced;
+    public Boolean influenced;
     private Long agencyId;
     private Long participantId;
     private Long organizationId;

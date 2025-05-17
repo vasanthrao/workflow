@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 public class BulkExpenditureResponse {
 
+
     private Long bulkExpenditureId;
     private Long agencyId;
     private String agencyName;
@@ -29,6 +30,7 @@ public class BulkExpenditureResponse {
     private String payeeName;
     private String bankName;
     private String ifscCode;
+    private String transactionId;//for upi
     private String modeOfPayment;
     private String remarks;
     private String uploadBillUrl;

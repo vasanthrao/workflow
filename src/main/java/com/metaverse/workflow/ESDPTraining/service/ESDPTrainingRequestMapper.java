@@ -9,10 +9,10 @@ public class ESDPTrainingRequestMapper
                                    Participant participant, Agency agency)
     {
         return ESDPTraining.builder()
-                .dateOfAwarenessProgram(DateUtil.stringToDate(request.getDateOfAwarenessProgram(),"dd-mm-yyyy"))
+                .dateOfAwarenessProgram(DateUtil.stringToDate(request.getDateOfAwarenessProgram(),"dd-MM-yyyy"))
                 .selectedForTraining(request.getSelectedForTraining())
                 .interestedInAttending15Days(request.getInterestedInAttending15Days())
-                .dateOfApplicationReceived(DateUtil.stringToDate(request.getDateOfApplicationReceived(),"dd-mm-yyyy"))
+                .dateOfApplicationReceived(DateUtil.stringToDate(request.getDateOfApplicationReceived(),"dd-MM-yyyy"))
                 .participantId(participant)
                 .organizationId(organization)
                 .agency(agency)

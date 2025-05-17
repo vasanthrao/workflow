@@ -32,6 +32,7 @@ public class ProgramExpenditureResponse {
     private String payeeName;
     private String bankName;
     private String ifscCode;
+    private String transactionId;//for upi
     private String modeOfPayment;
     private String purpose;
     private String uploadBillUrl;

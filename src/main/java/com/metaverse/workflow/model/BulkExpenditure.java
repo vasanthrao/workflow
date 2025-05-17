@@ -75,6 +75,9 @@ public class BulkExpenditure {
     @Column(name = "ifsc_code")
     private String ifscCode;
 
+    @Column(name = "transaction_id")
+    private String transactionId;//for upi
+
     @Column(name="remarks")
     private String remarks;
 

@@ -25,7 +25,7 @@ public class ParticipantRequestMapper {
 				.preTrainingAssessmentConducted(request.getPreTrainingAssessmentConducted())
 				.postTrainingAssessmentConducted(request.getPostTrainingAssessmentConducted())
 				.isCertificateIssued(request.getIsCertificateIssued())
-				.certificateIssueDate(DateUtil.stringToDate(request.getCertificateIssueDate(), "dd-mm-yyyy"))
+				.certificateIssueDate(DateUtil.stringToDate(request.getCertificateIssueDate(), "dd-MM-yyyy"))
 				.needAssessmentMethodology(request.getNeedAssessmentMethodology())
 				.organization(organization != null ? organization : null)
 				.programs(programs!= null && programs.size() > 0 ? programs : null)
@@ -71,7 +71,7 @@ public class ParticipantRequestMapper {
 				.preTrainingAssessmentConducted(request.getPreTrainingAssessmentConducted())
 				.postTrainingAssessmentConducted(request.getPostTrainingAssessmentConducted())
 				.isCertificateIssued(request.getIsCertificateIssued())
-				.certificateIssueDate(DateUtil.stringToDate(request.getCertificateIssueDate(), "dd-mm-yyyy"))
+				.certificateIssueDate(DateUtil.stringToDate(request.getCertificateIssueDate(), "dd-MM-yyyy"))
 				.needAssessmentMethodology(request.getNeedAssessmentMethodology())
 				.build();
 	}

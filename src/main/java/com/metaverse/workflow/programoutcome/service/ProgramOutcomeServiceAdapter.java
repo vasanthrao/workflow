@@ -9,10 +9,7 @@ import com.metaverse.workflow.model.outcomes.ONDCRegistration;
 import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
-import com.metaverse.workflow.programoutcome.dto.CGTMSETransactionRequest;
-import com.metaverse.workflow.programoutcome.dto.ONDCRegistrationRequest;
-import com.metaverse.workflow.programoutcome.dto.ONDCTransactionRequest;
-import com.metaverse.workflow.programoutcome.dto.UdyamRegistrationRequest;
+import com.metaverse.workflow.programoutcome.dto.*;
 import com.metaverse.workflow.programoutcome.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.parser.JSONParser;
@@ -39,11 +36,13 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     ONDCTransactionRepository ondcTransactionRepository;
 
     @Autowired
-    UdyamResistrationRepository udyamResistrationRepository;
+    UdyamRegistrationRepository udyamRegistrationRepository;
 
     @Autowired
     CGTMSETransactionRepository cgtmseTransactionRepository;
 
+    @Autowired
+    GeMTransactionRepository geMTransactionRepository;
     @Autowired
     AgencyRepository agencyRepository;
 
@@ -122,12 +121,12 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 Optional<Organization> organization = organizationRepository.findById(udyamResistrationRequest.getOrganizationId());
                 if (!organization.isPresent())
                     return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
-                udyamResistrationRepository.save(OutcomeRequestMapper.mapUdyamRegistration(udyamResistrationRequest, agency.get(), participant.get(), organization.get()));
+                udyamRegistrationRepository.save(OutcomeRequestMapper.mapUdyamRegistration(udyamResistrationRequest, agency.get(), participant.get(), organization.get()));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
             case "CGTMSETransaction": {
-                CGTMSETransactionRequest transactionRequest= parser.parse(data,CGTMSETransactionRequest.class);
+                CGTMSETransactionRequest transactionRequest = parser.parse(data, CGTMSETransactionRequest.class);
                 Optional<Agency> agency = agencyRepository.findById(transactionRequest.getAgencyId());
                 if (!agency.isPresent())
                     return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
@@ -137,10 +136,26 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 Optional<Organization> organization = organizationRepository.findById(transactionRequest.getOrganizationId());
                 if (!organization.isPresent())
                     return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
-                cgtmseTransactionRepository.save(OutcomeRequestMapper.mapCGTMSETransaction(transactionRequest,agency.get(),participant.get(),organization.get()));
+                cgtmseTransactionRepository.save(OutcomeRequestMapper.mapCGTMSETransaction(transactionRequest, agency.get(), participant.get(), organization.get()));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
+            case "GeMTransaction" : {
+                GeMTransactionRequest transactionRequest = parser.parse(data, GeMTransactionRequest.class);
+                Optional<Agency> agency = agencyRepository.findById(transactionRequest.getAgencyId());
+                if (!agency.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
+                Optional<Participant> participant = participantRepository.findById(transactionRequest.getParticipantId());
+                if (!participant.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
+                Optional<Organization> organization = organizationRepository.findById(transactionRequest.getOrganizationId());
+                if (!organization.isPresent())
+                    return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
+                geMTransactionRepository.save(OutcomeRequestMapper.mapGeMTransaction(transactionRequest, agency.get(), participant.get(), organization.get()));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+
         }
         return WorkflowResponse.builder().status(200).message("Success").data(status).build();
     }
@@ -157,7 +172,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
     private String getFieldType(Field field) {
         Class outcomeClass = field.getType();
-        if (field.getName().endsWith("Date")) {
+        if (field.getName().endsWith("Date") || field.getName().startsWith("date")) {
             return "date";
         } else if (outcomeClass.getName().equals("java.lang.String")) {
             return "text";

@@ -27,7 +27,6 @@ public class GeMTransaction {
 
     @Column(name = "procurement_date")
     private Date procurementDate;
-
     @Column(name = "product_name")
     private String productName;
 
@@ -43,8 +42,9 @@ public class GeMTransaction {
     @Column(name = "product_value")
     private Double productValue;
 
+
     @Column(name="Influenced")
-    Character influenced;
+    Boolean influenced;
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 public class CounsellorRegistrationRequestMapper {
     public static CounsellorRegistration map(CounsellorRegistrationRequest counsllorRequest) {
         return CounsellorRegistration.builder()
-                .dateOfRegistration(DateUtil.stringToDate(counsllorRequest.getDateOfRegistration(), "dd-mm-yyyy"))
+                .dateOfRegistration(DateUtil.stringToDate(counsllorRequest.getDateOfRegistration(), "dd-MM-yyyy"))
                 .nameOfCounsellor(counsllorRequest.getNameOfCounsellor())
-                .dateOfBirth(DateUtil.stringToDate(counsllorRequest.getDateOfBirth(), "dd-mm-yyyy"))
+                .dateOfBirth(DateUtil.stringToDate(counsllorRequest.getDateOfBirth(), "dd-MM-yyyy"))
                 .gender(counsllorRequest.getGender())
                 .socialCategory((counsllorRequest.getSocialCategory()))
                 .educationalQualification(counsllorRequest.getEducationalQualification())
@@ -25,7 +25,7 @@ public class CounsellorRegistrationRequestMapper {
                 .contactNo(counsllorRequest.getContactNo())
                 .altContactNo(counsllorRequest.getAltContactNo())
                 .emailId(counsllorRequest.getEmailId())
-                .dateOfSelection(DateUtil.stringToDate(counsllorRequest.getDateOfSelection(), "dd-mm-yyyy"))
+                .dateOfSelection(DateUtil.stringToDate(counsllorRequest.getDateOfSelection(), "dd-MM-yyyy"))
 //                .district(DistrictUtil.districtEntityList.get(counsllorRequest.districtId))
 //                .mandal(DistrictUtil.mandalEntityList.get(counsllorRequest.mandalId))
 //                .allotedDistrict(DistrictUtil.districtEntityList.get(counsllorRequest.allortedDistrictId))

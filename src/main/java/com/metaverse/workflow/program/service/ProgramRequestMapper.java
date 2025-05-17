@@ -23,7 +23,7 @@ public class ProgramRequestMapper {
                 .endTime(programRequest.getEndTime())
                 .spocName(programRequest.getSpocName())
                 .spocContactNo(programRequest.getSpocContactNo())
-                .location(location!=null?location:null)
+                .location(location)
                 .kpi(programRequest.getKpi())
                 .agency(agency)
                 .status(ProgramStatusConstants.PROGRAM_SCHEDULED)

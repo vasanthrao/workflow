@@ -2,6 +2,7 @@ package com.metaverse.workflow.model.outcomes;
 
 import java.sql.Date;
 
+import com.metaverse.workflow.model.ProgramSession;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -28,13 +29,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
-//@Table(name="zed_certificate_registration")
+//@Table(name="outcome_zed_certificate_registration")
 public class ZEDCertificateRegistration {
 	
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="zed_certificate_registration_i")
+    @Column(name="zed_certificate_registration_id")
 	private Long zedCertificateRegistrationId;
 	
 
@@ -60,10 +61,12 @@ public class ZEDCertificateRegistration {
     private String zedCertificationType; // Bronze / Silver / Gold
 
     @Column(name = "turnover_lakhs")
-    private Double turnoverInLakhs;
+    private Double turnoverLakhs;
+
 
     @Column(name = "energy_consumption_kwh_per_hr")
     private Double energyConsumptionKwhHr;
+
 
     @Column(name = "production_mt_per_hr")
     private Integer productionMtHr;
@@ -75,8 +78,8 @@ public class ZEDCertificateRegistration {
     Boolean influenced;
     
     @ManyToOne
-    @JoinColumn(name = "session_id")
-    private Session session;
+    @JoinColumn(name = "program_session_id")
+    private ProgramSession programSession;
 	@ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
