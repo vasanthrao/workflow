@@ -72,6 +72,9 @@ public class ProgramExpenditure {
         @Column(name = "mode_of_payment")
         private String modeOfPayment;
 
+        @Column(name = "transaction_id")
+        private String transactionId;//for upi
+
         @Column(name = "purpose")
         private String purpose;
 

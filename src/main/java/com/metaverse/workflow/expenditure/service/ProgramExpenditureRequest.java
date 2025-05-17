@@ -27,6 +27,7 @@ public class ProgramExpenditureRequest {
     private String payeeName;
     private String bankName;
     private String ifscCode;
+    private String transactionId;//for upi
     private PaymentType modeOfPayment;
     private String purpose;
     private String uploadBillUrl;

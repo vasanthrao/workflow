@@ -14,6 +14,7 @@ public class ExpenditureResponseMapper {
     public static BulkExpenditureResponse mapBulkExpenditure(BulkExpenditure expenditure /*, List<Long> fileIds*/)
     {
         return BulkExpenditureResponse.builder()
+                .transactionId(expenditure.getTransactionId())
                 .bulkExpenditureId(expenditure.getBulkExpenditureId())
                 .agencyId(expenditure.getAgency().getAgencyId())
                 .agencyName(expenditure.getAgency().getAgencyName())
@@ -37,6 +38,7 @@ public class ExpenditureResponseMapper {
     public static BulkExpenditureResponse mapBulkExpenditure(BulkExpenditure expenditure , List<Long> fileIds)
     {
         return BulkExpenditureResponse.builder()
+                .transactionId(expenditure.getTransactionId())
                 .bulkExpenditureId(expenditure.getBulkExpenditureId())
                 .agencyId(expenditure.getAgency().getAgencyId())
                 .agencyName(expenditure.getAgency().getAgencyName())
@@ -60,6 +62,7 @@ public class ExpenditureResponseMapper {
     public static BulkTransactions mapBulkExpenditureTransaction(BulkExpenditureTransaction  expenditure)
     {
         return BulkTransactions.builder()
+
                 .bulkExpenditureTransactionId(expenditure.getBulkExpenditureTransactionId())
                 .itemName(expenditure.getExpenditure().getItemName())
                 .purchaseDate(DateUtil.dateToString(expenditure.getExpenditure().getPurchaseDate(),"dd-MM-yyyy"))
@@ -86,6 +89,7 @@ public class ExpenditureResponseMapper {
     public static ProgramExpenditureResponse mapProgramExpenditure(ProgramExpenditure expenditure)
     {
         return ProgramExpenditureResponse.builder()
+                .transactionId(expenditure.getTransactionId())
                 .programExpenditureId(expenditure.getProgramExpenditureId())
                 .activityId(expenditure.getActivity().getActivityId())
                 .activityName(expenditure.getActivity().getActivityName())
@@ -113,6 +117,7 @@ public class ExpenditureResponseMapper {
     public static ProgramExpenditureResponse mapProgramExpenditure(ProgramExpenditure expenditure,List<Long> fileIds)
     {
         return ProgramExpenditureResponse.builder()
+                .transactionId(expenditure.getTransactionId())
                 .programExpenditureId(expenditure.getProgramExpenditureId())
                 .activityId(expenditure.getActivity().getActivityId())
                 .activityName(expenditure.getActivity().getActivityName())
