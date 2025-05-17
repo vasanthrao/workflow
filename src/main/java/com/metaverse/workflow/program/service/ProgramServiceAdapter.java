@@ -383,9 +383,9 @@ public class ProgramServiceAdapter implements ProgramService {
                 .findByFileType(fileType.toString());
 
         return files.stream()
-                .filter(file -> file.getProgramSession() != null && file.getProgramSession().getProgram() != null)
+                .filter(file -> file.getProgram() != null)
                 .map(file -> new ProgramFilePathInfo(
-                        file.getProgramSession().getProgram().getProgramId(),
+                        file.getProgram().getProgramId(),
                         storageService.load(file.getFilePath())
                 ))
                 .collect(Collectors.toList());

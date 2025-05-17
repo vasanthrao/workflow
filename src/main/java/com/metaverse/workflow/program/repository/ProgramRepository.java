@@ -4,6 +4,7 @@ import com.metaverse.workflow.model.Program;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,8 +15,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     Page<Program> findByAgencyAgencyId(Long agencyId, Pageable pageable);
 
     List<Program> findByAgencyAgencyId(Long agencyId);
-
-    List<Program> findAllByStatus(String status);
 
     List<Program> findByAgencyAgencyIdAndStatus(Long agencyId, String status);
 }

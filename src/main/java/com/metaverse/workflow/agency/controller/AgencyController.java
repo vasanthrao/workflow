@@ -7,6 +7,8 @@ import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.location.service.LocationResponse;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Program;
+import com.metaverse.workflow.model.ProgramSession;
+import com.metaverse.workflow.model.ProgramSessionFile;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.ProgramRepository;
 import com.metaverse.workflow.program.service.ProgramResponse;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,23 +65,51 @@ public class AgencyController {
         return ResponseEntity.ok(response);
     }
 
+    private Sort getSortOrder(String sort) {
+        if (sort == null || sort.isBlank()) {
+            return Sort.by(Sort.Direction.DESC, "programId");
+        }
+
+        String[] sortParams = sort.split(",");
+        String field = sortParams[0];
+        Sort.Direction direction = Sort.Direction.DESC;
+
+        if (sortParams.length > 1 && sortParams[1].equalsIgnoreCase("asc")) {
+            direction = Sort.Direction.ASC;
+        }
+
+        return Sort.by(direction, field);
+    }
+
     @GetMapping("/agency/programs/{id}")
     public ResponseEntity<WorkflowResponse> getProgramsByAgencyId(@PathVariable("id") Long id,
                                                                   @RequestParam(defaultValue = "0", required = false) int page,
-                                                                  @RequestParam(defaultValue = "10", required = false) int size) {
+                                                                  @RequestParam(defaultValue = "10", required = false) int size,
+                                                                  @RequestParam(defaultValue = "programId,desc", required = false) String sort
+    ) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Program> programPage;
-        if(id == -1) {
-            programPage = programRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, size, getSortOrder(sort));
+        Page<Program> programPage = (id == -1)
+                ? programRepository.findAll(pageable)
+                : programRepository.findByAgencyAgencyId(id, pageable);
 
-        } else {
-            programPage = programRepository.findByAgencyAgencyId(id, pageable);
-
+        for (Program program : programPage) {
+            List<ProgramSession> sessions = program.getProgramSessionList();
+            if (sessions != null) {
+                for (ProgramSession session : sessions) {
+                    List<ProgramSessionFile> filteredFiles = session.getProgramSessionFileList()
+                            .stream()
+                            .filter(file -> "FILE".equalsIgnoreCase(file.getFileType()))
+                            .collect(Collectors.toList());
+                    session.setProgramSessionFileList(filteredFiles);
+                }
+            }
         }
+
         List<ProgramResponse> response = programPage.getContent().stream()
                 .map(ProgramResponseMapper::mapProgram)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(
                 WorkflowResponse.builder()
                         .status(200)
