@@ -4,6 +4,8 @@ import com.metaverse.workflow.activity.repository.ActivityRepository;
 import com.metaverse.workflow.activity.repository.SubActivityRepository;
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.callcenter.repository.CallCenterVerificationRepository;
+import com.metaverse.workflow.common.constants.Constants;
+import com.metaverse.workflow.common.constants.ProgramStatusConstants;
 import com.metaverse.workflow.common.fileservice.FileSystemStorageService;
 import com.metaverse.workflow.common.fileservice.StorageService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
@@ -497,7 +499,6 @@ public class ProgramServiceAdapter implements ProgramService {
             Workbook workbook = WorkbookFactory.create(is);
             Sheet sheet = workbook.getSheetAt(0);
 
-            // Skip header row (row 0)
             for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
@@ -515,9 +516,7 @@ public class ProgramServiceAdapter implements ProgramService {
                     String kpi = getCellValue(row, 9);
                     String spocName = getCellValue(row, 10);
                     String spocContactNo = getCellValue(row, 11);
-                    String locationName = getCellValue(row, 12);
-                    Location location = locationRepository.findByLocationName(locationName);
-
+                    Location location = locationRepository.findByLocationName(Constants.YET_TO_BE_DECIDED);
                     Optional<Activity> activityOpt = activityRepository.findByActivityName(activityName);
                     Optional<SubActivity> subActivityOpt = subActivityRepository.findBySubActivityName(subActivityName);
                     if (activityOpt.isEmpty() || subActivityOpt.isEmpty()) {

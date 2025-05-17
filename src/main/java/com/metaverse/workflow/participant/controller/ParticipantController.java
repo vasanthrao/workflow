@@ -8,6 +8,7 @@ import com.metaverse.workflow.participant.service.ParticipantRequest;
 import com.metaverse.workflow.participant.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,8 +79,8 @@ public class ParticipantController {
 		return ResponseEntity.ok(mobileNumberExists);
 	}
 
-	@PostMapping("/upload")
-	public WorkflowResponse uploadExcel(@RequestParam("file") MultipartFile file,
+	@PostMapping(value = "/participants/import", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public WorkflowResponse uploadExcel(@RequestPart("file") MultipartFile file,
 										@RequestParam("programId")Long programId) {
 		try {
 			if (!file.getOriginalFilename().endsWith(".xlsx")) {
