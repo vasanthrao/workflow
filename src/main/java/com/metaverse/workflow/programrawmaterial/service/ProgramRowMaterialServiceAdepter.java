@@ -35,10 +35,11 @@ public class ProgramRowMaterialServiceAdepter implements ProgramRawMaterialServi
 
 
     @Override
-    public WorkflowResponse rawMaterialByProgramId(Long programId,int page, int size) {
+    public WorkflowResponse rawMaterialByProgramId(Long programId, int page, int size) {
         Optional<Program> program = programRepository.findById(programId);
         if (!program.isPresent())
             return WorkflowResponse.builder().status(400).message("Invalid Program").build();
+
         if (program.get().getProgramSessionList() == null)
             return WorkflowResponse.builder().status(400).message("No sessions created to program").build();
 
@@ -46,23 +47,38 @@ public class ProgramRowMaterialServiceAdepter implements ProgramRawMaterialServi
                 .map(session -> DateUtil.dateToString(session.getSessionDate(), "dd-MM-yyyy"))
                 .collect(Collectors.toSet());
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Participant> pagedParticipants = participantRepository.findByPrograms_ProgramId(programId, pageable);
-        ProgramRawMaterialResponse response = populateParticipantRawMaterial(
-                programId,
-                pagedParticipants.getContent(),
-                dateSet.size());
-        List<ProgramRawMaterial> list = programRawMaterialRepository.findByProgramRawMaterials(programId);
-        if (list == null || list.isEmpty()) {
-            return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
-                    .totalPages(pagedParticipants.getTotalPages()).build();
+        List<Participant> participants;
+        long totalElements;
+        int totalPages;
+
+        if (page == 0 && size == 0) {
+            participants = participantRepository.findByPrograms_ProgramId(programId);
+            totalElements = participants.size();
+            totalPages = 1;
         } else {
-            response = updateParticipantRawMaterials(list,response);
-            return  WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
-                    .totalPages(pagedParticipants.getTotalPages()).build();
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Participant> pagedParticipants = participantRepository.findByPrograms_ProgramId(programId, pageable);
+            participants = pagedParticipants.getContent();
+            totalElements = pagedParticipants.getTotalElements();
+            totalPages = pagedParticipants.getTotalPages();
         }
 
+        ProgramRawMaterialResponse response = populateParticipantRawMaterial(
+                programId,
+                participants,
+                dateSet.size());
+
+        List<ProgramRawMaterial> list = programRawMaterialRepository.findByProgramRawMaterials(programId);
+        if (list == null || list.isEmpty()) {
+            return WorkflowResponse.builder().status(200).message("Success").data(response)
+                    .totalElements(totalElements).totalPages(totalPages).build();
+        } else {
+            response = updateParticipantRawMaterials(list, response);
+            return WorkflowResponse.builder().status(200).message("Success").data(response)
+                    .totalElements(totalElements).totalPages(totalPages).build();
+        }
     }
+
 
     private ProgramRawMaterialResponse updateParticipantRawMaterials(List<ProgramRawMaterial> list, ProgramRawMaterialResponse response) {
         Map<Long, String> existingDetailsMap = list.stream().collect(Collectors.toMap(details -> details.getProgramAttendanceId().getParticipantId(), details -> details.getProgramRawMaterialUsedData()));

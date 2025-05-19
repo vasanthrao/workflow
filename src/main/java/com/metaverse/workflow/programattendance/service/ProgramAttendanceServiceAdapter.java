@@ -44,25 +44,43 @@ public class ProgramAttendanceServiceAdapter implements ProgramAttendanceService
                 .map(session -> DateUtil.dateToString(session.getSessionDate(), "dd-MM-yyyy"))
                 .collect(Collectors.toSet());
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Participant> pagedParticipants = participantRepository.findByPrograms_ProgramId(programId, pageable);
+        List<Participant> participants;
+        long totalElements;
+        int totalPages;
+
+        if (page == 0 && size == 0) {
+            // Fetch all participants (no pagination)
+            participants = participantRepository.findByPrograms_ProgramId(programId);
+            totalElements = participants.size();
+            totalPages = 1;
+        } else {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Participant> pagedParticipants = participantRepository.findByPrograms_ProgramId(programId, pageable);
+            participants = pagedParticipants.getContent();
+            totalElements = pagedParticipants.getTotalElements();
+            totalPages = pagedParticipants.getTotalPages();
+        }
 
         ProgramAttendanceResponse response = populateParticipantAttendace(
                 programId,
-                pagedParticipants.getContent(),
+                participants,
                 dateSet.size()
         );
 
         List<ProgramAttendance> attendanceList = programAttendanceRepository.findByProgramAttendances(programId);
-        if (attendanceList == null || attendanceList.isEmpty()) {
-            return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
-                    .totalPages(pagedParticipants.getTotalPages()).build();
-        } else {
+        if (attendanceList != null && !attendanceList.isEmpty()) {
             response = updateParticipantAttendances(attendanceList, response);
-            return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(pagedParticipants.getTotalElements())
-                    .totalPages(pagedParticipants.getTotalPages()).build();
         }
+
+        return WorkflowResponse.builder()
+                .status(200)
+                .message("Success")
+                .data(response)
+                .totalElements(totalElements)
+                .totalPages(totalPages)
+                .build();
     }
+
 
     @Override
     public WorkflowResponse updateProgramAttendance(ProgramAttendanceRequest request) {

@@ -25,4 +25,6 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     Page<Participant> findByProgramId(Long programId, Pageable pageable);
 
     Page<Participant> findByPrograms_ProgramId(Long programId, Pageable pageable);
+    List<Participant> findByPrograms_ProgramId(Long programId);
+
 }

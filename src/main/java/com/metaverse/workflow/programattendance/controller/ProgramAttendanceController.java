@@ -20,10 +20,11 @@ public class ProgramAttendanceController {
 
     @GetMapping(value = "/program/attendence/{programId}")
     public ResponseEntity<WorkflowResponse> attendenceByProgramId(@PathVariable("programId") Long programId,
-                                                                  @RequestParam(defaultValue = "0") int page,
-                                                                  @RequestParam(defaultValue = "10") int size) {
+                                                                  @RequestParam(value = "page", required = false) Integer page,
+                                                                  @RequestParam(value = "size", required = false) Integer size) {
+
         log.info("Program attendance controller, programId : {}", programId);
-        WorkflowResponse response = programAttendanceService.attendanceByProgramId(programId, page, size);
+        WorkflowResponse response = programAttendanceService.attendanceByProgramId(programId, page != null ?page :0, size != null ?size :0);
         return ResponseEntity.ok(response);
     }
 
