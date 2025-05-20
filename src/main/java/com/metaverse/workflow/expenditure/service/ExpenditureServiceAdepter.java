@@ -160,6 +160,23 @@ public class ExpenditureServiceAdepter implements ExpenditureService {
                 .data(responses)
                 .build();
     }
+    @Override
+    public List<ProgramExpenditureResponse> getAllProgramExpenditure(Long agencyId, Long programId) {
+        List<ProgramExpenditure> programExpendituresList =
+                programExpenditureRepository.findByAgency_AgencyIdAndProgram_ProgramId( agencyId, programId);
+
+        List<ProgramExpenditureResponse> responses = programExpendituresList.stream()
+                .map(programExpenditure -> {
+                    List<Long> fileIds = programSessionFileRepository
+                            .findByBulkExpenditureId(programExpenditure.getProgramExpenditureId())
+                            .stream()
+                            .map(ProgramSessionFile::getProgramSessionFileId)
+                            .toList();
+                    return ExpenditureResponseMapper.mapProgramExpenditure(programExpenditure, fileIds);
+                })
+                .toList();
+        return responses;
+    }
 
 
     @Override

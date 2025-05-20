@@ -5,9 +5,8 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import com.metaverse.workflow.agency.service.AgencyService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
-import com.metaverse.workflow.exceptions.DataException;
-import com.metaverse.workflow.program.repository.ProgramRepository;
 import com.metaverse.workflow.program.service.ProgramResponse;
 import com.metaverse.workflow.program.service.ProgramService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,12 +21,13 @@ import java.util.stream.Stream;
 
 @Service
 public class ProgramPdfGenerator  {
+
     @Autowired
-    ProgramService programService;
+    AgencyService agencyService;
 
-    public ByteArrayInputStream generateProgramsPdf(HttpServletResponse response) {
+    public ByteArrayInputStream generateProgramsPdf(HttpServletResponse response,Long agencyId) {
 
-        WorkflowResponse programs = programService.getPrograms();
+        WorkflowResponse programs = agencyService.getProgramByAgencyIdDropDown(agencyId);
         List<ProgramResponse> programList = (List<ProgramResponse>) programs.getData();
         Document document = new Document(PageSize.A4, 20, 20, 30, 30);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -41,11 +41,11 @@ public class ProgramPdfGenerator  {
             Paragraph title = new Paragraph("Program Details Report", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
-            document.add(Chunk.NEWLINE);
+            document.add(new Paragraph(""));
 
             PdfPTable table = new PdfPTable(12);
             table.setWidthPercentage(100);
-            table.setSpacingBefore(10f);
+            table.setSpacingBefore(5f);
             table.setSpacingAfter(10f);
 
 //            float[] columnWidths = {
