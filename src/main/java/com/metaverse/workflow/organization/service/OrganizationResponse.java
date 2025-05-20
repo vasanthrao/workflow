@@ -17,11 +17,11 @@ public class OrganizationResponse {
     private String organizationCategory;
     private String organizationType;
     private String udyamregistrationNo;
-    private Date dateOfRegistration;
+    private String dateOfRegistration;
     private String startupCertificateNo;
     private String natureOfStartup;
     private String areasOfWorking;
-    private Date incorporationDate;
+    private String incorporationDate;
     private String dateOfIssue;
     private String validUpto;
     private String stateId;
