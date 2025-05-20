@@ -1,4 +1,9 @@
 package com.metaverse.workflow.notifications.repository;
 
-public interface NotificationRepository {
+import com.metaverse.workflow.model.Notification;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 }

@@ -10,11 +10,14 @@ import com.metaverse.workflow.common.fileservice.FileSystemStorageService;
 import com.metaverse.workflow.common.fileservice.StorageService;
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.common.util.DateUtil;
+import com.metaverse.workflow.enums.UserType;
 import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.expenditure.repository.BulkExpenditureTransactionRepository;
 import com.metaverse.workflow.expenditure.repository.ProgramExpenditureRepository;
 import com.metaverse.workflow.location.repository.LocationRepository;
 import com.metaverse.workflow.model.*;
+import com.metaverse.workflow.notifications.dto.NotificationRequest;
+import com.metaverse.workflow.notifications.service.NotificationService;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
 import com.metaverse.workflow.program.repository.*;
@@ -88,6 +91,10 @@ public class ProgramServiceAdapter implements ProgramService {
     BulkExpenditureTransactionRepository bulkExpRepo;
     @Autowired
     FileSystemStorageService fileSystemStorageService;
+
+    @Autowired
+    NotificationService notificationService;
+
     @Autowired
     ProgramMonitoringFeedBackRepository monitoringFeedBackRepository;
 
@@ -103,6 +110,13 @@ public class ProgramServiceAdapter implements ProgramService {
             location = locationRepository.findById(request.getLocationId());
             program = programRepository.save(ProgramRequestMapper.map(request, agency.get(), location.get()));
         }
+        NotificationRequest notificationRequest = new NotificationRequest();
+        notificationRequest.setProgramId(program.getProgramId());
+        notificationRequest.setUserType(UserType.AGENCY);
+        notificationRequest.setMessage("New program scheduled: " + program.getProgramTitle());
+
+        notificationService.saveNotification(notificationRequest);
+
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.map(program)).build();
     }
 

@@ -91,12 +91,10 @@ public class ParticipantController {
 				return WorkflowResponse.builder().message(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR)).status(200).data("Invalid file format").build();
 			}
 
-			List<Participant> participants = excelHelper.excelToParticipants(file.getInputStream(),programId);
+			excelHelper.excelToParticipants(file.getInputStream(),programId);
 			return WorkflowResponse.builder().message("Success").status(200).data(null).build();
 		} catch (Exception e) {
 			return WorkflowResponse.builder().message(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR)).status(200).data("Error uploading file: " + e.getMessage()).build();
 		}
 	}
-
-
 }
