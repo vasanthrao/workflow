@@ -29,7 +29,7 @@ public interface ExpenditureService {
     WorkflowResponse getAllBulkExpenditureByAgencyId(Long agencyId);
     WorkflowResponse getAllProgramExpenditureByProgramIdByAgencyId(ExpenditureType expenditureType, Long agencyId,Long programId);
     WorkflowResponse deleteTransaction(Long transactionId) throws DataException;
-
+    List<ProgramExpenditureResponse> getAllProgramExpenditure(Long agencyId, Long programId);
 
 }
 

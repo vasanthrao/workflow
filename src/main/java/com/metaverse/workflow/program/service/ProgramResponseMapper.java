@@ -18,6 +18,7 @@ public class ProgramResponseMapper {
 
     public static ProgramResponse map(Program program) {
         return ProgramResponse.builder()
+                .mandal(program.getLocation() != null ? program.getLocation().getMandal() :null)
                 .district(program.getLocation() != null ? program.getLocation().getDistrict() :null)
                 .status(program.getStatus())
                 .programId(program.getProgramId())
@@ -70,6 +71,7 @@ public class ProgramResponseMapper {
 
     public static ProgramResponse mapProgram(Program program) {
         return ProgramResponse.builder()
+                .mandal(program.getLocation() != null ? program.getLocation().getMandal() :null)
                 .district(program.getLocation() != null ? program.getLocation().getDistrict() :null)
                 .status(program.getStatus())
                 .programId(program.getProgramId())

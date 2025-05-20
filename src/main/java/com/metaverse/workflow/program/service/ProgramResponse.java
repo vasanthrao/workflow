@@ -14,6 +14,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class  ProgramResponse {
 
+    private String mandal;
     private String district;
     private Long programId;
     private String locationName;

@@ -6,16 +6,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Month;
+import java.util.Map;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name="financial_target")
+@Table(name = "financial_target")
 public class FinancialTarget {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name ="financial_target_id")
+    @Column(name = "financial_target_id")
     private Long physicalTargetId;
 
     @ManyToOne
@@ -30,7 +33,7 @@ public class FinancialTarget {
     @JoinColumn(name = "subactivity_id", nullable = false)
     private SubActivity subactivity;
 
-    @Column(name ="year")
+    @Column(name = "year")
     private Integer year;
 
 
@@ -69,4 +72,23 @@ public class FinancialTarget {
 
     @Column(name = "mar_financial_target")
     private Double marFinancialTarget;
+
+    /*
+
+    public enum Month {
+        APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC, JAN, FEB, MAR
+    }
+
+    @ElementCollection
+    @CollectionTable(name = "financial_targets", joinColumns = @JoinColumn(name = "entity_id"))
+    @MapKeyColumn(name = "month")
+    @Column(name = "target")
+    private Map<Month, Double> financialTargets;
+
+    @ElementCollection
+    @CollectionTable(name = "physical_targets", joinColumns = @JoinColumn(name = "entity_id"))
+    @MapKeyColumn(name = "month")
+    @Column(name = "target")
+    private Map<Month, Double> physicalTargets;*/
+
 }

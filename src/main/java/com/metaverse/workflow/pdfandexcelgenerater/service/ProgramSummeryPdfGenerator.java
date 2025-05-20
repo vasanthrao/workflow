@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.stream.Stream;
 
 @Service
 public class ProgramSummeryPdfGenerator {
