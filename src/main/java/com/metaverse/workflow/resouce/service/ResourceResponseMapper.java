@@ -1,5 +1,6 @@
 package com.metaverse.workflow.resouce.service;
 
+import com.metaverse.workflow.model.Agency;
 import org.springframework.stereotype.Component;
 
 import com.metaverse.workflow.model.Resource;
@@ -20,6 +21,8 @@ public class ResourceResponseMapper {
 				.qualification(request.getQualification())
 				.specialization(request.getSpecialization())
 				.briefDescription(request.getBriefDescription())
+				.agencyNames(request.getAgency().stream().map(Agency::getAgencyName).toList())
+
 				.build();
 	}
 }

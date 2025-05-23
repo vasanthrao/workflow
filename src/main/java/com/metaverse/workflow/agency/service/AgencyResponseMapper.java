@@ -34,6 +34,14 @@ public class AgencyResponseMapper {
                 ResourceResponse.builder()
                         .resourceId(resource.getResourceId())
                         .name(resource.getName())
+                        .gender(resource.getGender())
+                        .mobileNo(resource.getMobileNo())
+                        .organizationName(resource.getOrganizationName())
+                        .email(resource.getEmail())
+                        .designation(resource.getDesignation())
+                        .qualification(resource.getQualification())
+                        .specialization(resource.getSpecialization())
+                        .briefDescription(resource.getBriefDescription())
                         .build()).collect(Collectors.toList()) : null;
 
     }

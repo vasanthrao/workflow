@@ -718,3 +718,9 @@ INSERT INTO mandal (mandal_id, mandal_name, district) VALUES
 (567, 'Ramannapeta', 32),
 (568, 'Valigonda', 32),
 (569, 'Yadagirigutta', 32);
+
+INSERT INTO district (district_id, district_name) VALUES (33, 'Hyderabad');
+
+-- Insert all Mandals for Hyderabad district with mandal_id starting from 572
+INSERT INTO mandal (mandal_id, mandal_name, district) VALUES
+(570, 'Hyderabad', 33);
