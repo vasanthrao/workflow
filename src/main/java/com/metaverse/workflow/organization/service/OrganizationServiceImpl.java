@@ -40,7 +40,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	public WorkflowResponse getOrganizations() {
-		List<Organization> organizationList = repository.findAll();
+		List<Organization> organizationList = repository.findAllByOrderByOrganizationNameAsc();
 		List<OrganizationResponse> response = OrganizationResponseMapper.mapOrganization(organizationList);
 		return WorkflowResponse.builder().message("Success").status(200).data(response).build();
 	}
