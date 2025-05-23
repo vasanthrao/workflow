@@ -1,6 +1,5 @@
 package com.metaverse.workflow.model;
 
-import com.metaverse.workflow.common.enums.OrganizationType;
 import jakarta.persistence.*;
 import lombok.*;
 

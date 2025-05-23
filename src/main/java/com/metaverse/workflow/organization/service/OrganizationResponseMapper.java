@@ -1,5 +1,6 @@
 package com.metaverse.workflow.organization.service;
 
+import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.location.service.LocationResponse;
 import com.metaverse.workflow.model.Location;
 import org.springframework.stereotype.Component;
@@ -18,17 +19,36 @@ public class OrganizationResponseMapper {
 	{
 		List<OrganizationResponse.Sector> sectors = request.getSectors().stream().map(sector -> OrganizationResponse.Sector.builder().sectorId(sector.getSectorId()).sectorName(sector.getSectorName()).build()).toList();
 		return OrganizationResponse.builder().organizationId(request.getOrganizationId())
-				.organizationName(request.getOrganizationName()).organizationCategory(request.getOrganizationCategory())
-				.organizationType(request.getOrganizationType()).udyamregistrationNo(request.getUdyamregistrationNo())
-				.dateOfRegistration(request.getDateOfRegistration()).startupCertificateNo(request.getStartupCertificateNo())
-				.natureOfStartup(request.getNatureOfStartup()).areasOfWorking(request.getAreasOfWorking())
-				.incorporationDate(request.getIncorporationDate()).dateOfIssue(request.getDateOfIssue()).validUpto(request.getValidUpto())
-				.stateId(request.getStateId()).distId(request.getDistId()).mandal(request.getMandal()).town(request.getTown())
-				.streetNo(request.getStreetNo()).houseNo(request.getHouseNo()).latitude(request.getLatitude()).longitude(request.getLongitude())
-				.contactNo(request.getContactNo()).email(request.getEmail()).contactNo(request.getContactNo()).email(request.getEmail())
-				.website(request.getWebsite()).ownerName(request.getOwnerName()).ownerContactNo(request.getOwnerContactNo())
-				.ownerEmail(request.getOwnerEmail()).ownerEmail(request.getOwnerEmail()).ownerAddress(request.getOwnerAddress())
-				.nameOfTheSHG(request.getNameOfTheSHG()).nameOfTheVO(request.getNameOfTheVO()).gramaPanchayat(request.getGramaPanchayat())
+				.organizationName(request.getOrganizationName())
+				.organizationCategory(request.getOrganizationCategory())
+				.organizationType(request.getOrganizationType())
+				.udyamregistrationNo(request.getUdyamregistrationNo())
+				.dateOfRegistration(DateUtil.dateToString(request.getDateOfRegistration(),"dd-MM-yyyy"))
+				.startupCertificateNo(request.getStartupCertificateNo())
+				.natureOfStartup(request.getNatureOfStartup())
+				.areasOfWorking(request.getAreasOfWorking())
+				.incorporationDate(DateUtil.dateToString(request.getIncorporationDate(),"dd-MM-yyyy"))
+				.dateOfIssue(request.getDateOfIssue())
+				.validUpto(request.getValidUpto())
+				.stateId(request.getStateId())
+				.distId(request.getDistId())
+				.mandal(request.getMandal())
+				.town(request.getTown())
+				.streetNo(request.getStreetNo())
+				.houseNo(request.getHouseNo())
+				.latitude(request.getLatitude())
+				.longitude(request.getLongitude())
+				.contactNo(request.getContactNo())
+				.email(request.getEmail())
+				.email(request.getEmail())
+				.website(request.getWebsite())
+				.ownerName(request.getOwnerName())
+				.ownerContactNo(request.getOwnerContactNo())
+				.ownerEmail(request.getOwnerEmail())
+				.ownerAddress(request.getOwnerAddress())
+				.nameOfTheSHG(request.getNameOfTheSHG())
+				.nameOfTheVO(request.getNameOfTheVO())
+				.gramaPanchayat(request.getGramaPanchayat()).nameOfTheSHG(request.getNameOfTheSHG()).nameOfTheVO(request.getNameOfTheVO()).gramaPanchayat(request.getGramaPanchayat())
 				.sectorList(sectors).build();
 	}
 
@@ -40,11 +60,11 @@ public class OrganizationResponseMapper {
 						.organizationCategory(organization.getOrganizationCategory())
 						.organizationType(organization.getOrganizationType())
 						.udyamregistrationNo(organization.getUdyamregistrationNo())
-						.dateOfRegistration(organization.getDateOfRegistration())
+						.dateOfRegistration(DateUtil.dateToString(organization.getDateOfRegistration(),"dd-MM-yyyy"))
 						.startupCertificateNo(organization.getStartupCertificateNo())
 						.natureOfStartup(organization.getNatureOfStartup())
 						.areasOfWorking(organization.getAreasOfWorking())
-						.incorporationDate(organization.getIncorporationDate())
+						.incorporationDate(DateUtil.dateToString(organization.getIncorporationDate(),"dd-MM-yyyy"))
 						.dateOfIssue(organization.getDateOfIssue())
 						.validUpto(organization.getValidUpto())
 						.stateId(organization.getStateId())

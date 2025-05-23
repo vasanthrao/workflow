@@ -24,5 +24,6 @@ public class ResourceResponse {
 	    private String qualification;
 	    private String specialization;
 	    private String briefDescription;
+	    private List<String> agencyNames;
 	    private List<Agency> agency;
 }
