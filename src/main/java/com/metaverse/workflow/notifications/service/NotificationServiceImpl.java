@@ -31,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         Notification notification = Notification.builder()
-                .programId(program)
+                .program(program)
                 .callCenterId(request.getCallCenterId())
                 .userType(request.getUserType().toString())
                 .message(request.getMessage())

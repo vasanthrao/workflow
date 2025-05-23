@@ -22,8 +22,8 @@ public class Notification {
     protected Long id;
 
     @ManyToOne
-    @JoinColumn(name = "program_id")
-    private Program programId;
+    @JoinColumn(name = "program")
+    private Program program;
 
     @Column(name="call_center_id")
     private Long callCenterId;

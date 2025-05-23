@@ -17,6 +17,7 @@ import com.metaverse.workflow.expenditure.repository.ProgramExpenditureRepositor
 import com.metaverse.workflow.location.repository.LocationRepository;
 import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.notifications.dto.NotificationRequest;
+import com.metaverse.workflow.notifications.repository.NotificationRepository;
 import com.metaverse.workflow.notifications.service.NotificationService;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.participant.service.ParticipantResponse;
@@ -97,6 +98,9 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     ProgramMonitoringFeedBackRepository monitoringFeedBackRepository;
+
+    @Autowired
+    NotificationRepository notificationRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -598,10 +602,12 @@ public class ProgramServiceAdapter implements ProgramService {
             List<ProgramSessionFile> sessionFiles = programSessionFileRepository.findByProgramSessionId(programId);
             fileSystemStorageService.deleteAll(sessionFiles.stream().map(ProgramSessionFile::getFilePath).toList());
             programSessionFileRepository.deleteByProgramExpenditureProgramProgramId(programId);
+            programSessionFileRepository.deleteByProgramProgramId(programId);
             bulkExpRepo.deleteByProgramProgramId(programId);
             mediaCoverageRepository.deleteByProgramProgramId(programId);
             programSessionRepository.deleteByProgramProgramId(programId);
             programExpenditureRepo.deleteByProgramProgramId(programId);
+            notificationRepository.deleteByProgramProgramId(programId);
 
             em.createNativeQuery("DELETE FROM program_participant_temp WHERE program_id = :programId")
                     .setParameter("programId", programId)

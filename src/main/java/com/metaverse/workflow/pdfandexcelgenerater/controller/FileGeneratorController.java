@@ -95,7 +95,7 @@ public class FileGeneratorController {
         programExcelGenerator.generateProgramsExcel(response);
     }
 
-    @GetMapping(value = "/program/summery/pdf/{programId}", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/program/summary/pdf/{programId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<?> generateProgramSummeryPDF(@PathVariable Long programId, HttpServletResponse response) {
 
         ByteArrayInputStream bis ;

@@ -26,4 +26,6 @@ public interface ProgramSessionFileRepository extends JpaRepository<ProgramSessi
     void deleteByProgramExpenditureProgramProgramId(Long programId);
 
     List<ProgramSessionFile> findByProgramSession_Program_ProgramId(Long programId);
+
+    void deleteByProgramProgramId(Long programId);
 }
