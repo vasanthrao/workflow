@@ -94,4 +94,8 @@ public class Organization {
             inverseJoinColumns = @JoinColumn(name = "sector_id")
     )
     private List<Sector> sectors;
+    @Column(name="department_name")
+    private String departmentName;
+    @Column(name="designation")
+    private String designation;
 }

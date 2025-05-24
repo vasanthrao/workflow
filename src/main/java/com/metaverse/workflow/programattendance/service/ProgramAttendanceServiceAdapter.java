@@ -108,11 +108,17 @@ public class ProgramAttendanceServiceAdapter implements ProgramAttendanceService
         return ProgramAttendanceResponse.builder().programId(programId).participantAttendanceList(list).build();
     }
 
-    private Character[] populateAttendaceData(Integer days) {
+    /*private Character[] populateAttendaceData(Integer days) {
         Character[] charArray = new Character[days];
         for (int i = 0; i < days; i++) {
             charArray[i] = 'A';
         }
+        return charArray;
+    }*/
+   private Character[] populateAttendaceData(Integer days) {
+        Character[] charArray = new Character[days];
+        Character defaultChar = (days == 1) ? 'P' : 'A';
+        Arrays.fill(charArray, defaultChar);
         return charArray;
     }
 
