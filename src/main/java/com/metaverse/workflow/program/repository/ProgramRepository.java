@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -20,6 +21,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     List<Program> findByAgencyAgencyIdAndStatus(Long agencyId, String status);
 
-    @Query("SELECT p FROM Program p WHERE p.startDate < :thresholdDate AND p.overdue = false")
-    List<Program> findProgramsWithStartDateBefore(@Param("thresholdDate") LocalDate thresholdDate);
+    @Query("SELECT p FROM Program p WHERE p.startDate = :targetDate AND p.overdue = false")
+    List<Program> findProgramsWithStartDateEqual(@Param("targetDate") Date targetDate);
 }
