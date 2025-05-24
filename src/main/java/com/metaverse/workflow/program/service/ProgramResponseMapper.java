@@ -89,6 +89,7 @@ public class ProgramResponseMapper {
                 .startTime(program.getStartTime())
                 .endTime(program.getEndTime())
                 .spocName(program.getSpocName())
+                .overdue(program.isOverdue())
                 .spocContactNo(program.getSpocContactNo())
                 .programLocation(program.getLocation().getLocationId())
                 .programLocationName(program.getLocation().getLocationName())
