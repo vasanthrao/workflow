@@ -20,8 +20,8 @@ public class OverdueProgramUpdater {
     private ProgramRepository programRepository;
 
     @Transactional
-//    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
-    @Scheduled(cron = "0 * * * * ?") //min update
+    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
+//    @Scheduled(cron = "0 * * * * ?") //min update
     public void updateOverduePrograms() {
         Date twoDaysAgo = java.sql.Date.valueOf(LocalDate.now().minusDays(2));
 
