@@ -684,7 +684,7 @@ public class ProgramServiceAdapter implements ProgramService {
             Date startDate = program.getStartDate();
             Date endDate = program.getEndDate();
             String status = program.getStatus();
-
+           // Boolean b=program.get
             if (startDate == null || endDate == null) continue;
 
 

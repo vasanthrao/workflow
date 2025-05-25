@@ -13,8 +13,8 @@ public class OrganizationRequestMapper {
 	public static Organization map(OrganizationRequest request, List<Sector> sectors)
 	{
 		return Organization.builder().organizationId(request.getOrganizationId())
-				.departmentName(request.getDepartmentName())
-				.designation(request.getDesignation())
+//				.departmentName(request.getDepartmentName())
+//				.designation(request.getDesignation())
 				.organizationName(request.getOrganizationName())
 				.organizationCategory(request.getOrganizationCategory())
 				.organizationType(request.getOrganizationType())
@@ -49,8 +49,8 @@ public class OrganizationRequestMapper {
 	public static Organization map(OrganizationRequest request)
 	{
 		return Organization.builder().organizationId(request.getOrganizationId())
-				.departmentName(request.getDepartmentName())
-				.designation(request.getDesignation())
+//				.departmentName(request.getDepartmentName())
+//				.designation(request.getDesignation())
 				.organizationName(request.getOrganizationName())
 				.organizationCategory(request.getOrganizationCategory())
 				.organizationType(request.getOrganizationType())

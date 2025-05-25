@@ -23,4 +23,5 @@ public class ResourceRequest {
     private String specialization;
     private String briefDescription;
     private Set<Long> agencyIds;
+    private  Boolean isVIP;
 }
