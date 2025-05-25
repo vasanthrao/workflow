@@ -6,14 +6,13 @@ import com.metaverse.workflow.exceptions.DataException;
 
 import java.io.*;
 
-import com.metaverse.workflow.model.FileType;
-import com.metaverse.workflow.model.ProgramFilePathInfo;
-import com.metaverse.workflow.model.ProgramFileResponse;
+import com.metaverse.workflow.model.*;
 import com.metaverse.workflow.program.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.parser.JSONParser;
@@ -21,6 +20,7 @@ import net.minidev.json.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +36,9 @@ public class ProgramController {
 
     @Autowired
     ProgramService programService;
+
+    @Autowired
+    OverdueProgramUpdater overdueProgramUpdater;
 
     @Operation(summary = "Create program", responses = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = WorkflowResponse.class))),
@@ -316,4 +319,13 @@ public class ProgramController {
         return ResponseEntity.ok(programService.deleteProgramAndDependencies(programId));
     }
 
+    @PutMapping("/{id}/update-overdue")
+    public ResponseEntity<ProgramUpdateResponse> updateOverdueById(@PathVariable Long id) {
+        try {
+            ProgramUpdateResponse response = overdueProgramUpdater.updateOverdueStatusById(id);
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

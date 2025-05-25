@@ -60,7 +60,10 @@ public class Program {
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
-
+    @Column(name = "overdue", nullable = false)
+    private boolean overdue;
+    @Column(name = "version")
+    private Long version;
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProgramSession> programSessionList;
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)

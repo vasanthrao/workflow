@@ -153,9 +153,20 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Override
     public WorkflowResponse getProgramParticipants(Long id, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Participant> participantPage = participantRepository.findByProgramId(id, pageable);
-        List<ParticipantResponse> response = ProgramResponseMapper.mapProgramParticipants(participantPage.getContent());
+        Pageable pageable;
+        Page<Participant> participantPage;
+        List<ParticipantResponse> response;
+        if(id == -1) {
+            pageable = PageRequest.of(page, size);
+            participantPage = participantRepository.findAll(pageable);
+            response = ProgramResponseMapper.mapProgramParticipants(participantPage.getContent());
+
+        }
+        else {
+            pageable = PageRequest.of(page, size);
+            participantPage = participantRepository.findByProgramId(id, pageable);
+            response = ProgramResponseMapper.mapProgramParticipants(participantPage.getContent());
+        }
         return WorkflowResponse.builder().status(200).message("Success").data(response).totalElements(participantPage.getTotalElements()).totalPages(participantPage.getTotalPages()).build();
     }
 
