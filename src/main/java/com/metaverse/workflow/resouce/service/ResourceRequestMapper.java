@@ -23,6 +23,7 @@ public class ResourceRequestMapper {
 				.specialization(request.getSpecialization())
 				.briefDescription(request.getBriefDescription())
 				.agency(agencies)
+				.isVIP(request.getIsVIP())
 				.build();
 	}
 }

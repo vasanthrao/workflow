@@ -34,5 +34,6 @@ public class ProgramAttendanceResponse {
         private Character[] attendanceData;
     }
 
+
 }
 

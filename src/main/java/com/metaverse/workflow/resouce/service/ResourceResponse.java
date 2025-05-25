@@ -26,4 +26,5 @@ public class ResourceResponse {
 	    private String briefDescription;
 	    private List<String> agencyNames;
 	    private List<Agency> agency;
+		private Boolean isVIP;
 }

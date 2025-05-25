@@ -22,7 +22,7 @@ public class ResourceResponseMapper {
 				.specialization(request.getSpecialization())
 				.briefDescription(request.getBriefDescription())
 				.agencyNames(request.getAgency().stream().map(Agency::getAgencyName).toList())
-
+				.isVIP(request.getIsVIP())
 				.build();
 	}
 }

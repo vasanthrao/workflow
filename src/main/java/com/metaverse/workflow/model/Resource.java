@@ -41,6 +41,9 @@ public class Resource {
   
     @Column(name="brief_description")
     private String briefDescription;
+
+    @Column(name="is_vip")
+    private Boolean isVIP;
     
     @ManyToMany
     @JoinTable(name = "agency_resource",

@@ -45,8 +45,8 @@ public class OrganizationRequest {
     private String nameOfTheVO;
     private String gramaPanchayat;
     private List<Integer> sectorIds;
-    private String departmentName;
-    private String designation;
+//    private String departmentName;
+//    private String designation;
 
 
 }

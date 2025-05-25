@@ -32,7 +32,8 @@ public class FileGeneratorController {
     ProgramSummeryPdfGenerator programSummeryPdfGenerator;
     @Autowired
     ProgramSummeryExcelGenerator programSummeryExcelGenerator;
-
+    @Autowired
+    AttendancePDFGenerator attendancePDFGenerator;
     @Autowired
     SessionPDFGenerator sessionPDFGenerator;
     @Autowired
@@ -61,6 +62,23 @@ public class FileGeneratorController {
                     .body("Program with ID " + programId + " not found.");
         }
         ByteArrayInputStream bis = sessionPDFGenerator.generateProgramSessionsPdf(programId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=users.pdf");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+
+    }
+    @GetMapping(value = "/program/attendance/pdf/{programId}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<?> generateAttendancePdfReport( @PathVariable Long programId) throws IOException {
+        if (!programRepository.existsById(programId)) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body("Program with ID " + programId + " not found.");
+        }
+        ByteArrayInputStream bis = attendancePDFGenerator.programAttendancePDF(programId);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=users.pdf");
         return ResponseEntity.ok()
@@ -129,5 +147,7 @@ public class FileGeneratorController {
 
         expenditureExcelGenerator.generateProgramsExcel(response, programId, agencyId);
     }
+
+
 
 }
