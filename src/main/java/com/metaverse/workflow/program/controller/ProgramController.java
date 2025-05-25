@@ -74,9 +74,10 @@ public class ProgramController {
 
     @GetMapping("/program/participants/{programId}")
     public ResponseEntity<WorkflowResponse> getParticipantsByProgramId(@PathVariable("programId") Long programId,
+                                                                       @RequestParam(value = "agencyId", required = false) Long agencyId,
                                                                        @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size) {
-        WorkflowResponse response = programService.getProgramParticipants(programId, page, size);
+        WorkflowResponse response = programService.getProgramParticipants(programId,agencyId, page, size);
         return ResponseEntity.ok(response);
     }
 

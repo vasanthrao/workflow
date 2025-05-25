@@ -14,7 +14,7 @@ public interface  ProgramService {
     WorkflowResponse createProgram(ProgramRequest request);
     WorkflowResponse createProgramSession(ProgramSessionRequest request, List<MultipartFile> files);
     WorkflowResponse getProgramById(Long id);
-    WorkflowResponse getProgramParticipants(Long id, int page, int size);
+    WorkflowResponse getProgramParticipants(Long id, Long agencyId, int page, int size);
     public WorkflowResponse getPrograms();
     WorkflowResponse updateProgram(ProgramRequest request);
     WorkflowResponse saveProgramType(ProgramTypeRequest programTypeRequest);

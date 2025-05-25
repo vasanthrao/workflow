@@ -20,8 +20,8 @@ public class OverdueProgramUpdater {
     private ProgramRepository programRepository;
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
-//    @Scheduled(cron = "0 * * * * ?") //min update
+//    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
+    @Scheduled(cron = "0 * * * * ?") //min update
     public void updateOverduePrograms() {
         Date twoDaysAgo = java.sql.Date.valueOf(LocalDate.now().minusDays(2));
 
@@ -30,7 +30,7 @@ public class OverdueProgramUpdater {
         for (Program program : overduePrograms) {
             System.out.println("Two days ago: " + twoDaysAgo);
             System.out.println("Found programs: " + overduePrograms.size());
-            program.setOverdue(true);
+            program.setOverdue(false);
             Long currentVersion = program.getVersion();
             if (currentVersion == null) {
                 program.setVersion(1L);
