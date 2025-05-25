@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class ProgramStatusSummery {
     private Integer programScheduled;
-    private Integer programsCompleted;
-    private Integer programsOverdue;
     private Integer programInProcess;
-    private Integer programDue;
+    private Integer programsCompleted;
+    private Integer programsCompletedDataPending;
+    private Integer programYetBegin;
     private Integer programOverDue;
 }

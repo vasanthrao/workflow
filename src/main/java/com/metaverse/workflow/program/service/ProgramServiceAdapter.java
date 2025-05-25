@@ -677,14 +677,14 @@ public class ProgramServiceAdapter implements ProgramService {
             programs = programRepository.findByAgencyAgencyId(agencyId);
         }
 
-        int completed = 0, overdue = 0, inProcess = 0, due = 0;
+        int completed = 0, inProcess = 0,completedDataPending =0 , yetToBegin =0  ,overDue = 0;
         Date today = new Date();
 
         for (Program program : programs) {
             Date startDate = program.getStartDate();
             Date endDate = program.getEndDate();
             String status = program.getStatus();
-           // Boolean b=program.get
+
             if (startDate == null || endDate == null) continue;
 
 
@@ -692,12 +692,15 @@ public class ProgramServiceAdapter implements ProgramService {
                 if ("Program Expenditure Updated".equalsIgnoreCase(status)) {
                     completed++;
                 } else {
-                    overdue++;
+                    completedDataPending++;
                 }
             } else if (!today.before(startDate) && !today.after(endDate)) {
                 inProcess++;
             } else if (startDate.after(today)) {
-                due++;
+                yetToBegin++;
+            } else if (program.getVersion() != null){
+                completedDataPending--;
+                overDue++;
             }
         }
 
@@ -706,13 +709,15 @@ public class ProgramServiceAdapter implements ProgramService {
                 .status(200)
                 .data(ProgramStatusSummery.builder()
                         .programScheduled(programs.size())
-                        .programsCompleted(completed)
-                        .programsOverdue(overdue)
                         .programInProcess(inProcess)
-                        .programDue(due)
+                        .programsCompleted(completed)
+                        .programsCompletedDataPending(completedDataPending)
+                        .programYetBegin(yetToBegin)
+                        .programOverDue(overDue)
                         .build())
                 .build();
     }
+
 
 }
 
