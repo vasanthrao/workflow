@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public class ParticipantResponseForESDPTraining {
 
+
     private Long organizationId;
     private String organizationName;
     private String organizationCategory;
@@ -37,4 +38,5 @@ public class ParticipantResponseForESDPTraining {
     private Character isCertificateIssued;
     private String certificateIssueDate;
     private String needAssessmentMethodology;
+    private List<Long> programIds;
 }

@@ -45,7 +45,7 @@ public class ProgramExcelGenerator {
             cell.setCellValue(headers[i]);
             cell.setCellStyle(headerStyle);
         }
-        Integer dataRowIndex = 1;
+        int dataRowIndex = 1;
         for (ProgramResponse res : programList) {
             HSSFRow dataRow = sheet.createRow(dataRowIndex);
             dataRow.createCell(0).setCellValue(res.getProgramTitle());

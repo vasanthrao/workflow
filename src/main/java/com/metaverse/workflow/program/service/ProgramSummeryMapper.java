@@ -71,6 +71,12 @@ public class ProgramSummeryMapper {
                                 .filter(participant -> participant.getOrganization() == null)
                                 .count()
                 )
+                .noOfDepartment(
+                        program.getParticipants().stream()
+                                .filter(participant -> participant.getOrganization() !=null)
+                                .filter(participant -> "department".equalsIgnoreCase(participant.getOrganization().getOrganizationType()))
+                                .count()
+                )
                 .build();
     }
 }

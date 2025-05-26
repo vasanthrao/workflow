@@ -26,6 +26,7 @@ public class ProgramSummary {
     private  Long noOfSHGs;
     private  Long noOfMSMEs;
     private  Long noOfStartups;
+    private  Long noOfDepartment;
     private  Long noOfAspirants;
 
 }
