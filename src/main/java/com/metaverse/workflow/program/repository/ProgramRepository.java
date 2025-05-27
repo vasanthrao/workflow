@@ -23,4 +23,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     @Query("SELECT p FROM Program p WHERE p.startDate = :targetDate AND p.overdue = false")
     List<Program> findProgramsWithStartDateEqual(@Param("targetDate") Date targetDate);
+
+    Boolean existsByLocation_LocationId(Long locationId);
 }

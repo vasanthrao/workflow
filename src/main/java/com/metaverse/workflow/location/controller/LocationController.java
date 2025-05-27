@@ -2,14 +2,12 @@ package com.metaverse.workflow.location.controller;
 
 import java.util.List;
 
+import com.metaverse.workflow.common.util.RestControllerBase;
+import com.metaverse.workflow.exceptions.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
 import com.metaverse.workflow.location.service.LocationRequest;
@@ -42,5 +40,22 @@ public class LocationController {
 		WorkflowResponse response = locationSercice.getLocations();
 		return ResponseEntity.ok(response);
 	}
-	
+	@PutMapping("/locations/update/{locationId}")
+	public ResponseEntity<?> updateLocation(@PathVariable Long locationId, @RequestBody LocationRequest locationRequest) {
+		try {
+			return ResponseEntity.ok(locationSercice.updateLocation(locationId, locationRequest));
+		} catch (DataException e) {
+			return RestControllerBase.error(e);
+		}
+	}
+	@DeleteMapping("locations/delete/{locationId}")
+	public ResponseEntity<?> deleteLocation(@PathVariable Long locationId) {
+		try {
+			return ResponseEntity.ok(locationSercice.deleteLocation(locationId));
+		} catch (DataException e) {
+			return RestControllerBase.error(e);
+		}
+	}
+
+
 }

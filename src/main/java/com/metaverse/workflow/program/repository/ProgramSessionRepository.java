@@ -11,4 +11,6 @@ public interface ProgramSessionRepository extends JpaRepository<ProgramSession, 
     void deleteByProgramProgramId(Long programId);
 
     List<ProgramSession> findByProgram_ProgramId(Long programId);
+
+    Boolean existsByResource_ResourceId(Long resourceId);
 }
