@@ -40,7 +40,13 @@ public class FileGeneratorController {
     ProgramRepository programRepository;
     @Autowired
     ParticipantsPDFGenerator participantsPDFGenerator;
-
+    @Autowired
+    LocationExcelGenerator locationExcelGenerator;
+    @Autowired
+    ResourceExcelGenerator resourceExcelGenerator;
+    @Autowired
+    OrganizationExcelGenerator organizationExcelGenerator;
+    
     @GetMapping(value = "/program/pdf/{agencyId}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> generatePdfReport(HttpServletResponse response,@PathVariable Long agencyId) throws IOException {
         ByteArrayInputStream bis = programPdfGenerator.generateProgramsPdf(response,agencyId );
@@ -111,6 +117,25 @@ public class FileGeneratorController {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;fileName=users.xls");
         programExcelGenerator.generateProgramsExcel(response);
+    }
+    @GetMapping("/organization/excel")
+    public void generateOrganizationExcelReport(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;fileName=users.xls");
+        organizationExcelGenerator.exportOrganizationsToExcel(response);
+    }
+
+    @GetMapping("/location/excel/{agencyId}")
+    public void generateLocationExcelReport(HttpServletResponse response,@PathVariable Long agencyId) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;fileName=users.xls");
+        locationExcelGenerator.locationsExportToExcel(response,agencyId);
+    }
+    @GetMapping("/resource/excel/{agencyId}")
+    public void generateResourceExcelReport(HttpServletResponse response,@PathVariable Long agencyId) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;fileName=users.xls");
+        resourceExcelGenerator.exportAgencyResourcesToExcel(response,agencyId);
     }
 
     @GetMapping(value = "/program/summary/pdf/{programId}", produces = MediaType.APPLICATION_PDF_VALUE)

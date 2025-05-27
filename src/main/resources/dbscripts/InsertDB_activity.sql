@@ -36,8 +36,10 @@ insert into activity_sub_activity(activity_id,sub_activity_id)values(10,46);
 
 -- Insert Activity SubActivity for CITD_11 agency
 insert into activity(activity_id,activity_name,agency_id) values(11,'Awareness Program',5),(12,'Workshop',5);
-insert into sub_activity(sub_activity_id,sub_activity_name) values(47,'Orientation Program on Component'),(48,'To identify the CFCs & Prototypes');
-insert into activity_sub_activity(activity_id,sub_activity_id)values(11,47),(12,48);
+insert into sub_activity(sub_activity_id,sub_activity_name) values(47,'Orientation Program on Component')
+,(48,'To identify the CFCs & Prototypes'),(105,'Brainstorming session'),(106,'Benchmarking'),(107,'Validation Program for final report');
+insert into activity_sub_activity(activity_id,sub_activity_id)values(11,47),(12,48),(12,105),(12,106),(12,107);
+
 
 -- Insert Activity SubActivity for CIPET_!! agency
 insert into activity(activity_id,activity_name,agency_id) values(13,'Awareness Program',6),(14,'Workshop',6);

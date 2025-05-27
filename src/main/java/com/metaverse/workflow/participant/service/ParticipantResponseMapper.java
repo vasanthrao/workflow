@@ -1,7 +1,9 @@
 package com.metaverse.workflow.participant.service;
 
+import com.metaverse.workflow.common.util.CommonUtil;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.Participant;
+import com.metaverse.workflow.model.Program;
 
 import java.util.stream.Collectors;
 
@@ -30,8 +32,8 @@ public class ParticipantResponseMapper {
 				.organizationId(participant.getOrganization() != null ? participant.getOrganization().getOrganizationId() : null)
 				.programIds(participant.getPrograms() != null ? participant.getPrograms().stream().map(program -> program.getProgramId()).collect(Collectors.toList()) : null)
 				.organizationName(participant.getOrganization() != null ? participant.getOrganization().getOrganizationName() : null)
-				.district(participant.getOrganization() != null ? participant.getOrganization().getDistId() : null)
-				.mandal(participant.getOrganization() != null ? participant.getOrganization().getMandal() : null)
+				.district(participant.getOrganization() != null ? CommonUtil.districtMap.get( Integer.valueOf(participant.getOrganization().getDistId())) : null)
+				.mandal(participant.getOrganization() != null ? CommonUtil.districtMap.get( Integer.valueOf(participant.getOrganization().getMandal())) : null)
 				.nameOfVO(participant.getOrganization() != null ? participant.getOrganization().getNameOfTheVO() : null)
 				.sectorList(participant.getOrganization() != null ? participant.getOrganization().getSectors() : null)
 				.build();
@@ -49,7 +51,7 @@ public class ParticipantResponseMapper {
 				.natureOfStartup(participant.getOrganization() != null ? participant.getOrganization().getNatureOfStartup() : null)
 				.areasOfWorking(participant.getOrganization() != null ? participant.getOrganization().getAreasOfWorking() : null)
 				.programDates(participant.getPrograms().stream().map(program -> dateToString(program.getStartDate(), "dd-MM-yyyy"))
-						.collect(Collectors.toList()))
+						            .collect(Collectors.toList()))
 				.sectors(participant.getOrganization() != null ? participant.getOrganization().getSectors(): null)
 				.memberId(participant.getMemberId())
 				.participantId(participant.getParticipantId())
@@ -68,6 +70,7 @@ public class ParticipantResponseMapper {
 				.isCertificateIssued((participant.getIsCertificateIssued()))
 				.certificateIssueDate(DateUtil.dateToString(participant.getCertificateIssueDate(),"dd-MM-yyyy"))
 				.needAssessmentMethodology(participant.getNeedAssessmentMethodology())
+				.programIds(participant.getPrograms().stream().map(Program::getProgramId).collect(Collectors.toList()))
 				.build();
 	}
 

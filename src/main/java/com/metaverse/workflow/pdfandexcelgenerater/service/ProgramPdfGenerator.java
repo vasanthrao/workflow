@@ -29,7 +29,7 @@ public class ProgramPdfGenerator  {
 
         WorkflowResponse programs = agencyService.getProgramByAgencyIdDropDown(agencyId);
         List<ProgramResponse> programList = (List<ProgramResponse>) programs.getData();
-        Document document = new Document(PageSize.A4, 20, 20, 30, 30);
+        Document document = new Document(PageSize.A4.rotate(), 20, 20, 30, 30);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         try {
@@ -48,23 +48,7 @@ public class ProgramPdfGenerator  {
             table.setSpacingBefore(5f);
             table.setSpacingAfter(10f);
 
-//            float[] columnWidths = {
-//                    1.2f, 1.2f, 2.0f, 1.2f, 2.0f, 1.5f, 2.0f, 1.5f,
-//                    1.5f, 1.5f, 1.5f, 2.0f, 1.5f, 2.0f, 2.0f, 1.5f
-//            };
-//            table.setWidths(columnWidths);
 
-            /*Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.WHITE);
-            Stream.of("ProgramId", "ActivityId", "ActivityName", "SubActivityId", "subActivityName", "AgencyId", "AgencyName",
-                    "StartDate", "EndDate", "StartTime", "EndTime", "SpocName", "pocContactNo", "ProgramLocation",
-                    "ProgramLocationName", "Kpi").forEach(headerTitle -> {
-                PdfPCell header = new PdfPCell();
-                header.setBackgroundColor(new Color(63, 81, 181)); // Indigo
-                header.setPadding(8);
-                header.setPhrase(new Phrase(headerTitle, headerFont));
-                header.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(header);
-            });*/
             Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.WHITE);
             Stream.of("ProgramName", "ActivityName",  "subActivityName", "AgencyName",
                     "StartDate", "EndDate", "StartTime", "EndTime", "SpocName", "pocContactNo",

@@ -25,4 +25,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     List<Program> findProgramsWithStartDateTwoDaysAgo();
 
     List<Program> findByAgencyAgencyIdAndStatusIn(Long agencyId, List<String> statuses);
+
+    Boolean existsByLocation_LocationId(Long locationId);
 }
