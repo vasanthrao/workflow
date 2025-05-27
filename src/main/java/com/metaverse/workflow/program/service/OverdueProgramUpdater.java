@@ -23,14 +23,12 @@ public class OverdueProgramUpdater {
 //    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
     @Scheduled(cron = "0 * * * * ?") //min update
     public void updateOverduePrograms() {
-        Date twoDaysAgo = java.sql.Date.valueOf(LocalDate.now().minusDays(2));
-
-        List<Program> overduePrograms = programRepository.findProgramsWithStartDateEqual(twoDaysAgo);
-
+        List<Program> overduePrograms = programRepository.findProgramsWithStartDateTwoDaysAgo();
+        System.out.println("-----------------overdue programs-------------- " +overduePrograms.size());
         for (Program program : overduePrograms) {
-            System.out.println("Two days ago: " + twoDaysAgo);
+            System.out.println("Two days ago: " + program.getProgramId());
             System.out.println("Found programs: " + overduePrograms.size());
-            program.setOverdue(false);
+            program.setOverdue(true);
             Long currentVersion = program.getVersion();
             if (currentVersion == null) {
                 program.setVersion(1L);
@@ -46,7 +44,7 @@ public class OverdueProgramUpdater {
         Program program = programRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Program not found with ID: " + id));
 
-        program.setOverdue(true);
+        program.setOverdue(false);
         program.setVersion(program.getVersion() + 1);
         programRepository.save(program);
         return new ProgramUpdateResponse(program.getProgramId(), "Program marked as overdue.", true);

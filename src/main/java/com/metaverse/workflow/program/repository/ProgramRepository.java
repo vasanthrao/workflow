@@ -21,6 +21,8 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     List<Program> findByAgencyAgencyIdAndStatus(Long agencyId, String status);
 
-    @Query("SELECT p FROM Program p WHERE p.startDate = :targetDate AND p.overdue = false")
-    List<Program> findProgramsWithStartDateEqual(@Param("targetDate") Date targetDate);
+    @Query(value = "SELECT * FROM program WHERE DATE_ADD(start_date, INTERVAL 2 DAY) = CURRENT_DATE", nativeQuery = true)
+    List<Program> findProgramsWithStartDateTwoDaysAgo();
+
+    List<Program> findByAgencyAgencyIdAndStatusIn(Long agencyId, List<String> statuses);
 }

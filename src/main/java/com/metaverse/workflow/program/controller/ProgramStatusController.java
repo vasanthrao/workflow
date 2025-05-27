@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,18 +52,32 @@ public class ProgramStatusController {
                 !status.equals(ProgramStatusConstants.PARTICIPANTS_ADDED) &&
                 !status.equals(ProgramStatusConstants.ATTENDANCE_MARKED) &&
                 !status.equals(ProgramStatusConstants.PROGRAM_EXECUTION_UPDATED) &&
-                !status.equals(ProgramStatusConstants.PROGRAM_EXPENDITURE_UPDATED);
+                !status.equals(ProgramStatusConstants.PROGRAM_EXECUTION) &&
+        !status.equals(ProgramStatusConstants.PROGRAM_EXPENDITURE_UPDATED);
     }
 
     @GetMapping("/{agencyId}")
     public WorkflowResponse getProgramsByStatus(@PathVariable Long agencyId,
                                                 @RequestParam String status) {
+        List<Program> programs = new ArrayList<>();
         if (isValidStatus(status)) {
             return WorkflowResponse.builder().message("Invalid status value." + status).status(HttpStatus.INTERNAL_SERVER_ERROR.value()).data(status).build();
         }
-        List<Program> programs = programRepository.findByAgencyAgencyIdAndStatus(agencyId, status);
-        List<ProgramResponse> response = programs != null ? programs.stream().map(ProgramResponseMapper::map).collect(Collectors.toList()) : null;
-        return WorkflowResponse.builder().message("Success").status(200).data(response).build();
+        else {
+            if (ProgramStatusConstants.PROGRAM_EXECUTION.equalsIgnoreCase(status)) {
+                List<String> statuses = Arrays.asList(
+                        ProgramStatusConstants.SESSIONS_CREATED,
+                        ProgramStatusConstants.PARTICIPANTS_ADDED,
+                        ProgramStatusConstants.ATTENDANCE_MARKED
+                );
+                programs = programRepository.findByAgencyAgencyIdAndStatusIn(agencyId, statuses);
+            }
+            else {
+               programs = programRepository.findByAgencyAgencyIdAndStatus(agencyId, status);
+            }
+            List<ProgramResponse> response = programs != null ? programs.stream().map(ProgramResponseMapper::map).collect(Collectors.toList()) : null;
+            return WorkflowResponse.builder().message("Success").status(200).data(response).build();
+        }
     }
     @GetMapping("/summary/{agencyId}")
     public WorkflowResponse getProgramsStatusSummery(@PathVariable Long agencyId) {
