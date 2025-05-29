@@ -12,26 +12,47 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_treds_registration")
-public class TReDSRegistration {
+@Table(name = "outcome_pmmy")
+public class PMMY{
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "treds_registration_id")
-    private Integer tredsRegistrationId;
-    @Column(name = "treds_registration_No")
-    private String tredsRegistrationNo;
-    @Column(name = "treds_registration_Date")
-    private Date tredsRegistrationDate;
-    @Column(name = "created_on", insertable = true, updatable = false)
-    @OneToMany(mappedBy = "tredsRegistration", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TReDSTransaction> tredsTransactionList;
+    @Column(name = "pmmy_id")
+    private Long pmmyId;
+
+    @Column(name = "loan_amount_released")
+    private Double loanAmountReleased;
+
+    @Column(name = "loan_sanctioned_date")
+    @Temporal(TemporalType.DATE)
+    private Date loanSanctionedDate;
+
+    @Column(name = "grounding_date")
+    @Temporal(TemporalType.DATE)
+    private Date groundingDate;
+
+    @Column(name = "business_turnover")
+    private Double businessTurnover;
+
+    @Column(name = "market_linkage_date")
+    @Temporal(TemporalType.DATE)
+    private Date marketLinkageDate;
+
+    @Column(name = "market_volume_mt")
+    private Double marketVolume;
+    @Column(name = "units")
+    private String units;
+    @Column(name = "market_value")
+    private Double marketValue;
+
+    @Column(name = "product_marketed_name")
+    private String productMarketedName;
     @Column(name="Influenced")
     Boolean isInfluenced;
     @ManyToOne
@@ -43,6 +64,7 @@ public class TReDSRegistration {
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
+    @Column(name = "created_on", insertable = true, updatable = false)
     @CreationTimestamp
     private Date createdOn;
     @Column(name = "updated_on", insertable = false, updatable = true)

@@ -4,36 +4,44 @@ import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_treds_registration")
-public class TReDSRegistration {
+@Setter
+@Table(name = "outcome_nisc")
+public class NSIC {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "treds_registration_id")
-    private Integer tredsRegistrationId;
-    @Column(name = "treds_registration_No")
-    private String tredsRegistrationNo;
-    @Column(name = "treds_registration_Date")
-    private Date tredsRegistrationDate;
-    @Column(name = "created_on", insertable = true, updatable = false)
-    @OneToMany(mappedBy = "tredsRegistration", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TReDSTransaction> tredsTransactionList;
-    @Column(name="Influenced")
-    Boolean isInfluenced;
+    @Column(name = "nisc_id")
+    private Long nsicId;
+
+    @Column(name = "govt_agency_procured")
+    private String govtAgencyProcured;
+
+    @Column(name = "date_of_procurement")
+    private Date dateOfProcurement;
+
+    @Column(name = "type_of_product_supplied")
+    private String typeOfProductSupplied;
+
+
+    @Column(name = "value_of_procurement")
+    private Double valueOfProcurement;
+
+    @Column(name = "cost_savings_tender")
+    private Double costSavingsTender;
+
+    @Column(name = "Influenced")
+   private Boolean isInfluenced;
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
@@ -43,6 +51,7 @@ public class TReDSRegistration {
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
+    @Column(name = "created_on", insertable = true, updatable = false)
     @CreationTimestamp
     private Date createdOn;
     @Column(name = "updated_on", insertable = false, updatable = true)

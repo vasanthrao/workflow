@@ -39,6 +39,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -657,7 +659,6 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Override
     public WorkflowResponse getProgramStatusSummery(Long agencyId) {
-
         List<Program> programs;
 
         if (agencyId == -1) {
@@ -673,36 +674,28 @@ public class ProgramServiceAdapter implements ProgramService {
         }
 
         int completed = 0, inProcess = 0, completedDataPending = 0, yetToBegin = 0, overDue = 0;
-        Date today = new Date();
+        LocalDate today = LocalDate.now();
 
         for (Program program : programs) {
-            Date startDate = program.getStartDate();
-            Date endDate = program.getEndDate();
+            if (program.getStartDate() == null || program.getEndDate() == null) continue;
+
+            LocalDate startDate = program.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endDate = program.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             String status = program.getStatus();
 
-            if (startDate == null || endDate == null) continue;
-
-
-            if (startDate.equals(today) && endDate.equals(today)) {
+            if (today.isBefore(startDate)) {
+                yetToBegin++;
+            } else if ((today.isEqual(startDate) || today.isAfter(startDate)) && today.isBefore(endDate.plusDays(1))) {
                 inProcess++;
-            } else if (endDate.before(today)) {
+            } else if (today.isAfter(endDate)) {
                 if ("Program Expenditure Updated".equalsIgnoreCase(status)) {
                     completed++;
+                } else if (program.isOverdue()) {
+                    overDue++;
                 } else {
                     completedDataPending++;
                 }
-            } else if (!today.before(startDate) && !today.after(endDate)) {
-                inProcess++;
-            } else if (startDate.after(today)) {
-                yetToBegin++;
             }
-
-            if (program.getVersion() != null && endDate.before(today) &&
-                    !"Program Expenditure Updated".equalsIgnoreCase(status)) {
-                completedDataPending--;
-                overDue++;
-            }
-
         }
 
         return WorkflowResponse.builder()
@@ -718,6 +711,7 @@ public class ProgramServiceAdapter implements ProgramService {
                         .build())
                 .build();
     }
+
 
 
 }

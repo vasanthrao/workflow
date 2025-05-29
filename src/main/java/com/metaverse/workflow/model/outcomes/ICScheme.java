@@ -12,26 +12,52 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_treds_registration")
-public class TReDSRegistration {
+@Table(name = "outcome_ic_scheme")
+public class ICScheme {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "treds_registration_id")
-    private Integer tredsRegistrationId;
-    @Column(name = "treds_registration_No")
-    private String tredsRegistrationNo;
-    @Column(name = "treds_registration_Date")
-    private Date tredsRegistrationDate;
-    @Column(name = "created_on", insertable = true, updatable = false)
-    @OneToMany(mappedBy = "tredsRegistration", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TReDSTransaction> tredsTransactionList;
+    @Column(name = "ic_scheme_id")
+    private Long icSchemeId;
+
+    @Column(name = "industry_name")
+    private String industryName;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "type_of_msme")
+    private String typeOfMsme;
+
+    @Column(name = "annual_turnover")
+    private Double annualTurnover;
+
+    @Column(name = "domestic_sales")
+    private Double domesticSales;
+
+    @Column(name = "export_market_amount")
+    private Double exportMarket;
+
+    @Column(name = "employment_direct")
+    private Integer employmentDirect;
+
+    @Column(name = "employment_indirect")
+    private Integer employmentIndirect;
+
+    @Temporal(TemporalType.DATE)
+    private Date dateOfExport;
+
+    @Column(name = "value_of_export")
+    private Double valueOfExport;
+
+    @Column(name = "export_market_details")
+    private String exportMarketDetails;
+
     @Column(name="Influenced")
     Boolean isInfluenced;
     @ManyToOne
@@ -43,6 +69,7 @@ public class TReDSRegistration {
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
+    @Column(name = "created_on", insertable = true, updatable = false)
     @CreationTimestamp
     private Date createdOn;
     @Column(name = "updated_on", insertable = false, updatable = true)

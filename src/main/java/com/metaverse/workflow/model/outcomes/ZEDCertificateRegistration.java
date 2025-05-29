@@ -10,15 +10,12 @@ import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
 
-import jakarta.mail.Session;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -73,10 +70,11 @@ public class ZEDCertificateRegistration {
 
     @Column(name = "product_defect_rate_per_100_units")
     private Integer defectRatePer100Units;
-	
+
+
+
     @Column(name="Influenced")
-    Boolean influenced;
-    
+    Boolean isInfluenced;
     @ManyToOne
     @JoinColumn(name = "program_session_id")
     private ProgramSession programSession;

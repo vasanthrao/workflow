@@ -1,9 +1,6 @@
 package com.metaverse.workflow.programoutcome.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
-
-import java.util.Date;
 
 @Builder
 @NoArgsConstructor
@@ -18,7 +15,7 @@ public class GeMTransactionRequest {
     public String registeredAs; // Buyer or Seller
     public Integer quantity;
     public Double productValue;
-    public Boolean influenced;
+    public Boolean isInfluenced;
     private Long agencyId;
     private Long participantId;
     private Long organizationId;
