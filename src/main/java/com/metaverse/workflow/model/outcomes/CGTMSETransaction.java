@@ -86,7 +86,7 @@ public class CGTMSETransaction {
     Date dateOfGrounding;
 
     @Column(name="Influenced")
-    Boolean influenced;
+    Boolean isInfluenced;
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;

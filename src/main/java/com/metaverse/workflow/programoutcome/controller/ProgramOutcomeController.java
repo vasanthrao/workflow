@@ -1,6 +1,8 @@
 package com.metaverse.workflow.programoutcome.controller;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.common.util.RestControllerBase;
+import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import com.metaverse.workflow.programoutcome.dto.ProgramOutcomeTableResponse;
 import com.metaverse.workflow.programoutcome.service.OutcomeDetails;
@@ -40,9 +42,14 @@ public class ProgramOutcomeController {
 
     @PostMapping(value = "/program/outcome/save/{outcome}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkflowResponse> saveOutcome(@PathVariable("outcome") String outcomeName, @RequestPart("data") String data) throws ParseException {
+    public ResponseEntity<?> saveOutcome(@PathVariable("outcome") String outcomeName, @RequestPart("data") String data) throws ParseException {
         log.info("Program outcome : {}", data);
-        WorkflowResponse response = programOutcomeService.saveOutCome(outcomeName, data);
+        WorkflowResponse response = null;
+        try {
+            response = programOutcomeService.saveOutCome(outcomeName, data);
+        } catch (DataException exception) {
+            return   RestControllerBase.error(exception);
+        }
         return ResponseEntity.ok(response);
     }
 

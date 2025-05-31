@@ -18,30 +18,45 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_gem_transaction")
-public class GeMTransaction {
+@Table(name = "outcome_ic_scheme")
+public class ICScheme {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="gem_transaction_id")
-    private Long gemTransactionId;
+    @Column(name = "ic_scheme_id")
+    private Long icSchemeId;
 
-    @Column(name = "procurement_date")
-    private Date procurementDate;
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "industry_name")
+    private String industryName;
 
-    @Column(name = "unit_of_measurement")
-    private String unitOfMeasurement;
+    @Column(name = "location")
+    private String location;
 
-    @Column(name = "registered_as")
-    private String registeredAs; // Buyer or Seller
+    @Column(name = "type_of_msme")
+    private String typeOfMsme;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "annual_turnover")
+    private Double annualTurnover;
 
-    @Column(name = "product_value")
-    private Double productValue;
+    @Column(name = "domestic_sales")
+    private Double domesticSales;
 
+    @Column(name = "export_market_amount")
+    private Double exportMarket;
+
+    @Column(name = "employment_direct")
+    private Integer employmentDirect;
+
+    @Column(name = "employment_indirect")
+    private Integer employmentIndirect;
+
+    @Temporal(TemporalType.DATE)
+    private Date dateOfExport;
+
+    @Column(name = "value_of_export")
+    private Double valueOfExport;
+
+    @Column(name = "export_market_details")
+    private String exportMarketDetails;
 
     @Column(name="Influenced")
     Boolean isInfluenced;

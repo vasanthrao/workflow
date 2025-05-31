@@ -4,10 +4,7 @@ import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,33 +15,33 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_gem_transaction")
-public class GeMTransaction {
+@Setter
+@Table(name = "outcome_nisc")
+public class NSIC {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="gem_transaction_id")
-    private Long gemTransactionId;
+    @Column(name = "nisc_id")
+    private Long nsicId;
 
-    @Column(name = "procurement_date")
-    private Date procurementDate;
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "govt_agency_procured")
+    private String govtAgencyProcured;
 
-    @Column(name = "unit_of_measurement")
-    private String unitOfMeasurement;
+    @Column(name = "date_of_procurement")
+    private Date dateOfProcurement;
 
-    @Column(name = "registered_as")
-    private String registeredAs; // Buyer or Seller
-
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Column(name = "product_value")
-    private Double productValue;
+    @Column(name = "type_of_product_supplied")
+    private String typeOfProductSupplied;
 
 
-    @Column(name="Influenced")
-    Boolean isInfluenced;
+    @Column(name = "value_of_procurement")
+    private Double valueOfProcurement;
+
+    @Column(name = "cost_savings_tender")
+    private Double costSavingsTender;
+
+    @Column(name = "Influenced")
+   private Boolean isInfluenced;
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;

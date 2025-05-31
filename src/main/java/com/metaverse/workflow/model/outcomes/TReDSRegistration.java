@@ -12,37 +12,26 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_gem_transaction")
-public class GeMTransaction {
+@Table(name = "outcome_treds_registration")
+public class TReDSRegistration {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="gem_transaction_id")
-    private Long gemTransactionId;
-
-    @Column(name = "procurement_date")
-    private Date procurementDate;
-    @Column(name = "product_name")
-    private String productName;
-
-    @Column(name = "unit_of_measurement")
-    private String unitOfMeasurement;
-
-    @Column(name = "registered_as")
-    private String registeredAs; // Buyer or Seller
-
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Column(name = "product_value")
-    private Double productValue;
-
-
+    @Column(name = "treds_registration_id")
+    private Integer tredsRegistrationId;
+    @Column(name = "treds_registration_No")
+    private String tredsRegistrationNo;
+    @Column(name = "treds_registration_Date")
+    private Date tredsRegistrationDate;
+    @Column(name = "created_on", insertable = true, updatable = false)
+    @OneToMany(mappedBy = "tredsRegistration", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TReDSTransaction> tredsTransactionList;
     @Column(name="Influenced")
     Boolean isInfluenced;
     @ManyToOne
@@ -54,7 +43,6 @@ public class GeMTransaction {
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
-    @Column(name = "created_on", insertable = true, updatable = false)
     @CreationTimestamp
     private Date createdOn;
     @Column(name = "updated_on", insertable = false, updatable = true)

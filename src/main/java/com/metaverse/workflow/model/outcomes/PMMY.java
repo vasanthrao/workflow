@@ -18,31 +18,41 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_gem_transaction")
-public class GeMTransaction {
+@Table(name = "outcome_pmmy")
+public class PMMY{
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="gem_transaction_id")
-    private Long gemTransactionId;
+    @Column(name = "pmmy_id")
+    private Long pmmyId;
 
-    @Column(name = "procurement_date")
-    private Date procurementDate;
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "loan_amount_released")
+    private Double loanAmountReleased;
 
-    @Column(name = "unit_of_measurement")
-    private String unitOfMeasurement;
+    @Column(name = "loan_sanctioned_date")
+    @Temporal(TemporalType.DATE)
+    private Date loanSanctionedDate;
 
-    @Column(name = "registered_as")
-    private String registeredAs; // Buyer or Seller
+    @Column(name = "grounding_date")
+    @Temporal(TemporalType.DATE)
+    private Date groundingDate;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "business_turnover")
+    private Double businessTurnover;
 
-    @Column(name = "product_value")
-    private Double productValue;
+    @Column(name = "market_linkage_date")
+    @Temporal(TemporalType.DATE)
+    private Date marketLinkageDate;
 
+    @Column(name = "market_volume_mt")
+    private Double marketVolume;
+    @Column(name = "units")
+    private String units;
+    @Column(name = "market_value")
+    private Double marketValue;
 
+    @Column(name = "product_marketed_name")
+    private String productMarketedName;
     @Column(name="Influenced")
     Boolean isInfluenced;
     @ManyToOne

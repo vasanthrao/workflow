@@ -18,30 +18,52 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "outcome_gem_transaction")
-public class GeMTransaction {
+@Table(name = "outcome_pmegp")
+public class PMEGP {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="gem_transaction_id")
-    private Long gemTransactionId;
+    @Column(name = "pmegp_id")
+    private Long pmegpId;
 
-    @Column(name = "procurement_date")
-    private Date procurementDate;
-    @Column(name = "product_name")
-    private String productName;
+    @Column(name = "loan_sanctioned_date")
+    private Date loanSanctionedDate;
 
-    @Column(name = "unit_of_measurement")
-    private String unitOfMeasurement;
+    @Column(name = "loan_amount_released_lakhs")
+    private Double loanAmountReleased;
 
-    @Column(name = "registered_as")
-    private String registeredAs; // Buyer or Seller
+    @Column(name = "govt_subsidy_lakhs")
+    private Double govtSubsidy;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "beneficiary_contribution_lakhs")
+    private Double beneficiaryContribution;
 
-    @Column(name = "product_value")
-    private Double productValue;
+    @Column(name = "total_amount_released_lakhs")
+    private Double totalAmountReleased;
 
+    @Column(name = "grounding_date")
+    private Date groundingDate;
+
+    @Column(name = "business_turnover_lakhs")
+    private Double businessTurnover;
+
+    @Column(name = "market_linkage_date")
+    private Date dateOfMarketLinkage;
+
+    @Column(name = "market_volume")
+    private Double volumeOfMarket;
+
+    @Column(name = "units")
+    private String units;
+
+    @Column(name = "market_value")
+    private Double valueOfMarket;
+
+    @Column(name = "product_market_name")
+    private String nameOfProductMarket;
+
+    @Column(name = "persons_employed")
+    private Integer numberOfPersonsEmployed;
 
     @Column(name="Influenced")
     Boolean isInfluenced;

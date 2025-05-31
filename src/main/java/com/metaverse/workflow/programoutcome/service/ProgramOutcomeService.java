@@ -1,6 +1,7 @@
 package com.metaverse.workflow.programoutcome.service;
 
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import net.minidev.json.parser.ParseException;
 
@@ -12,7 +13,7 @@ public interface ProgramOutcomeService {
 
     WorkflowResponse getOutcomeDetails(Long participantId, String outcome);
 
-    WorkflowResponse saveOutCome(String outcomeName, String data) throws ParseException;
+    WorkflowResponse saveOutCome(String outcomeName, String data) throws ParseException, DataException;
 
     WorkflowResponse getOutcomeDetailsByName(String outcome);
 

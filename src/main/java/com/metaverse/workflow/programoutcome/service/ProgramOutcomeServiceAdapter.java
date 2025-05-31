@@ -2,11 +2,11 @@ package com.metaverse.workflow.programoutcome.service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
-import com.metaverse.workflow.model.outcomes.ONDCRegistration;
-import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
+import com.metaverse.workflow.model.outcomes.*;
 import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.programoutcome.dto.*;
@@ -52,6 +52,27 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     @Autowired
     ParticipantRepository participantRepository;
 
+    @Autowired
+    TReDSRegistrationRepository tredsRegistrationRepository;
+
+    @Autowired
+    TReDSTransactionRepository tredsTransactionRepository;
+
+    @Autowired
+    PMEGPRepository pmegpRepository;
+
+    @Autowired
+    PMMYRepository pmmyRepository;
+
+    @Autowired
+    PMSRepository pmsRepository;
+
+    @Autowired
+    ICSchemeRepository icSchemeRepository;
+
+    @Autowired
+    NSICRepository nsicRepository;
+
     @Override
     public List<ProgramOutcomeTable> getProgramOutcomeTables() {
         return programOutcomeTableRepository.findAll();
@@ -69,9 +90,15 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             switch (outcome) {
                 case "ONDCTransaction": {
                     List<ONDCRegistration> ondcRegistration = ondcRegistrationRepository.findByParticipantId(participantId);
-                    if (ondcRegistration == null || ondcRegistration.size() == 0)
+                    if (ondcRegistration == null || ondcRegistration.isEmpty())
                         return WorkflowResponse.builder().status(400).message("ONDC Registration not completed").build();
                     columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("ONDC Registration No")).fieldName("ondcRegistrationNo").fieldType("label").fieldValue(ondcRegistration.get(0).getOndcRegistrationNo()).build());
+                }
+                case "TReDSTransaction": {
+                    List<TReDSRegistration> tReDSRegistrations = tredsRegistrationRepository.findByParticipantId(participantId);
+                    if (tReDSRegistrations == null || tReDSRegistrations.isEmpty())
+                        return WorkflowResponse.builder().status(400).message("TReDS Registration not completed").build();
+                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("TReDS Registration No")).fieldName("tredsRegistrationNo").fieldType("label").fieldValue(tReDSRegistrations.get(0).getTredsRegistrationNo()).build());
                 }
             }
             return WorkflowResponse.builder().status(200).message("Success").data(OutcomeDetails.builder().outcomeForm(columnList).build()).build();
@@ -82,7 +109,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     }
 
     @Override
-    public WorkflowResponse saveOutCome(String outcomeName, String data) throws ParseException {
+    public WorkflowResponse saveOutCome(String outcomeName, String data) throws ParseException, DataException {
         String status = "";
         JSONParser parser = new JSONParser();
         switch (outcomeName) {
@@ -140,7 +167,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
-            case "GeMTransaction" : {
+            case "GeMTransaction": {
                 GeMTransactionRequest transactionRequest = parser.parse(data, GeMTransactionRequest.class);
                 Optional<Agency> agency = agencyRepository.findById(transactionRequest.getAgencyId());
                 if (!agency.isPresent())
@@ -152,6 +179,99 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 if (!organization.isPresent())
                     return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
                 geMTransactionRepository.save(OutcomeRequestMapper.mapGeMTransaction(transactionRequest, agency.get(), participant.get(), organization.get()));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "TReDSRegistration": {
+                TReDSRegistrationRequest request = parser.parse(data, TReDSRegistrationRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                tredsRegistrationRepository.save(OutcomeRequestMapper.mapTredsRegistration(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "TReDSTransaction": {
+                TReDSTransactionRequest tredsTransactionRequest = parser.parse(data, TReDSTransactionRequest.class);
+                List<TReDSRegistration> tredsRegistrationList = tredsRegistrationRepository.findByParticipantId(tredsTransactionRequest.getParticipantId());
+                if (tredsRegistrationList == null || tredsRegistrationList.isEmpty())
+                    return WorkflowResponse.builder().status(400).message("Invalid TReDS Registration").build();
+                tredsTransactionRepository.save(OutcomeRequestMapper.mapTredsTransaction(tredsTransactionRequest, tredsRegistrationList.get(0)));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "PMEGP": {
+                PMEGPRequest request = parser.parse(data, PMEGPRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+               pmegpRepository.save(OutcomeRequestMapper.mapPmegp(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "PMMY": {
+                PMMYRequest request = parser.parse(data, PMMYRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                pmmyRepository.save(OutcomeRequestMapper.mapPmmy(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "PMS": {
+                PMSRequest request = parser.parse(data, PMSRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                pmsRepository.save(OutcomeRequestMapper.mapPms(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "ICScheme": {
+                ICSchemeRequest request = parser.parse(data, ICSchemeRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                icSchemeRepository.save(OutcomeRequestMapper.mapIcScheme(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "NSIC": {
+                NSICRequest request = parser.parse(data, NSICRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                nsicRepository.save(OutcomeRequestMapper.mapNsic(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
@@ -182,6 +302,8 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             return "decimal";
         } else if (outcomeClass.getName().equals("java.lang.Character")) {
             return "character";
+        }else if(field.getName().startsWith("is")) {
+            return "radio button";
         }
         return "";
     }
