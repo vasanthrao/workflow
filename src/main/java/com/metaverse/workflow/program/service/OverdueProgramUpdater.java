@@ -24,10 +24,10 @@ public class OverdueProgramUpdater {
     @Scheduled(cron = "0 * * * * ?") //min update
     public void updateOverduePrograms() {
         List<Program> overduePrograms = programRepository.findProgramsWithStartDateTwoDaysAgo();
-        System.out.println("-----------------overdue programs-------------- " +overduePrograms.size());
+       // System.out.println("-----------------overdue programs-------------- " +overduePrograms.size());
         for (Program program : overduePrograms) {
-            System.out.println("Two days ago: " + program.getProgramId());
-            System.out.println("Found programs: " + overduePrograms.size());
+//            System.out.println("Two days ago: " + program.getProgramId());
+//            System.out.println("Found programs: " + overduePrograms.size());
             program.setOverdue(true);
             Long currentVersion = program.getVersion();
             if (currentVersion == null) {

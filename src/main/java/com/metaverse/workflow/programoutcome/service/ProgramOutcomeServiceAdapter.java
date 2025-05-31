@@ -6,7 +6,10 @@ import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
-import com.metaverse.workflow.model.outcomes.*;
+import com.metaverse.workflow.model.outcomes.ONDCRegistration;
+import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
+import com.metaverse.workflow.model.outcomes.TReDSRegistration;
+import com.metaverse.workflow.model.outcomes.ZEDCertification;
 import com.metaverse.workflow.organization.repository.OrganizationRepository;
 import com.metaverse.workflow.participant.repository.ParticipantRepository;
 import com.metaverse.workflow.programoutcome.dto.*;
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -72,6 +74,19 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
     @Autowired
     NSICRepository nsicRepository;
+    @Autowired
+    PatentsRepository patentsRepository;
+    @Autowired
+    GIProductRepository giProductRepository;
+    @Autowired
+    BarcodeRepository barcodeRepository;
+    @Autowired
+    TreadMarkRepository treadMarkRepository;
+    @Autowired
+    LeanRepository leanRepository;
+    @Autowired
+    ZEDCertificationRepository zedCertificationRepository;
+
 
     @Override
     public List<ProgramOutcomeTable> getProgramOutcomeTables() {
@@ -100,6 +115,29 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                         return WorkflowResponse.builder().status(400).message("TReDS Registration not completed").build();
                     columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("TReDS Registration No")).fieldName("tredsRegistrationNo").fieldType("label").fieldValue(tReDSRegistrations.get(0).getTredsRegistrationNo()).build());
                 }
+                case "ZEDCertificationSilver": {
+                    List<ZEDCertification> zedCertifications = zedCertificationRepository.findByParticipantId(participantId);
+                    if (zedCertifications == null || zedCertifications.isEmpty())
+                        return WorkflowResponse.builder().status(400).message("ZED Certification not found").build();
+
+                    if (!"Bronze".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
+                        return WorkflowResponse.builder().status(400).message("Bronze certification is required before applying for Gold").build();
+
+                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("Zed Certifications Type")).fieldName("zedCertificationType").fieldType("label").fieldValue(zedCertifications.get(0).getZedCertificationType()).build());
+
+                }
+                case "ZEDCertificationGold": {
+                    List<ZEDCertification> zedCertifications = zedCertificationRepository.findByParticipantId(participantId);
+                    if (zedCertifications == null || zedCertifications.isEmpty())
+                        return WorkflowResponse.builder().status(400).message("ZED Certification not found").build();
+
+                    if (!"Silver".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
+                        return WorkflowResponse.builder().status(400).message("Silver certification is required before applying for Gold").build();
+
+                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("Zed Certifications Type")).fieldName("zedCertificationType").fieldType("label").fieldValue(zedCertifications.get(0).getZedCertificationType()).build());
+
+                }
+
             }
             return WorkflowResponse.builder().status(200).message("Success").data(OutcomeDetails.builder().outcomeForm(columnList).build()).build();
         } catch (ClassNotFoundException ex) {
@@ -115,82 +153,78 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
         switch (outcomeName) {
             case "ONDCRegistration": {
                 ONDCRegistrationRequest request = parser.parse(data, ONDCRegistrationRequest.class);
-                Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
-                if (!agency.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
-                Optional<Participant> participant = participantRepository.findById(request.getParticipantId());
-                if (!participant.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
-                Optional<Organization> organization = organizationRepository.findById(request.getOrganizationId());
-                if (!organization.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
-                ondcRegistrationRepository.save(OutcomeRequestMapper.mapOndcRegistration(request, agency.get(), participant.get(), organization.get()));
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                ondcRegistrationRepository.save(OutcomeRequestMapper.mapOndcRegistration(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
             case "ONDCTransaction": {
                 ONDCTransactionRequest ondcTransactionRequest = parser.parse(data, ONDCTransactionRequest.class);
                 List<ONDCRegistration> ondcRegistrationList = ondcRegistrationRepository.findByParticipantId(ondcTransactionRequest.getParticipantId());
-                if (ondcRegistrationList == null || ondcRegistrationList.size() == 0)
+                if (ondcRegistrationList == null || ondcRegistrationList.isEmpty())
                     return WorkflowResponse.builder().status(400).message("Invalid Ondc Registration").build();
                 ondcTransactionRepository.save(OutcomeRequestMapper.mapOndcTransaction(ondcTransactionRequest, ondcRegistrationList.get(0)));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
             case "UdyamRegistration": {
-                UdyamRegistrationRequest udyamResistrationRequest = parser.parse(data, UdyamRegistrationRequest.class);
-                Optional<Agency> agency = agencyRepository.findById(udyamResistrationRequest.getAgencyId());
-                if (!agency.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
-                Optional<Participant> participant = participantRepository.findById(udyamResistrationRequest.getParticipantId());
-                if (!participant.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
-                Optional<Organization> organization = organizationRepository.findById(udyamResistrationRequest.getOrganizationId());
-                if (!organization.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
-                udyamRegistrationRepository.save(OutcomeRequestMapper.mapUdyamRegistration(udyamResistrationRequest, agency.get(), participant.get(), organization.get()));
+                UdyamRegistrationRequest request = parser.parse(data, UdyamRegistrationRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                udyamRegistrationRepository.save(OutcomeRequestMapper.mapUdyamRegistration(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
             case "CGTMSETransaction": {
-                CGTMSETransactionRequest transactionRequest = parser.parse(data, CGTMSETransactionRequest.class);
-                Optional<Agency> agency = agencyRepository.findById(transactionRequest.getAgencyId());
-                if (!agency.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
-                Optional<Participant> participant = participantRepository.findById(transactionRequest.getParticipantId());
-                if (!participant.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
-                Optional<Organization> organization = organizationRepository.findById(transactionRequest.getOrganizationId());
-                if (!organization.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
-                cgtmseTransactionRepository.save(OutcomeRequestMapper.mapCGTMSETransaction(transactionRequest, agency.get(), participant.get(), organization.get()));
+                CGTMSETransactionRequest request = parser.parse(data, CGTMSETransactionRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                cgtmseTransactionRepository.save(OutcomeRequestMapper.mapCGTMSETransaction(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
             case "GeMTransaction": {
-                GeMTransactionRequest transactionRequest = parser.parse(data, GeMTransactionRequest.class);
-                Optional<Agency> agency = agencyRepository.findById(transactionRequest.getAgencyId());
-                if (!agency.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
-                Optional<Participant> participant = participantRepository.findById(transactionRequest.getParticipantId());
-                if (!participant.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Participant").build();
-                Optional<Organization> organization = organizationRepository.findById(transactionRequest.getOrganizationId());
-                if (!organization.isPresent())
-                    return WorkflowResponse.builder().status(400).message("Invalid Organization").build();
-                geMTransactionRepository.save(OutcomeRequestMapper.mapGeMTransaction(transactionRequest, agency.get(), participant.get(), organization.get()));
+                GeMTransactionRequest request = parser.parse(data, GeMTransactionRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                geMTransactionRepository.save(OutcomeRequestMapper.mapGeMTransaction(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
             case "TReDSRegistration": {
                 TReDSRegistrationRequest request = parser.parse(data, TReDSRegistrationRequest.class);
-                Agency agency = agencyRepository.findById(request.getAgencyId())
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
                         .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
 
-                Participant participant = participantRepository.findById(request.getParticipantId())
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
                         .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
 
-                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
                 tredsRegistrationRepository.save(OutcomeRequestMapper.mapTredsRegistration(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
@@ -207,27 +241,28 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             }
             case "PMEGP": {
                 PMEGPRequest request = parser.parse(data, PMEGPRequest.class);
-                Agency agency = agencyRepository.findById(request.getAgencyId())
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
                         .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
 
-                Participant participant = participantRepository.findById(request.getParticipantId())
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
                         .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
 
-                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
-               pmegpRepository.save(OutcomeRequestMapper.mapPmegp(request, agency, participant, organization));
+
+                pmegpRepository.save(OutcomeRequestMapper.mapPmegp(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
             case "PMMY": {
                 PMMYRequest request = parser.parse(data, PMMYRequest.class);
-                Agency agency = agencyRepository.findById(request.getAgencyId())
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
                         .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
 
-                Participant participant = participantRepository.findById(request.getParticipantId())
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
                         .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
 
-                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
                 pmmyRepository.save(OutcomeRequestMapper.mapPmmy(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
@@ -235,13 +270,13 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             }
             case "PMS": {
                 PMSRequest request = parser.parse(data, PMSRequest.class);
-                Agency agency = agencyRepository.findById(request.getAgencyId())
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
                         .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
 
-                Participant participant = participantRepository.findById(request.getParticipantId())
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
                         .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
 
-                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
                 pmsRepository.save(OutcomeRequestMapper.mapPms(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
@@ -249,13 +284,13 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             }
             case "ICScheme": {
                 ICSchemeRequest request = parser.parse(data, ICSchemeRequest.class);
-                Agency agency = agencyRepository.findById(request.getAgencyId())
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
                         .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
 
-                Participant participant = participantRepository.findById(request.getParticipantId())
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
                         .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
 
-                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
                 icSchemeRepository.save(OutcomeRequestMapper.mapIcScheme(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
@@ -263,15 +298,98 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             }
             case "NSIC": {
                 NSICRequest request = parser.parse(data, NSICRequest.class);
-                Agency agency = agencyRepository.findById(request.getAgencyId())
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
                         .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
 
-                Participant participant = participantRepository.findById(request.getParticipantId())
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
                         .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
 
-                Organization organization = organizationRepository.findById(request.getOrganizationId())
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
                 nsicRepository.save(OutcomeRequestMapper.mapNsic(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "Patents": {
+                PatentsRequest request = parser.parse(data, PatentsRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                patentsRepository.save(OutcomeRequestMapper.mapPatents(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "GIProduct": {
+                GIProductRequest request = parser.parse(data, GIProductRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                giProductRepository.save(OutcomeRequestMapper.mapGIProduct(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "Barcode": {
+                BarcodeRequest request = parser.parse(data, BarcodeRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                barcodeRepository.save(OutcomeRequestMapper.mapBarcode(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "TreadMark": {
+                TreadMarkRequest request = parser.parse(data, TreadMarkRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                treadMarkRepository.save(OutcomeRequestMapper.mapTreadMark(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "Lean": {
+                LeanRequest request = parser.parse(data, LeanRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                leanRepository.save(OutcomeRequestMapper.mapLean(request, agency, participant, organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
+            }
+            case "ZEDCertificationBronze", "ZEDCertificationSilver", "ZEDCertificationGold": {
+                ZEDCertificationRequest request = parser.parse(data, ZEDCertificationRequest.class);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
@@ -302,7 +420,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             return "decimal";
         } else if (outcomeClass.getName().equals("java.lang.Character")) {
             return "character";
-        }else if(field.getName().startsWith("is")) {
+        } else if (field.getName().startsWith("is")) {
             return "radio button";
         }
         return "";
@@ -310,11 +428,12 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
     private String getFieldDisplayName(String fieldName) {
         String displayname = "";
-        if (fieldName != null && fieldName.length() > 0) {
+        if (fieldName != null && !fieldName.isEmpty()) {
             displayname = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
             displayname = displayname.replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2");
         }
         return displayname;
     }
+
 
 }
