@@ -1,10 +1,12 @@
 package com.metaverse.workflow.programoutcome.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class LeanRequest {
     public String zedCertificationType; // Bronze / Silver / Gold /dropdown
     public String certificationNumber;

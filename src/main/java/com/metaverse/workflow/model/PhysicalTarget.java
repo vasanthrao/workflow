@@ -1,15 +1,14 @@
 package com.metaverse.workflow.model;
 
+import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
 @Getter
 @Table(name="physical_target")
 public class PhysicalTarget {
@@ -24,51 +23,22 @@ public class PhysicalTarget {
     private Agency agency;
 
     @ManyToOne
-    @JoinColumn(name = "activity_id", nullable = false)
-    private Activity activity;
+    @JoinColumn(name = "outcome_table_id", nullable = false)
+    private ProgramOutcomeTable programOutcomeTable;
 
-    @ManyToOne
-    @JoinColumn(name = "subactivity_id", nullable = false)
-    private SubActivity subactivity;
+    @Column(name = "financial_year")
+    private String financialYear;
 
-    @Column(name ="year")
-    private Integer year;
+    @Column(name = "q1")
+    private Integer q1;
 
+    @Column(name = "q2")
+    private Integer q2;
 
-    @Column(name = "apr_physical_target")
-    private Integer aprPhysicalTarget;
+    @Column(name = "q3")
+    private Integer q3;
 
-    @Column(name = "may_physical_target")
-    private Integer mayPhysicalTarget;
-
-    @Column(name = "jun_physical_target")
-    private Integer junPhysicalTarget;
-
-    @Column(name = "jul_physical_target")
-    private Integer julPhysicalTarget;
-
-    @Column(name = "aug_physical_target")
-    private Integer augPhysicalTarget;
-
-    @Column(name = "sep_physical_target")
-    private Integer sepPhysicalTarget;
-
-    @Column(name = "oct_physical_target")
-    private Integer octPhysicalTarget;
-
-    @Column(name = "nov_physical_target")
-    private Integer novPhysicalTarget;
-
-    @Column(name = "dec_physical_target")
-    private Integer decPhysicalTarget;
-
-    @Column(name = "jan_physical_target")
-    private Integer janPhysicalTarget;
-
-    @Column(name = "feb_physical_target")
-    private Integer febPhysicalTarget;
-
-    @Column(name = "mar_physical_target")
-    private Integer marPhysicalTarget;
+    @Column(name = "q4")
+    private Integer q4;
 
 }

@@ -1,12 +1,14 @@
 package com.metaverse.workflow.programoutcome.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
-@Data
+@Setter
+@Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ICSchemeRequest {
 
     public String industryName;
