@@ -87,7 +87,7 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Autowired
     SubActivityRepository subActivityRepository;
-    @Autowired
+   @Autowired
     BulkExpenditureTransactionRepository bulkExpRepo;
     @Autowired
     FileSystemStorageService fileSystemStorageService;
@@ -103,14 +103,13 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @PersistenceContext
     private EntityManager em;
-
     @Override
     public WorkflowResponse createProgram(ProgramRequest request) {
         Optional<Location> location = null;
         Program program = null;
         Optional<Agency> agency = agencyRepository.findById(request.getAgencyId());
         if (!agency.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Agency").build();
-        if (request.getLocationId() != null) {
+        if(request.getLocationId()!=null) {
             location = locationRepository.findById(request.getLocationId());
             program = programRepository.save(ProgramRequestMapper.map(request, agency.get(), location.get()));
         }
@@ -152,16 +151,18 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
     @Override
-    public WorkflowResponse getProgramParticipants(Long id, Long agencyId, int page, int size) {
+    public WorkflowResponse getProgramParticipants(Long id,Long agencyId, int page, int size) {
         Pageable pageable;
         Page<Participant> participantPage;
         List<ParticipantResponse> response;
         pageable = PageRequest.of(page, size);
-        if (id == -1) {
+        if(id == -1) {
             participantPage = participantRepository.findAll(pageable);
-        } else if (agencyId != null) {
+        }
+        else if(agencyId != null) {
             participantPage = participantRepository.findByPrograms_Agency_AgencyId(agencyId, pageable);
-        } else {
+        }
+        else {
             participantPage = participantRepository.findByProgramId(id, pageable);
         }
         response = ProgramResponseMapper.mapProgramParticipants(participantPage.getContent());
@@ -304,7 +305,7 @@ public class ProgramServiceAdapter implements ProgramService {
         sessionObj.setStartTime(request.getStartTime());
         sessionObj.setEndTime(request.getEndTime());
         sessionObj.setProgramSessionId(request.getProgramSessionId());
-        if (!resource.isPresent()) {
+        if(!resource.isPresent()) {
             sessionObj.setResource(resource.get());
         }
         ProgramSession response = programSessionRepository.save(sessionObj);
@@ -482,7 +483,7 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
     @Override
-    public WorkflowResponse getFeedBackById(Long feedBackId) {
+    public WorkflowResponse getFeedBackById(Long feedBackId)  {
         if (monitoringFeedBackRepository.existsById(feedBackId)) {
             Optional<ProgramMonitoringFeedBack> feedBack = monitoringFeedBackRepository.findById(feedBackId);
             return WorkflowResponse.builder().status(200).message("Success")
@@ -547,14 +548,14 @@ public class ProgramServiceAdapter implements ProgramService {
                     Optional<Activity> activityOpt = activityRepository.findByActivityName(activityName);
                     Optional<SubActivity> subActivityOpt = subActivityRepository.findBySubActivityName(subActivityName);
                     if (activityOpt.isEmpty() || subActivityOpt.isEmpty()) {
-                        errors.add("Row " + (i + 1) + ": Invalid Activity or Sub Activity");
+                        errors.add("Row " + (i+1) + ": Invalid Activity or Sub Activity");
                         continue;
                     }
 
                     Optional<Agency> agencyOpt = agencyRepository.findByAgencyName(agencyName);
 
-                    if (agencyOpt.isEmpty()) {
-                        errors.add("Row " + (i + 1) + ": Invalid Location or Agency");
+                    if(agencyOpt.isEmpty()) {
+                        errors.add("Row " + (i+1) + ": Invalid Location or Agency");
                         continue;
                     }
 
@@ -578,11 +579,11 @@ public class ProgramServiceAdapter implements ProgramService {
                     if (singleResp.getStatus() == 200) {
                         successCount++;
                     } else {
-                        errors.add("Row " + (i + 1) + ": " + singleResp.getMessage());
+                        errors.add("Row " + (i+1) + ": " + singleResp.getMessage());
                     }
 
                 } catch (Exception e) {
-                    errors.add("Row " + (i + 1) + ": " + e.getMessage());
+                    errors.add("Row " + (i+1) + ": " + e.getMessage());
                 }
             }
         } catch (Exception e) {
@@ -643,6 +644,7 @@ public class ProgramServiceAdapter implements ProgramService {
     }
 
 
+
     private String getCellValue(Row row, int col) {
         Cell cell = row.getCell(col);
         if (cell == null) return "";
@@ -659,6 +661,7 @@ public class ProgramServiceAdapter implements ProgramService {
 
     @Override
     public WorkflowResponse getProgramStatusSummery(Long agencyId) {
+
         List<Program> programs;
 
         if (agencyId == -1) {
@@ -673,28 +676,30 @@ public class ProgramServiceAdapter implements ProgramService {
             programs = programRepository.findByAgencyAgencyId(agencyId);
         }
 
-        int completed = 0, inProcess = 0, completedDataPending = 0, yetToBegin = 0, overDue = 0;
-        LocalDate today = LocalDate.now();
+        int completed = 0, inProcess = 0,completedDataPending =0 , yetToBegin =0  ,overDue = 0;
+        Date today = new Date();
 
         for (Program program : programs) {
-            if (program.getStartDate() == null || program.getEndDate() == null) continue;
-
-            LocalDate startDate = program.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate endDate = program.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Date startDate = program.getStartDate();
+            Date endDate = program.getEndDate();
             String status = program.getStatus();
 
-            if (today.isBefore(startDate)) {
-                yetToBegin++;
-            } else if ((today.isEqual(startDate) || today.isAfter(startDate)) && today.isBefore(endDate.plusDays(1))) {
-                inProcess++;
-            } else if (today.isAfter(endDate)) {
+            if (startDate == null || endDate == null) continue;
+
+
+            if (endDate.before(today)) {
                 if ("Program Expenditure Updated".equalsIgnoreCase(status)) {
                     completed++;
-                } else if (program.isOverdue()) {
-                    overDue++;
                 } else {
                     completedDataPending++;
                 }
+            } else if (!today.before(startDate) && !today.after(endDate)) {
+                inProcess++;
+            } else if (startDate.after(today)) {
+                yetToBegin++;
+            } else if (program.getVersion() != null){
+                completedDataPending--;
+                overDue++;
             }
         }
 
@@ -711,7 +716,6 @@ public class ProgramServiceAdapter implements ProgramService {
                         .build())
                 .build();
     }
-
 
 
 }
