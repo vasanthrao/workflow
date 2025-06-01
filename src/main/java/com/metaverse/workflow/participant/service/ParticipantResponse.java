@@ -36,6 +36,6 @@ public class ParticipantResponse {
 	private String district;
 	private String mandal;
 	private String nameOfVO;
-	private List<Sector> sectorList;
+	private List<String> sectorList;
 
 }

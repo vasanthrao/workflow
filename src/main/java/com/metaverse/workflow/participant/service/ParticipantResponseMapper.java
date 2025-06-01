@@ -4,6 +4,7 @@ import com.metaverse.workflow.common.util.CommonUtil;
 import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.model.Participant;
 import com.metaverse.workflow.model.Program;
+import com.metaverse.workflow.model.Sector;
 
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class ParticipantResponseMapper {
 				.district(participant.getOrganization() != null ? CommonUtil.districtMap.get( Integer.valueOf(participant.getOrganization().getDistId())) : null)
 				.mandal(participant.getOrganization() != null ? CommonUtil.districtMap.get( Integer.valueOf(participant.getOrganization().getMandal())) : null)
 				.nameOfVO(participant.getOrganization() != null ? participant.getOrganization().getNameOfTheVO() : null)
-				.sectorList(participant.getOrganization() != null ? participant.getOrganization().getSectors() : null)
+				.sectorList(participant.getOrganization() != null ? participant.getOrganization().getSectors().stream().map(Sector::getSectorName).toList() : null)
 				.build();
 	}
 
