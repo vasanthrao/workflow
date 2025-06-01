@@ -16,4 +16,5 @@ public class PhysicalTargetResponse {
     private Integer q2;
     private Integer q3;
     private Integer q4;
+    private Integer total;
 }

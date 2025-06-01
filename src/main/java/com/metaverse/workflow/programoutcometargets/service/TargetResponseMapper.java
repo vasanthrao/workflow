@@ -27,6 +27,7 @@ public class TargetResponseMapper {
                 .q2(request.getQ2())
                 .q3(request.getQ3())
                 .q4(request.getQ4())
+                .total(request.getQ1()+ request.getQ2()+ request.getQ3()+ request.getQ4())
                 .agencyName(request.getAgency().getAgencyName())
                 .outcomeTableName(request.getProgramOutcomeTable().getOutcomeTableName())
                 .build();

@@ -39,13 +39,4 @@ public class FinancialTarget {
 
     @Column(name = "q4")
     private Double q4;
-
-    /*@ManyToOne
-    @JoinColumn(name = "activity_id", nullable = false)
-    private Activity activity;
-
-    @ManyToOne
-    @JoinColumn(name = "subactivity_id", nullable = false)
-    private SubActivity subactivity;*/
-
 }
