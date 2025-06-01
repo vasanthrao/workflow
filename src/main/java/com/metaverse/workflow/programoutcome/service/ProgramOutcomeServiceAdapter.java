@@ -117,8 +117,13 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 }
                 case "ZEDCertification": {
                     List<ZEDCertification> zedCertifications = zedCertificationRepository.findByParticipantId(participantId);
-//                    if (zedCertifications == null || zedCertifications.isEmpty())
-//                        return WorkflowResponse.builder().status(400).message("ZED Certification not found").build();
+                    if (zedCertifications == null || zedCertifications.isEmpty())
+                        return WorkflowResponse.builder().status(400).message("ZED Certification not found").build();
+
+                    if ("Silver".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
+                        return WorkflowResponse.builder().status(400).message("Bronze certification is required before adding for Silver").build();
+
+                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("Zed Certifications Type")).fieldName("zedCertificationType").fieldType("label").fieldValue(zedCertifications.get(0).getZedCertificationType()).build());
 
                     if(!zedCertifications.isEmpty()) {
                         if ("Gold".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
@@ -371,7 +376,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                 status = outcomeName + " Saved Successfully.";
                 break;
             }
-            case "ZEDCertificationBronze", "ZEDCertificationSilver", "ZEDCertificationGold": {
+            case "ZEDCertification": {
                 ZEDCertificationRequest request = parser.parse(data, ZEDCertificationRequest.class);
                 Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
                         .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));

@@ -1,94 +1,51 @@
 package com.metaverse.workflow.model;
 
+import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.Month;
-import java.util.Map;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
 @Getter
 @Table(name = "financial_target")
 public class FinancialTarget {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "financial_target_id")
-    private Long physicalTargetId;
+    private Long financialTargetId;
 
     @ManyToOne
     @JoinColumn(name = "agency_id", nullable = false)
     private Agency agency;
 
     @ManyToOne
+    @JoinColumn(name = "outcome_table_id", nullable = false)
+    private ProgramOutcomeTable programOutcomeTable;
+
+    @Column(name = "financial_year")
+    private String financialYear;
+
+    @Column(name = "q1")
+    private Double q1;
+
+    @Column(name = "q2")
+    private Double q2;
+
+    @Column(name = "q3")
+    private Double q3;
+
+    @Column(name = "q4")
+    private Double q4;
+
+    /*@ManyToOne
     @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
 
     @ManyToOne
     @JoinColumn(name = "subactivity_id", nullable = false)
-    private SubActivity subactivity;
-
-    @Column(name = "year")
-    private Integer year;
-
-
-    @Column(name = "apr_financial_target")
-    private Double aprFinancialTarget;
-
-    @Column(name = "may_financial_target")
-    private Double mayFinancialTarget;
-
-    @Column(name = "jun_financial_target")
-    private Double junFinancialTarget;
-
-    @Column(name = "jul_financial_target")
-    private Double julFinancialTarget;
-
-    @Column(name = "aug_financial_target")
-    private Double augFinancialTarget;
-
-    @Column(name = "sep_financial_target")
-    private Double sepFinancialTarget;
-
-    @Column(name = "oct_financial_target")
-    private Double octFinancialTarget;
-
-    @Column(name = "nov_financial_target")
-    private Double novFinancialTarget;
-
-    @Column(name = "dec_financial_target")
-    private Double decFinancialTarget;
-
-    @Column(name = "jan_financial_target")
-    private Double janFinancialTarget;
-
-    @Column(name = "feb_financial_target")
-    private Double febFinancialTarget;
-
-    @Column(name = "mar_financial_target")
-    private Double marFinancialTarget;
-
-    /*
-
-    public enum Month {
-        APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC, JAN, FEB, MAR
-    }
-
-    @ElementCollection
-    @CollectionTable(name = "financial_targets", joinColumns = @JoinColumn(name = "entity_id"))
-    @MapKeyColumn(name = "month")
-    @Column(name = "target")
-    private Map<Month, Double> financialTargets;
-
-    @ElementCollection
-    @CollectionTable(name = "physical_targets", joinColumns = @JoinColumn(name = "entity_id"))
-    @MapKeyColumn(name = "month")
-    @Column(name = "target")
-    private Map<Month, Double> physicalTargets;*/
+    private SubActivity subactivity;*/
 
 }
