@@ -22,6 +22,7 @@ public class TargetResponseMapper {
     {
         return PhysicalTargetResponse.builder()
                 .physicalTargetId(request.getPhysicalTargetId())
+                .outcomeId(request.getProgramOutcomeTable().getOutcomeTableId())
                 .financialYear(request.getFinancialYear())
                 .q1(request.getQ1())
                 .q2(request.getQ2())

@@ -28,9 +28,7 @@ public class OutcomeDetails {
         private String fieldDisplayName;
         private String fieldType;
         private String fieldValue;
-
     }
-
 }
 
 

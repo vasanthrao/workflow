@@ -9,6 +9,7 @@ import lombok.Setter;
 @Builder
 public class PhysicalTargetResponse {
     private Long physicalTargetId;
+    private Integer outcomeId;
     private String agencyName;
     private String outcomeTableName;
     private String financialYear;

@@ -2,6 +2,7 @@ package com.metaverse.workflow.programoutcometargets.service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.common.util.RestControllerBase;
 import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.FinancialTarget;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TargetServiceAdepter implements TargetService {
@@ -97,6 +99,13 @@ public class TargetServiceAdepter implements TargetService {
 
         ProgramOutcomeTable outcomeTable = outcomeTableRepository.findById(request.getOutcomeId())
                 .orElseThrow(() -> new DataException("Outcome table not found","",400));
+
+        List<PhysicalTarget> existingTargets = physicalRepository
+                .findByProgramOutcomeTableAndFinancialYear(outcomeTable, request.getFinancialYear());
+
+        if (!existingTargets.isEmpty()) {
+            throw new DataException("Target for the given outcome and financial year already exists", "TARGET-OUTCOME-NOT-FOUND", 409);
+        }
 
         PhysicalTarget savedTarget = physicalRepository.save(TargetRequestMapper.mapPhysicalTarget(request, agency, outcomeTable));
 

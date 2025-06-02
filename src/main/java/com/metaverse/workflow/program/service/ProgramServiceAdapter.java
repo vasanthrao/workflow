@@ -119,9 +119,11 @@ public class ProgramServiceAdapter implements ProgramService {
         notificationRequest.setMessage("New program scheduled: " + program.getProgramTitle());
 
         notificationService.saveNotification(notificationRequest);
-
+        updateOverduePrograms();
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.map(program)).build();
     }
+
+
 
     @Override
     public WorkflowResponse createProgramSession(ProgramSessionRequest request, List<MultipartFile> files) {
@@ -198,6 +200,7 @@ public class ProgramServiceAdapter implements ProgramService {
         if (!location.isPresent()) return WorkflowResponse.builder().status(400).message("Invalid Location").build();
 
         Program program = programRepository.save(ProgramRequestMapper.mapUpdate(request, agency.get(), location.get(), programOptional.get()));
+        updateOverduePrograms();
         return WorkflowResponse.builder().status(200).message("Success").data(ProgramResponseMapper.map(program)).build();
     }
 
@@ -715,6 +718,27 @@ public class ProgramServiceAdapter implements ProgramService {
                         .programOverDue(overDue)
                         .build())
                 .build();
+    }
+
+    public void updateOverduePrograms() {
+        Date twoDaysAgo = java.sql.Date.valueOf(LocalDate.now().plusDays(2));
+        List<Program> overdueProgramUpdate = new ArrayList<>();
+        List<Program> overduePrograms = programRepository.findProgramsWithStartDateEqual(twoDaysAgo);
+
+        for (Program program : overduePrograms) {
+            System.out.println("Two days ago: " + twoDaysAgo);
+            System.out.println("Found programs: " + overduePrograms.size());
+            program.setOverdue(true);
+            Long currentVersion = program.getVersion();
+            if (currentVersion == null) {
+                program.setVersion(1L);
+            } else {
+                program.setVersion(currentVersion + 1);
+            }
+            overdueProgramUpdate.add(program);
+        }
+
+        programRepository.saveAll(overdueProgramUpdate);
     }
 
 

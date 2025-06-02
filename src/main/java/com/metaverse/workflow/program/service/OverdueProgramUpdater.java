@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,14 +21,39 @@ public class OverdueProgramUpdater {
     private ProgramRepository programRepository;
 
     @Transactional
-//    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
-    @Scheduled(cron = "0 * * * * ?") //min update
+    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
+//    @Scheduled(cron = "0 * * * * ?") //min update
     public void updateOverduePrograms() {
-        List<Program> overduePrograms = programRepository.findProgramsWithStartDateTwoDaysAgo();
-       // System.out.println("-----------------overdue programs-------------- " +overduePrograms.size());
+        Date twoDaysAgo = java.sql.Date.valueOf(LocalDate.now().plusDays(2));
+        List<Program> overdueProgramUpdate = new ArrayList<>();
+        List<Program> overduePrograms = programRepository.findProgramsWithStartDateEqual(twoDaysAgo);
+
         for (Program program : overduePrograms) {
-//            System.out.println("Two days ago: " + program.getProgramId());
-//            System.out.println("Found programs: " + overduePrograms.size());
+            System.out.println("Two days ago: " + twoDaysAgo);
+            System.out.println("Found programs: " + overduePrograms.size());
+            program.setOverdue(true);
+            Long currentVersion = program.getVersion();
+            if (currentVersion == null) {
+                program.setVersion(1L);
+            } else {
+                program.setVersion(currentVersion + 1);
+            }
+            overdueProgramUpdate.add(program);
+        }
+        programRepository.saveAll(overdueProgramUpdate);
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * ?") //Every day 12
+//    @Scheduled(cron = "0 * * * * ?") //min update
+    public void updatePastDaysPrograms() {
+        Date today = java.sql.Date.valueOf(LocalDate.now());
+
+        List<Program> overduePrograms = programRepository.findByStartDateBefore(today);
+
+
+        for (Program program : overduePrograms) {
+            System.out.println("Found programs: " + overduePrograms.size());
             program.setOverdue(true);
             Long currentVersion = program.getVersion();
             if (currentVersion == null) {
@@ -39,6 +65,7 @@ public class OverdueProgramUpdater {
 
         programRepository.saveAll(overduePrograms);
     }
+
 
     public ProgramUpdateResponse updateOverdueStatusById(Long id) {
         Program program = programRepository.findById(id)

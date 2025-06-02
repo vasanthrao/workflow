@@ -21,10 +21,12 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     List<Program> findByAgencyAgencyIdAndStatus(Long agencyId, String status);
 
-    @Query(value = "SELECT * FROM program WHERE DATE_ADD(start_date, INTERVAL 2 DAY) = CURRENT_DATE", nativeQuery = true)
-    List<Program> findProgramsWithStartDateTwoDaysAgo();
-
     List<Program> findByAgencyAgencyIdAndStatusIn(Long agencyId, List<String> statuses);
 
     Boolean existsByLocation_LocationId(Long locationId);
+
+    @Query("SELECT p FROM Program p WHERE p.startDate <= :targetDate")
+    List<Program> findProgramsWithStartDateEqual(@Param("targetDate") Date targetDate);
+
+    List<Program> findByStartDateBefore(Date today);
 }
