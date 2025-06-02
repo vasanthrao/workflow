@@ -2,6 +2,7 @@ package com.metaverse.workflow.programoutcome.service;
 
 import com.metaverse.workflow.agency.repository.AgencyRepository;
 import com.metaverse.workflow.common.response.WorkflowResponse;
+import com.metaverse.workflow.common.util.DateUtil;
 import com.metaverse.workflow.exceptions.DataException;
 import com.metaverse.workflow.model.Agency;
 import com.metaverse.workflow.model.Organization;
@@ -86,6 +87,8 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     LeanRepository leanRepository;
     @Autowired
     ZEDCertificationRepository zedCertificationRepository;
+    @Autowired
+    ZEDCertificationMapper zedCertificationMapper;
 
 
     @Override
@@ -107,15 +110,25 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                     List<ONDCRegistration> ondcRegistration = ondcRegistrationRepository.findByParticipantId(participantId);
                     if (ondcRegistration == null || ondcRegistration.isEmpty())
                         return WorkflowResponse.builder().status(400).message("ONDC Registration not completed").build();
-                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("ONDC Registration No")).fieldName("ondcRegistrationNo").fieldType("label").fieldValue(ondcRegistration.get(0).getOndcRegistrationNo()).build());
+                    columnList.add(OutcomeDetails.OutcomeDataSet.builder()
+                            .fieldDisplayName(getFieldDisplayName("ONDC Registration No"))
+                            .fieldName("ondcRegistrationNo").fieldType("label")
+                            .fieldValue(ondcRegistration.get(0).getOndcRegistrationNo())
+                            .build()
+                    );
                 }
                 case "TReDSTransaction": {
                     List<TReDSRegistration> tReDSRegistrations = tredsRegistrationRepository.findByParticipantId(participantId);
                     if (tReDSRegistrations == null || tReDSRegistrations.isEmpty())
                         return WorkflowResponse.builder().status(400).message("TReDS Registration not completed").build();
-                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("TReDS Registration No")).fieldName("tredsRegistrationNo").fieldType("label").fieldValue(tReDSRegistrations.get(0).getTredsRegistrationNo()).build());
+                    columnList.add(OutcomeDetails.OutcomeDataSet.builder()
+                            .fieldDisplayName(getFieldDisplayName("TReDS Registration No"))
+                            .fieldName("tredsRegistrationNo").fieldType("label")
+                            .fieldValue(tReDSRegistrations.get(0).getTredsRegistrationNo())
+                            .build());
                 }
                 case "ZEDCertification": {
+                    List<String> certificationTypes = List.of("Bronze", "Silver", "Gold");
                     List<ZEDCertification> zedCertifications = zedCertificationRepository.findByParticipantId(participantId);
                     if (zedCertifications == null || zedCertifications.isEmpty())
                         return WorkflowResponse.builder().status(400).message("ZED Certification not found").build();
@@ -123,15 +136,34 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                     if ("Silver".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
                         return WorkflowResponse.builder().status(400).message("Bronze certification is required before adding for Silver").build();
 
-                    columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("Zed Certifications Type")).fieldName("zedCertificationType").fieldType("label").fieldValue(zedCertifications.get(0).getZedCertificationType()).build());
+                    columnList.add(
+                            OutcomeDetails.OutcomeDataSet.builder()
+                                    .fieldDisplayName(getFieldDisplayName("Zed Certifications Type"))
+                                    .fieldName("zedCertificationType")
+                                    .fieldType("label")
+                                    .fieldValue(zedCertifications.get(0).getZedCertificationType())
+                                    .fieldOptions(certificationTypes)
+                                    .build()
+                    );
 
                     if(!zedCertifications.isEmpty()) {
                         if ("Gold".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
                             return WorkflowResponse.builder().status(400).message("Silver certification is required before applying for Gold").build();
-                        columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("Zed Certifications Type")).fieldName("zedCertificationType").fieldType("label").fieldValue(zedCertifications.get(0).getZedCertificationType()).build());
+                        columnList.add(OutcomeDetails.OutcomeDataSet.builder()
+                                .fieldDisplayName(getFieldDisplayName("Zed Certifications Type"))
+                                .fieldName("zedCertificationType").fieldType("label")
+                                .fieldValue(zedCertifications.get(0).getZedCertificationType())
+                                .fieldOptions(certificationTypes)
+                                .build()
+                        );
                     }
                     else {
-                        columnList.add(OutcomeDetails.OutcomeDataSet.builder().fieldDisplayName(getFieldDisplayName("Zed Certifications Type")).fieldName("zedCertificationType").fieldType("label").fieldValue(null).build());
+                        columnList.add(OutcomeDetails.OutcomeDataSet.builder()
+                                .fieldDisplayName(getFieldDisplayName("Zed Certifications Type"))
+                                .fieldName("zedCertificationType")
+                                .fieldType("label").fieldValue(null)
+                                .build()
+                        );
                     }
                 }
             }
@@ -378,18 +410,9 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             }
             case "ZEDCertification": {
                 ZEDCertificationRequest request = parser.parse(data, ZEDCertificationRequest.class);
-                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
-                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
-
-                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
-                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
-
-                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
-                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
-                status = outcomeName + " Saved Successfully.";
-                break;
+                ZEDCertification zedCertification = zedCertificationMapper.toEntity(request);
+                zedCertificationRepository.save(zedCertification);
             }
-
         }
         return WorkflowResponse.builder().status(200).message("Success").data(status).build();
     }
