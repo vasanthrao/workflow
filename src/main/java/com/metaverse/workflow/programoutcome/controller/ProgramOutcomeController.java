@@ -35,8 +35,10 @@ public class ProgramOutcomeController {
     }
 
     @GetMapping(value = "/program/outcome/details/{participantId}/{outcome}")
-    public ResponseEntity<WorkflowResponse> getProgramOutcomeDetails(@PathVariable("participantId") Long participantId, @PathVariable("outcome") String outcome) {
-        WorkflowResponse response = programOutcomeService.getOutcomeDetails(participantId, outcome);
+    public ResponseEntity<WorkflowResponse> getProgramOutcomeDetails(@PathVariable("participantId") Long participantId,
+                                                                     @PathVariable("outcome") String outcome,
+                                                                     @RequestParam(value = "type",required = false) String type) {
+        WorkflowResponse response = programOutcomeService.getOutcomeDetails(participantId, outcome,type);
         return ResponseEntity.ok(response);
     }
 

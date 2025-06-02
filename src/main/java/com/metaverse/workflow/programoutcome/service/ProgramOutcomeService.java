@@ -11,7 +11,7 @@ public interface ProgramOutcomeService {
 
     List<ProgramOutcomeTable> getProgramOutcomeTables();
 
-    WorkflowResponse getOutcomeDetails(Long participantId, String outcome);
+    WorkflowResponse getOutcomeDetails(Long participantId, String outcome,String type);
 
     WorkflowResponse saveOutCome(String outcomeName, String data) throws ParseException, DataException;
 

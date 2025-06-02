@@ -96,7 +96,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     }
 
     @Override
-    public WorkflowResponse getOutcomeDetails(Long participantId, String outcome) {
+    public WorkflowResponse getOutcomeDetails(Long participantId, String outcome,String type) {
         String className = "com.metaverse.workflow.programoutcome.dto." + outcome + "Request";
         try {
             Field[] fields = Class.forName(className).getFields();
@@ -129,45 +129,41 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                     break;
                 }
                 case "ZEDCertification": {
-                    List<String> certificationTypes = List.of("Bronze", "Silver", "Gold");
                     List<ZEDCertification> zedCertifications = zedCertificationRepository.findByParticipantId(participantId);
-                    if (zedCertifications == null || zedCertifications.isEmpty())
-                        return WorkflowResponse.builder().status(400).message("ZED Certification not found").build();
 
-                    if ("Silver".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
-                        return WorkflowResponse.builder().status(400).message("Bronze certification is required before adding for Silver").build();
+                    String currentType = zedCertifications != null && !zedCertifications.isEmpty()
+                            ? zedCertifications.get(0).getZedCertificationType()
+                            : null;
+
+
+                        if ("Silver".equalsIgnoreCase(type) && !"Bronze".equalsIgnoreCase(currentType)) {
+                            return WorkflowResponse.builder()
+                                    .status(400)
+                                    .message("Bronze certification is not added yet. Please complete Bronze before applying for Silver.")
+                                    .build();
+                        }
+
+                        if ("Gold".equalsIgnoreCase(type) && !"Silver".equalsIgnoreCase(currentType)) {
+                            return WorkflowResponse.builder()
+                                    .status(400)
+                                    .message("Silver certification is not added yet. Please complete Silver before applying for Gold.")
+                                    .build();
+                        }
+
+
 
                     columnList.add(
                             OutcomeDetails.OutcomeDataSet.builder()
                                     .fieldDisplayName(getFieldDisplayName("Zed Certifications Type"))
                                     .fieldName("zedCertificationType")
                                     .fieldType("label")
-                                    .fieldValue(zedCertifications.get(0).getZedCertificationType())
-                                    .fieldOptions(certificationTypes)
+                                    .fieldValue(currentType == null?"Bronze":currentType)
                                     .build()
                     );
 
-                    if(!zedCertifications.isEmpty()) {
-                        if ("Gold".equalsIgnoreCase(zedCertifications.get(0).getZedCertificationType()))
-                            return WorkflowResponse.builder().status(400).message("Silver certification is required before applying for Gold").build();
-                        columnList.add(OutcomeDetails.OutcomeDataSet.builder()
-                                .fieldDisplayName(getFieldDisplayName("Zed Certifications Type"))
-                                .fieldName("zedCertificationType").fieldType("label")
-                                .fieldValue(zedCertifications.get(0).getZedCertificationType())
-                                .fieldOptions(certificationTypes)
-                                .build()
-                        );
-                    }
-                    else {
-                        columnList.add(OutcomeDetails.OutcomeDataSet.builder()
-                                .fieldDisplayName(getFieldDisplayName("Zed Certifications Type"))
-                                .fieldName("zedCertificationType")
-                                .fieldType("label").fieldValue(null)
-                                .build()
-                        );
-                    }
                     break;
                 }
+
             }
             return WorkflowResponse.builder().status(200).message("Success").data(OutcomeDetails.builder().outcomeForm(columnList).build()).build();
         } catch (ClassNotFoundException ex) {
