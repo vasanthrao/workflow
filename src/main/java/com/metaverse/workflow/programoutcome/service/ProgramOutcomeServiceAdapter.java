@@ -116,6 +116,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                             .fieldValue(ondcRegistration.get(0).getOndcRegistrationNo())
                             .build()
                     );
+                    break;
                 }
                 case "TReDSTransaction": {
                     List<TReDSRegistration> tReDSRegistrations = tredsRegistrationRepository.findByParticipantId(participantId);
@@ -126,6 +127,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                             .fieldName("tredsRegistrationNo").fieldType("label")
                             .fieldValue(tReDSRegistrations.get(0).getTredsRegistrationNo())
                             .build());
+                    break;
                 }
                 case "ZEDCertification": {
                     List<String> certificationTypes = List.of("Bronze", "Silver", "Gold");
@@ -165,6 +167,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
                                 .build()
                         );
                     }
+                    break;
                 }
             }
             return WorkflowResponse.builder().status(200).message("Success").data(OutcomeDetails.builder().outcomeForm(columnList).build()).build();
