@@ -31,10 +31,9 @@ public class TargetServiceAdepter implements TargetService {
     @Override
     public WorkflowResponse saveFinancialTarget(FinancialTargetRequest request) throws DataException {
         Agency agency = agencyRepository.findById(request.getAgencyId())
-                .orElseThrow(() -> new DataException("Agency not found","",400));
-
+                .orElseThrow(() -> new DataException("Agency not found","AGENCY_NOT_FOUND",400));
         ProgramOutcomeTable outcomeTable = outcomeTableRepository.findById(request.getOutcomeId())
-                .orElseThrow(() -> new DataException("Outcome table not found","",400));
+                .orElseThrow(() -> new DataException("Outcome table not found","OUTCOME_NOT_FOUND",400));
 
         FinancialTarget savedTarget = financialRepository.save(TargetRequestMapper.mapFinancialTarget(request, agency, outcomeTable));
 
@@ -45,7 +44,7 @@ public class TargetServiceAdepter implements TargetService {
     @Override
     public WorkflowResponse updateFinancialTarget(FinancialTargetRequest request, Long financialTargetId) throws DataException {
         FinancialTarget existingTarget = financialRepository.findById(financialTargetId)
-                .orElseThrow(() -> new DataException("Financial target not found","",400));
+                .orElseThrow(() -> new DataException("Financial target not found","TARGET_NOT_FOUND",400));
 
         TargetRequestMapper.mapUpdateFinancialTarget(existingTarget, request);
         FinancialTarget updatedTarget = financialRepository.save(existingTarget);
@@ -59,7 +58,7 @@ public class TargetServiceAdepter implements TargetService {
     @Override
     public WorkflowResponse getFinancialTargetsById(Long financialTargetId) throws DataException {
         FinancialTarget target = financialRepository.findById(financialTargetId)
-                .orElseThrow(() -> new DataException("Financial target not found","",400));
+                .orElseThrow(() -> new DataException("Financial target not found","TARGET_NOT_FOUND",400));
         return WorkflowResponse.builder().status(200).message("Target updated Successfully")
                 .data(TargetResponseMapper.mapFinancialTarget(target))
                 .build(); }
@@ -101,10 +100,10 @@ public class TargetServiceAdepter implements TargetService {
                 .orElseThrow(() -> new DataException("Outcome table not found","",400));
 
         List<PhysicalTarget> existingTargets = physicalRepository
-                .findByProgramOutcomeTableAndFinancialYear(outcomeTable, request.getFinancialYear());
+                .findByProgramOutcomeTableAndFinancialYearAndAgencyAgencyId(outcomeTable, request.getFinancialYear(),agency.getAgencyId());
 
         if (!existingTargets.isEmpty()) {
-            throw new DataException("Target for the given outcome and financial year already exists", "TARGET-OUTCOME-NOT-FOUND", 409);
+            throw new DataException("Target for the given outcome and financial year already exists", "TARGET-EXISTS", 409);
         }
 
         PhysicalTarget savedTarget = physicalRepository.save(TargetRequestMapper.mapPhysicalTarget(request, agency, outcomeTable));

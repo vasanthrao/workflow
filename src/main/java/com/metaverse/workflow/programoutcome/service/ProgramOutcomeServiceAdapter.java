@@ -87,8 +87,7 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
     LeanRepository leanRepository;
     @Autowired
     ZEDCertificationRepository zedCertificationRepository;
-    @Autowired
-    ZEDCertificationMapper zedCertificationMapper;
+
 
 
     @Override
@@ -413,8 +412,18 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
             }
             case "ZEDCertification": {
                 ZEDCertificationRequest request = parser.parse(data, ZEDCertificationRequest.class);
-                ZEDCertification zedCertification = zedCertificationMapper.toEntity(request);
-                zedCertificationRepository.save(zedCertification);
+                Agency agency = agencyRepository.findById(request.getAgencyId() == null ? 0 : request.getAgencyId())
+                        .orElseThrow(() -> new DataException("Agency data not found", "AGENCY-DATA-NOT-FOUND", 400));
+
+                Participant participant = participantRepository.findById(request.getParticipantId() == null ? 0 : request.getParticipantId())
+                        .orElseThrow(() -> new DataException("Participant data not found", "PARTICIPANT-DATA-NOT-FOUND", 400));
+
+                Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
+                        .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+
+                zedCertificationRepository.save(OutcomeRequestMapper.mapZEDCertification(request,agency,participant,organization));
+                status = outcomeName + " Saved Successfully.";
+                break;
             }
         }
         return WorkflowResponse.builder().status(200).message("Success").data(status).build();

@@ -11,7 +11,7 @@ insert into program_outcome_tables (outcome_table_id, outcome_table_display_name
 (8,'PMEGP','PMEGP'),
 (9,'PMMY','PMMY'),
 (10,'PMS','PMS'),
-(11, 'IC Scheme', '1ICScheme'),
+(11, 'IC Scheme', 'ICScheme'),
 (12,'NSIC','NSIC'),
 (13,'Patents','Patents'),
 (14,'GIProduct','GIProduct'),

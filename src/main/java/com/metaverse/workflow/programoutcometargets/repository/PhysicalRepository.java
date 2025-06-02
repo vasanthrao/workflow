@@ -12,4 +12,6 @@ public interface PhysicalRepository extends JpaRepository<PhysicalTarget,Long> {
     List<PhysicalTarget> findByAgencyAgencyId(Long agencyId);
 
     List<PhysicalTarget> findByProgramOutcomeTableAndFinancialYear(ProgramOutcomeTable outcomeTable, String financialYear);
+
+    List<PhysicalTarget> findByProgramOutcomeTableAndFinancialYearAndAgencyAgencyId(ProgramOutcomeTable outcomeTable, String financialYear, Long agencyId);
 }

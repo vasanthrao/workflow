@@ -56,7 +56,7 @@ public class CounsellorServiceImpl implements CounsellorService {
         CounsellorRegistration response = counsellorRegistrationRepository.save(counsellorRegistration);
         counsellorAllotment.setCounsellorRegistration(response);
         counsellorAllotmentRepository.save(counsellorAllotment);
-        return WorkflowResponse.builder().message("success").status(200).data(response).build();
+        return WorkflowResponse.builder().message("success").status(200).data(CounsellorRegistrationResponseMapper.map(response)).build();
     }
 
 
