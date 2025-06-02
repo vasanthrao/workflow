@@ -33,4 +33,21 @@ public class TargetResponseMapper {
                 .outcomeTableName(request.getProgramOutcomeTable().getOutcomeTableName())
                 .build();
     }
+
+    public static TargetResponse mapPhysicalTargetResponse(PhysicalTarget target) {
+        if (target == null) return null;
+
+        return TargetResponse.builder()
+                .physicalTargetId(target.getPhysicalTargetId())
+                .outcomeId(target.getProgramOutcomeTable().getOutcomeTableId())
+                .agencyName(target.getAgency().getAgencyName()) // assuming a nested object
+                .outcomeTableName(target.getProgramOutcomeTable().getOutcomeTableName()) // assuming a nested object
+                .financialYear(target.getFinancialYear())
+                .q1(target.getQ1())
+                .q2(target.getQ2())
+                .q3(target.getQ3())
+                .q4(target.getQ4())
+                .total(target.getQ1()+ target.getQ2()+ target.getQ3()+ target.getQ4())
+                .build();
+    }
 }

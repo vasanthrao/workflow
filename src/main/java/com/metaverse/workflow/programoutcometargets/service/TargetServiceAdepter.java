@@ -14,8 +14,7 @@ import com.metaverse.workflow.programoutcometargets.repository.PhysicalRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TargetServiceAdepter implements TargetService {
@@ -147,8 +146,34 @@ public class TargetServiceAdepter implements TargetService {
             targets = physicalRepository.findByAgencyAgencyId(agencyId);
             if (targets.isEmpty()) return WorkflowResponse.builder().status(400).message("Targets  not assigned for this agency").build();
         }
+
+        Map<String, OutcomeGroup> groupedData = new HashMap<>();
+        Map<String, Set<String>> yearTracker = new HashMap<>();
+        Set<String> financialYearHeaders = new HashSet<>();
+        for (PhysicalTarget target : targets) {
+            TargetResponse response = TargetResponseMapper.mapPhysicalTargetResponse(target);
+            String outcomeName = response.getOutcomeTableName();
+            String year = response.getFinancialYear();
+            long total = response.getTotal() != null ? response.getTotal() : 0L;
+
+            OutcomeGroup group = groupedData.computeIfAbsent(outcomeName, k -> {
+                OutcomeGroup og = new OutcomeGroup();
+                og.setOutcomeTableName(k);
+                og.setGrandTotal(0L);
+                return og;
+            });
+
+            Set<String> trackedYears = yearTracker.computeIfAbsent(outcomeName, k -> new HashSet<>());
+            financialYearHeaders.add(year);
+            if (trackedYears.add(year)) {
+                group.getFinancialYear().add(response);
+                group.setGrandTotal(group.getGrandTotal() + total);
+                group.setFinancialYearHeaders(financialYearHeaders);
+            }
+        }
+
         return WorkflowResponse.builder().status(200).message("Success")
-                .data(targets.stream().map(TargetResponseMapper::mapPhysicalTarget).toList())
+                .data(groupedData)
                 .build();
     }
 
