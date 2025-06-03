@@ -5,6 +5,7 @@ import com.metaverse.workflow.model.Organization;
 import com.metaverse.workflow.model.Participant;
 import jakarta.persistence.*;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -42,12 +43,15 @@ public class NSIC {
 
     @Column(name = "Influenced")
    private Boolean isInfluenced;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "participant_id")
     private Participant participant;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;

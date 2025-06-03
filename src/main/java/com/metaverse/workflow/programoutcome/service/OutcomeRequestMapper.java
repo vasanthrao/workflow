@@ -9,7 +9,7 @@ import com.metaverse.workflow.programoutcome.dto.*;
 
 public class OutcomeRequestMapper {
 
-    private static final String DATE_FORMAT = "dd-MM-yyyy";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     public static ONDCRegistration mapOndcRegistration(ONDCRegistrationRequest request, Agency agency, Participant participant, Organization organization) {
         return ONDCRegistration.builder()
@@ -45,25 +45,25 @@ public class OutcomeRequestMapper {
 
     public static CGTMSETransaction mapCGTMSETransaction(CGTMSETransactionRequest request, Agency agency, Participant participant, Organization organization) {
         return CGTMSETransaction.builder()
-                .creditApplicationDate(DateUtil.stringToDate(request.getCreditApplicationDate(), "dd-MM-yyyy"))
-                .dprSubmissionDate(DateUtil.stringToDate(request.getDprSubmissionDate(), "dd-MM-yyyy"))
-                .approvalDate(DateUtil.stringToDate(request.getApprovalDate(), "dd-MM-yyyy"))
-                .amountReleaseDate(DateUtil.stringToDate(request.getAmountReleaseDate(), "dd-MM-yyyy"))
+                .creditApplicationDate(DateUtil.stringToDate(request.getCreditApplicationDate(), DATE_FORMAT))
+                .dprSubmissionDate(DateUtil.stringToDate(request.getDprSubmissionDate(), DATE_FORMAT))
+                .approvalDate(DateUtil.stringToDate(request.getApprovalDate(), DATE_FORMAT))
+                .amountReleaseDate(DateUtil.stringToDate(request.getAmountReleaseDate(), DATE_FORMAT))
                 .valueReleased(request.getValueReleased())
                 .creditGuaranteePercentage(request.getCreditGuaranteePercentage())
                 .purpose(request.getPurpose())
-                .groundingDate(DateUtil.stringToDate(request.getGroundingDate(), "dd-MM-yyyy"))
+                .groundingDate(DateUtil.stringToDate(request.getGroundingDate(), DATE_FORMAT))
                 .productName(request.getProductName())
                 .productionPerMonth(request.getProductionPerMonth())
                 .marketType(request.getMarketType())
-                .marketingDate(DateUtil.stringToDate(request.getMarketingDate(), "dd-MM-yyyy"))
+                .marketingDate(DateUtil.stringToDate(request.getMarketingDate(), DATE_FORMAT))
                 .marketVolume(request.getMarketVolume())
                 .marketValue(request.getMarketValue())
                 .totalTurnover(request.getTotalTurnover())
                 .employmentMale(request.getEmploymentMale())
                 .employmentFemale(request.getEmploymentFemale())
                 .proposeOfEnterpriseUpgradation(request.getProposeOfEnterpriseUpgradation())
-                .dateOfGrounding(DateUtil.stringToDate(request.getDateOfGrounding(), "dd-MM-yyyy"))
+                .dateOfGrounding(DateUtil.stringToDate(request.getDateOfGrounding(), DATE_FORMAT))
                 .isInfluenced(request.getIsInfluenced())
                 .agency(agency)
                 .organization(organization)

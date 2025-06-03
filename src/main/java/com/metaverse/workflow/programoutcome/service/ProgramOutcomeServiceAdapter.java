@@ -187,6 +187,12 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
                 Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                if (ondcRegistrationRepository.existsByParticipant_ParticipantId(request.getParticipantId())) {
+                    return WorkflowResponse.builder()
+                            .message("ONDC registration already exists for the given participant.")
+                            .data(ondcRegistrationRepository.findByParticipantId(request.getParticipantId()))
+                            .build();
+                }
                 ondcRegistrationRepository.save(OutcomeRequestMapper.mapOndcRegistration(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
@@ -210,6 +216,12 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
                 Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                if (udyamRegistrationRepository.existsByParticipant_ParticipantId(request.getParticipantId())) {
+                    return WorkflowResponse.builder()
+                            .message("Udyam registration already exists for the given participant.")
+                            .data(udyamRegistrationRepository.findByParticipantParticipantId(request.getParticipantId()))
+                            .build();
+                }
                 udyamRegistrationRepository.save(OutcomeRequestMapper.mapUdyamRegistration(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
@@ -238,6 +250,12 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
                 Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                if (geMTransactionRepository.existsByParticipant_ParticipantId(request.getParticipantId())) {
+                    return WorkflowResponse.builder()
+                            .message("Udyam registration already exists for the given participant.")
+                            .data(geMTransactionRepository.findByParticipantParticipantId(request.getParticipantId()))
+                            .build();
+                }
                 geMTransactionRepository.save(OutcomeRequestMapper.mapGeMTransaction(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;
@@ -252,6 +270,12 @@ public class ProgramOutcomeServiceAdapter implements ProgramOutcomeService {
 
                 Organization organization = organizationRepository.findById(request.getOrganizationId() == null ? 0 : request.getOrganizationId())
                         .orElseThrow(() -> new DataException("Organization data not found", "ORGANIZATION-DATA-NOT-FOUND", 400));
+                if (tredsRegistrationRepository.existsByParticipant_ParticipantId(request.getParticipantId())) {
+                    return WorkflowResponse.builder()
+                            .message("TReDS registration already exists for the given participant.")
+                            .data(tredsRegistrationRepository.findByParticipantId(request.getParticipantId()))
+                            .build();
+                }
                 tredsRegistrationRepository.save(OutcomeRequestMapper.mapTredsRegistration(request, agency, participant, organization));
                 status = outcomeName + " Saved Successfully.";
                 break;

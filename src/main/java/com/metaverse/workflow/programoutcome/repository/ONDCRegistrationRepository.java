@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface ONDCRegistrationRepository extends JpaRepository<ONDCRegistration, Long> {
     @Query("SELECT DISTINCT ondc FROM ONDCRegistration ondc JOIN ondc.participant p WHERE p.participantId = :participantId")
     List<ONDCRegistration> findByParticipantId(Long participantId);
+    boolean existsByParticipant_ParticipantId(Long participantId);
+
 }
