@@ -21,4 +21,14 @@ public interface ONDCRegistrationRepository extends JpaRepository<ONDCRegistrati
     long countByAgencyAndDateBetween(@Param("agencyId") Long agencyId,
                                      @Param("startDate") Date startDate,
                                      @Param("endDate") Date endDate);
+
+    boolean existsByParticipant_ParticipantId(Long participantId);
+
+
+        @Query("SELECT YEAR(o.createdOn), COUNT(o) " +
+                "FROM ONDCRegistration o " +
+                "WHERE o.participant.participantId = :participantId " +
+                "GROUP BY YEAR(o.createdOn) " +
+                "ORDER BY YEAR(o.createdOn)")
+        List<Object[]> countRegistrationsByYearAndParticipant(@Param("participantId") Long participantId);
 }

@@ -18,8 +18,7 @@ import java.util.Date;
 @Setter
 @Table(name="outcome_zed_certification")
 public class ZEDCertification {
-	
-	
+
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="zed_certificate_registration_id")
@@ -49,10 +48,8 @@ public class ZEDCertification {
     @Column(name = "turnover")
     private Double turnover;
 
-
     @Column(name = "energy_consumption_kwh_per_hr")
     private Double energyConsumptionKwhHr;
-
 
     @Column(name = "production_mt_per_hr")
     private Integer productionMtHr;
@@ -62,7 +59,6 @@ public class ZEDCertification {
 
     @Column(name="Influenced")
     Boolean isInfluenced;
-
 
 	@ManyToOne
     @JoinColumn(name = "agency_id")

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -64,12 +65,15 @@ public class Patents {
 
     @Column(name = "Influenced")
     private Boolean isInfluenced;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "participant_id")
     private Participant participant;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;

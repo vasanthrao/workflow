@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -38,12 +39,15 @@ public class UdyamRegistration {
     @Column(name = "updated_on", insertable = false, updatable = true)
     @UpdateTimestamp
     private Date updatedOn;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "agency_id")
     private Agency agency;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "participant_id")
     private Participant participant;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;

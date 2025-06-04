@@ -16,4 +16,7 @@ public interface TReDSRegistrationRepository extends JpaRepository<TReDSRegistra
     @Query("SELECT COUNT(r) FROM TReDSRegistration r WHERE r.agency.agencyId = :agencyId AND r.tredsRegistrationDate BETWEEN :startDate AND :endDate")
     long countByAgencyIdAndTredsRegistrationDateBetween(@Param("agencyId") Long agencyId,
                                                         @Param("startDate") Date startDate,
-                                                        @Param("endDate") Date endDate);}
+                                                        @Param("endDate") Date endDate);
+
+    boolean existsByParticipant_ParticipantId(Long participantId);
+}
