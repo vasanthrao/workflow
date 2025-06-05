@@ -65,122 +65,124 @@ public class OutcomeTargetServiceImpl implements OutcomeTargetService {
 
         List<OutcomeTargetDTO> dtoList = new ArrayList<>();
 
+
         // ONDC Registration
         dtoList.add(createOutcomeDto("ONDCRegistration", financialYear,
                 physicalTargetRepository.findTarget("ONDCRegistration", financialYear, agencyId),
-                ondcRegistrationRepository.countByAgencyAndDateBetween(agencyId, dQ1Start, dQ1End),
-                ondcRegistrationRepository.countByAgencyAndDateBetween(agencyId, dQ2Start, dQ2End),
-                ondcRegistrationRepository.countByAgencyAndDateBetween(agencyId, dQ3Start, dQ3End),
-                ondcRegistrationRepository.countByAgencyAndDateBetween(agencyId, dQ4Start, dQ4End)
+                ondcRegistrationRepository.countONDCRegistration(agencyId, dQ1Start, dQ1End),
+                ondcRegistrationRepository.countONDCRegistration(agencyId, dQ2Start, dQ2End),
+                ondcRegistrationRepository.countONDCRegistration(agencyId, dQ3Start, dQ3End),
+                ondcRegistrationRepository.countONDCRegistration(agencyId, dQ4Start, dQ4End)
         ));
 
         // ONDC Transaction
         dtoList.add(createOutcomeDto("ONDCTransaction", financialYear,
                 physicalTargetRepository.findTarget("ONDCTransaction", financialYear, agencyId),
-                ondcTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ1Start, dQ1End),
-                ondcTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ2Start, dQ2End),
-                ondcTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ3Start, dQ3End),
-                ondcTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ4Start, dQ4End)
+                ondcTransactionRepository.countONDCTransaction(agencyId, dQ1Start, dQ1End),
+                ondcTransactionRepository.countONDCTransaction(agencyId, dQ2Start, dQ2End),
+                ondcTransactionRepository.countONDCTransaction(agencyId, dQ3Start, dQ3End),
+                ondcTransactionRepository.countONDCTransaction(agencyId, dQ4Start, dQ4End)
         ));
 
         // Udyam Registration
         dtoList.add(createOutcomeDto("UdyamRegistration", financialYear,
                 physicalTargetRepository.findTarget("UdyamRegistration", financialYear, agencyId),
-                udyamRegistrationRepository.countByAgencyAndRegistrationDateBetween(agencyId, dQ1Start, dQ1End),
-                udyamRegistrationRepository.countByAgencyAndRegistrationDateBetween(agencyId, dQ2Start, dQ2End),
-                udyamRegistrationRepository.countByAgencyAndRegistrationDateBetween(agencyId, dQ3Start, dQ3End),
-                udyamRegistrationRepository.countByAgencyAndRegistrationDateBetween(agencyId, dQ4Start, dQ4End)
+                udyamRegistrationRepository.countUdyamRegistration(agencyId, dQ1Start, dQ1End),
+                udyamRegistrationRepository.countUdyamRegistration(agencyId, dQ2Start, dQ2End),
+                udyamRegistrationRepository.countUdyamRegistration(agencyId, dQ3Start, dQ3End),
+                udyamRegistrationRepository.countUdyamRegistration(agencyId, dQ4Start, dQ4End)
         ));
 
         //TReDsRegistration
         dtoList.add(createOutcomeDto("TReDS Registration", financialYear,
                 physicalTargetRepository.findTarget("TReDSRegistration", financialYear, agencyId),
-                tredsRegistrationRepository.countByAgencyIdAndTredsRegistrationDateBetween(agencyId, dQ1Start, dQ1End),
-                tredsRegistrationRepository.countByAgencyIdAndTredsRegistrationDateBetween(agencyId, dQ2Start, dQ2End),
-                tredsRegistrationRepository.countByAgencyIdAndTredsRegistrationDateBetween(agencyId, dQ3Start, dQ3End),
-                tredsRegistrationRepository.countByAgencyIdAndTredsRegistrationDateBetween(agencyId, dQ4Start, dQ4End)
+                tredsRegistrationRepository.countTReDSRegistration(agencyId, dQ1Start, dQ1End),
+                tredsRegistrationRepository.countTReDSRegistration(agencyId, dQ2Start, dQ2End),
+                tredsRegistrationRepository.countTReDSRegistration(agencyId, dQ3Start, dQ3End),
+                tredsRegistrationRepository.countTReDSRegistration(agencyId, dQ4Start, dQ4End)
         ));
 
         //TReDSTransaction
         dtoList.add(createOutcomeDto("TReDS Transaction", financialYear,
                 physicalTargetRepository.findTarget("TReDSTransaction", financialYear, agencyId),
-                tReDSTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ1Start, dQ1End),
-                tReDSTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ2Start, dQ2End),
-                tReDSTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ3Start, dQ3End),
-                tReDSTransactionRepository.countByAgencyAndTransactionDateBetween(agencyId, dQ4Start, dQ4End)
+                tReDSTransactionRepository.countTReDSTransaction(agencyId, dQ1Start, dQ1End),
+                tReDSTransactionRepository.countTReDSTransaction(agencyId, dQ2Start, dQ2End),
+                tReDSTransactionRepository.countTReDSTransaction(agencyId, dQ3Start, dQ3End),
+                tReDSTransactionRepository.countTReDSTransaction(agencyId, dQ4Start, dQ4End)
         ));
 
         // ZED Certification - Bronze
         dtoList.add(createOutcomeDto("ZED Certification (Bronze)", financialYear,
                 physicalTargetRepository.findTarget("ZEDCertification", financialYear, agencyId),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Bronze", dQ1Start, dQ1End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Bronze", dQ2Start, dQ2End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Bronze", dQ3Start, dQ3End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Bronze", dQ4Start, dQ4End)
+                zedCertificationRepository.countZedCertification(agencyId, "Bronze", dQ1Start, dQ1End),
+                zedCertificationRepository.countZedCertification(agencyId, "Bronze", dQ2Start, dQ2End),
+                zedCertificationRepository.countZedCertification(agencyId, "Bronze", dQ3Start, dQ3End),
+                zedCertificationRepository.countZedCertification(agencyId, "Bronze", dQ4Start, dQ4End)
         ));
 
         // ZED Certification - Silver
         dtoList.add(createOutcomeDto("ZED Certification (Silver)", financialYear,
                 physicalTargetRepository.findTarget("ZEDCertification", financialYear, agencyId),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Silver", dQ1Start, dQ1End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Silver", dQ2Start, dQ2End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Silver", dQ3Start, dQ3End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Silver", dQ4Start, dQ4End)
+                zedCertificationRepository.countZedCertification(agencyId, "Silver", dQ1Start, dQ1End),
+                zedCertificationRepository.countZedCertification(agencyId, "Silver", dQ2Start, dQ2End),
+                zedCertificationRepository.countZedCertification(agencyId, "Silver", dQ3Start, dQ3End),
+                zedCertificationRepository.countZedCertification(agencyId, "Silver", dQ4Start, dQ4End)
         ));
 
         // ZED Certification - Gold
         dtoList.add(createOutcomeDto("ZED Certification (Gold)", financialYear,
                 physicalTargetRepository.findTarget("ZEDCertification", financialYear, agencyId),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Gold", dQ1Start, dQ1End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Gold", dQ2Start, dQ2End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Gold", dQ3Start, dQ3End),
-                zedCertificationRepository.countByAgencyAgencyIdAndZedCertificationTypeAndCertificationDateBetween(agencyId, "Gold", dQ4Start, dQ4End)
+                zedCertificationRepository.countZedCertification(agencyId, "Gold", dQ1Start, dQ1End),
+                zedCertificationRepository.countZedCertification(agencyId, "Gold", dQ2Start, dQ2End),
+                zedCertificationRepository.countZedCertification(agencyId, "Gold", dQ3Start, dQ3End),
+                zedCertificationRepository.countZedCertification(agencyId, "Gold", dQ4Start, dQ4End)
         ));
 
         //Barcode
         dtoList.add(createOutcomeDto("Barcode", financialYear,
                 physicalTargetRepository.findTarget("Barcode", financialYear, agencyId),
-                barcodeRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ1Start, dQ1End),
-                barcodeRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ2Start, dQ2End),
-                barcodeRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ3Start, dQ3End),
-                barcodeRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ4Start, dQ4End)
+                barcodeRepository.countBarcode(agencyId, dQ1Start, dQ1End),
+                barcodeRepository.countBarcode(agencyId, dQ2Start, dQ2End),
+                barcodeRepository.countBarcode(agencyId, dQ3Start, dQ3End),
+                barcodeRepository.countBarcode(agencyId, dQ4Start, dQ4End)
         ));
 
         //GI Product
         dtoList.add(createOutcomeDto("GI Product", financialYear,
                 physicalTargetRepository.findTarget("GIProduct", financialYear, agencyId),
-                giProductRepository.countByAgencyAgencyIdAndDateOfGIRegistrationBetween(agencyId, dQ1Start, dQ1End),
-                giProductRepository.countByAgencyAgencyIdAndDateOfGIRegistrationBetween(agencyId, dQ2Start, dQ2End),
-                giProductRepository.countByAgencyAgencyIdAndDateOfGIRegistrationBetween(agencyId, dQ3Start, dQ3End),
-                giProductRepository.countByAgencyAgencyIdAndDateOfGIRegistrationBetween(agencyId, dQ4Start, dQ4End)
+                giProductRepository.countGIProduct(agencyId, dQ1Start, dQ1End),
+                giProductRepository.countGIProduct(agencyId, dQ2Start, dQ2End),
+                giProductRepository.countGIProduct(agencyId, dQ3Start, dQ3End),
+                giProductRepository.countGIProduct(agencyId, dQ4Start, dQ4End)
         ));
 
         //IC Scheme
         dtoList.add(createOutcomeDto("IC Scheme", financialYear,
                 physicalTargetRepository.findTarget("ICScheme", financialYear, agencyId),
-                icSchemeRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ1Start, dQ1End),
-                icSchemeRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ2Start, dQ2End),
-                icSchemeRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ3Start, dQ3End),
-                icSchemeRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ4Start, dQ4End)
+                icSchemeRepository.countICScheme(agencyId, dQ1Start, dQ1End),
+                icSchemeRepository.countICScheme(agencyId, dQ2Start, dQ2End),
+                icSchemeRepository.countICScheme(agencyId, dQ3Start, dQ3End),
+                icSchemeRepository.countICScheme(agencyId, dQ4Start, dQ4End)
         ));
 
         //Patents
         dtoList.add(createOutcomeDto("Patents", financialYear,
                 physicalTargetRepository.findTarget("Patents", financialYear, agencyId),
-                patentsRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ1Start, dQ1End),
-                patentsRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ2Start, dQ2End),
-                patentsRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ3Start, dQ3End),
-                patentsRepository.countByAgencyAgencyIdAndDateOfExportBetween(agencyId, dQ4Start, dQ4End)
+                patentsRepository.countPatents(agencyId, dQ1Start, dQ1End),
+                patentsRepository.countPatents(agencyId, dQ2Start, dQ2End),
+                patentsRepository.countPatents(agencyId, dQ3Start, dQ3End),
+                patentsRepository.countPatents(agencyId, dQ4Start, dQ4End)
         ));
 
         //TradeMark
         dtoList.add(createOutcomeDto("Trade Mark", financialYear,
                 physicalTargetRepository.findTarget("TreadMark", financialYear, agencyId),
-                treadMarkRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ1Start, dQ1End),
-                treadMarkRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ2Start, dQ2End),
-                treadMarkRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ3Start, dQ3End),
-                treadMarkRepository.countByAgencyAgencyIdAndDateOfRegistrationBetween(agencyId, dQ4Start, dQ4End)
+                treadMarkRepository.countTreadMark(agencyId, dQ1Start, dQ1End),
+                treadMarkRepository.countTreadMark(agencyId, dQ2Start, dQ2End),
+                treadMarkRepository.countTreadMark(agencyId, dQ3Start, dQ3End),
+                treadMarkRepository.countTreadMark(agencyId, dQ4Start, dQ4End)
         ));
+
         return dtoList;
 
     }

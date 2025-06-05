@@ -15,8 +15,22 @@ public interface UdyamRegistrationRepository extends JpaRepository<UdyamRegistra
     long countByAgencyAndRegistrationDateBetween(@Param("agencyId") Long agencyId,
                                                  @Param("startDate") Date startDate,
                                                  @Param("endDate") Date endDate);
+    @Query("SELECT COUNT(u) FROM UdyamRegistration u WHERE u.udyamRegistationDate BETWEEN :startDate AND :endDate")
+    long countByRegistrationDateBetween(@Param("startDate") Date startDate,
+                                                 @Param("endDate") Date endDate);
 
     boolean existsByParticipant_ParticipantId(Long participantId);
 
     List<UdyamRegistration> findByParticipantParticipantId(Long participantId);
+
+    default long countUdyamRegistration(Long agencyId, Date dQ1Start, Date dQ1End) {
+        if (agencyId == -1) {
+            return countByRegistrationDateBetween(dQ1Start, dQ1End);
+        } else if (dQ1Start == null || dQ1End == null) {
+            return count();
+        } else {
+            return countByAgencyAndRegistrationDateBetween(agencyId, dQ1Start, dQ1End);
+        }
+
+    }
 }

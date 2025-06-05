@@ -21,14 +21,20 @@ public interface ONDCRegistrationRepository extends JpaRepository<ONDCRegistrati
     long countByAgencyAndDateBetween(@Param("agencyId") Long agencyId,
                                      @Param("startDate") Date startDate,
                                      @Param("endDate") Date endDate);
-
+    @Query("SELECT COUNT(r) FROM ONDCRegistration r " +
+            "WHERE r.ondcRegistrationDate BETWEEN :startDate AND :endDate")
+    long countByDateBetween(@Param("startDate") Date startDate,
+                            @Param("endDate") Date endDate);
     boolean existsByParticipant_ParticipantId(Long participantId);
+    default long countONDCRegistration(Long agencyId, Date dQ1Start, Date dQ1End) {
+        if (agencyId == -1) {
+            return countByDateBetween(dQ1Start, dQ1End);
+        } else if (dQ1Start == null || dQ1End == null) {
+            return count();
+        } else {
+            return countByAgencyAndDateBetween(agencyId, dQ1Start, dQ1End);
+        }
 
+    }
 
-        @Query("SELECT YEAR(o.createdOn), COUNT(o) " +
-                "FROM ONDCRegistration o " +
-                "WHERE o.participant.participantId = :participantId " +
-                "GROUP BY YEAR(o.createdOn) " +
-                "ORDER BY YEAR(o.createdOn)")
-        List<Object[]> countRegistrationsByYearAndParticipant(@Param("participantId") Long participantId);
 }
