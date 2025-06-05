@@ -26,4 +26,16 @@ public interface PhysicalRepository extends JpaRepository<PhysicalTarget,Long> {
     PhysicalTarget findTarget(@Param("outcomeName") String outcomeName,
                               @Param("financialYear") String financialYear,
                               @Param("agencyId") Long agencyId);
+
+    @Query("SELECT pt FROM PhysicalTarget pt " +
+            "WHERE pt.programOutcomeTable.outcomeTableName = :outcomeName " +
+            "AND pt.programOutcomeTable.outcomeTableId = :outcomeId " +
+            "AND pt.financialYear = :financialYear " +
+            "AND pt.agency.agencyId = :agencyId")
+    PhysicalTarget findTarget(@Param("outcomeName") String outcomeName,
+                              @Param("outcomeId") Integer outcomeId,
+                              @Param("financialYear") String financialYear,
+                              @Param("agencyId") Long agencyId);
+
+
 }

@@ -113,7 +113,7 @@ public class OutcomeTargetServiceImpl implements OutcomeTargetService {
 
         // ZED Certification - Bronze
         dtoList.add(createOutcomeDto("ZED Certification (Bronze)", financialYear,
-                physicalTargetRepository.findTarget("ZEDCertification", financialYear, agencyId),
+                physicalTargetRepository.findTarget("ZEDCertification",17, financialYear, agencyId),
                 zedCertificationRepository.countZedCertification(agencyId, "Bronze", dQ1Start, dQ1End),
                 zedCertificationRepository.countZedCertification(agencyId, "Bronze", dQ2Start, dQ2End),
                 zedCertificationRepository.countZedCertification(agencyId, "Bronze", dQ3Start, dQ3End),
@@ -122,7 +122,7 @@ public class OutcomeTargetServiceImpl implements OutcomeTargetService {
 
         // ZED Certification - Silver
         dtoList.add(createOutcomeDto("ZED Certification (Silver)", financialYear,
-                physicalTargetRepository.findTarget("ZEDCertification", financialYear, agencyId),
+                physicalTargetRepository.findTarget("ZEDCertification",18, financialYear, agencyId),
                 zedCertificationRepository.countZedCertification(agencyId, "Silver", dQ1Start, dQ1End),
                 zedCertificationRepository.countZedCertification(agencyId, "Silver", dQ2Start, dQ2End),
                 zedCertificationRepository.countZedCertification(agencyId, "Silver", dQ3Start, dQ3End),
@@ -131,7 +131,7 @@ public class OutcomeTargetServiceImpl implements OutcomeTargetService {
 
         // ZED Certification - Gold
         dtoList.add(createOutcomeDto("ZED Certification (Gold)", financialYear,
-                physicalTargetRepository.findTarget("ZEDCertification", financialYear, agencyId),
+                physicalTargetRepository.findTarget("ZEDCertification",19, financialYear, agencyId),
                 zedCertificationRepository.countZedCertification(agencyId, "Gold", dQ1Start, dQ1End),
                 zedCertificationRepository.countZedCertification(agencyId, "Gold", dQ2Start, dQ2End),
                 zedCertificationRepository.countZedCertification(agencyId, "Gold", dQ3Start, dQ3End),
