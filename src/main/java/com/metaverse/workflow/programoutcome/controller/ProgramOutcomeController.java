@@ -7,6 +7,7 @@ import com.metaverse.workflow.model.outcomes.ProgramOutcomeTable;
 import com.metaverse.workflow.programoutcome.dto.ProgramOutcomeTableResponse;
 import com.metaverse.workflow.programoutcome.service.OutcomeDetails;
 import com.metaverse.workflow.programoutcome.service.ProgramOutcomeService;
+import com.metaverse.workflow.programoutcome.service.UdyamService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.parser.ParseException;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +27,9 @@ public class ProgramOutcomeController {
 
     @Autowired
     ProgramOutcomeService programOutcomeService;
+
+    @Autowired
+    UdyamService udyamService;
 
     @GetMapping(value = "/program/outcome/tables")
     public ResponseEntity<WorkflowResponse> getProgramOutcomeTables() {
@@ -59,6 +64,18 @@ public class ProgramOutcomeController {
     public ResponseEntity<WorkflowResponse> getProgramOutcomes(@PathVariable("outcome") String outcomeName) {
         WorkflowResponse response = programOutcomeService.getOutcomeDetailsByName(outcomeName);
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("udyam/data/upload")
+    public ResponseEntity<?> uploadExcel(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("File is empty");
+        }
+        try {
+            udyamService.saveUdyamDataFromExcel(file);
+        } catch (DataException e) {
+            return RestControllerBase.error(e);
+        }
+        return ResponseEntity.ok("Excel data saved successfully!");
     }
 
 }
