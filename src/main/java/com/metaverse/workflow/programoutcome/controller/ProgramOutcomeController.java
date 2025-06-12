@@ -43,6 +43,7 @@ public class ProgramOutcomeController {
     public ResponseEntity<WorkflowResponse> getProgramOutcomeDetails(@PathVariable("participantId") Long participantId,
                                                                      @PathVariable("outcome") String outcome,
                                                                      @RequestParam(value = "type",required = false) String type) {
+        log.info("/program/outcome/details/");
         WorkflowResponse response = programOutcomeService.getOutcomeDetails(participantId, outcome,type);
         return ResponseEntity.ok(response);
     }
@@ -65,7 +66,7 @@ public class ProgramOutcomeController {
         WorkflowResponse response = programOutcomeService.getOutcomeDetailsByName(outcomeName);
         return ResponseEntity.ok(response);
     }
-    @PostMapping("udyam/data/upload")
+    @PostMapping("/udyam/data/upload")
     public ResponseEntity<?> uploadExcel(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("File is empty");

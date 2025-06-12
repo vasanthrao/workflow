@@ -17,7 +17,21 @@ insert into program_outcome_tables (outcome_table_id, outcome_table_display_name
 (14,'GIProduct','GIProduct'),
 (15,'Barcode','Barcode'),
 (16,'TreadMark','TreadMark'),
-(17,'ZEDCertification Bronze','ZEDCertificationBronze'),
-(18,'ZEDCertification Silver','ZEDCertificationSilver'),
-(19,'ZEDCertification Gold','ZEDCertificationGold'),
-(20,'Lean','Lean');
+(17,'ZEDCertification Bronze','ZEDCertification'),
+(18,'ZEDCertification Silver','ZEDCertification'),
+(19,'ZEDCertification Gold','ZEDCertification'),
+(20,'Lean','Lean'),
+(21,'GeM Registration','GeMRegistration'),
+(22,'Consortia Tender','ConsortiaTender'),
+(23,'OEM','OEM'),
+(24,'PMFME Scheme','PMFMEScheme'),
+(25,'PM Viswakarma','PMViswakarma'),
+(26,'Vendor Development','VendorDevelopment'),
+(27,'Sc St Hub','ScStHub'),
+(28,'SIDBI Aspire','SIDBIAspire'),
+(29,'Design Rights','DesignRights'),
+(30,'Copy Rights','CopyRights'),
+(31,'Greening Of MSME','GreeningOfMSME'),
+
+
+
